@@ -97,9 +97,8 @@ module.exports = app;
 
 
 
-//PORT
-const PORT = process.env.PORT || 5500;
+
 ///Server starting
-app.listen( PORT , function () {
-    console.log(`Server stater at port ${PORT}`);
+app.listen( 5500 , function () {
+    console.log(`Server stater at port 5500`);
 })
