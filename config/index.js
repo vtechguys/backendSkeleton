@@ -32,7 +32,9 @@ const configIndex = {
     //session
     SESSION_MODE: 'jwt',
     //DB_URL
-    DB_URL: DB_URL
+    DB_URL: DB_URL,
+    //LOGGER CONFIG
+    LOGGER_TYPE: 'dev'
 
 };
 

@@ -6,7 +6,7 @@
 //Express node http framework
 const express = require('express');
 //Logs everthing to file
-const logger = require('logger');
+const logger = require('morgan');
 //parse html body
 const bodyParser = require('body-parser');
 //favicon page
@@ -14,7 +14,7 @@ const mfavicon = require("express-favicon");
 
 //configApp
 const config = require('./config');
-
+//RBAC --> Role_Based_Access_Control --> authenticator & session
 
 
 
@@ -32,7 +32,7 @@ app.use(function (request, response, next) {
     next();
 });
 //Logger
-app.use(logger('dev'));
+app.use(logger( config.LOGGER_TYPE ));
 //body pareser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -60,7 +60,7 @@ require('crashreporter').configure({
 //////////////////Use session technique you want/////////////////////
 //authenticator middleware
 if(config.SESSION_MODE === "jwt"){
-    app.use();
+    // app.use();
 }
 else{
     //use express session
