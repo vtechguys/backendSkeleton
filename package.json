@@ -15,5 +15,35 @@
     "rbac"
   ],
   "author": "devopsgenesis",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "async": "^2.6.1",
+    "aws-sdk": "^2.238.1",
+    "body-parser": "^1.18.3",
+    "busboy": "^0.2.14",
+    "compress-images": "^1.4.0",
+    "crashreporter": "^1.1.0",
+    "express-favicon": "^2.0.0",
+    "express-rate-limit": "^2.11.0",
+    "image-downloader": "^3.4.1",
+    "image-size": "^0.6.3",
+    "imagemin": "^6.0.0",
+    "inspect": "0.0.2",
+    "jsonwebtoken": "^8.2.1",
+    "log4js": "^3.0.5",
+    "mongoose": "^4.8.1",
+    "morgan": "^1.9.0",
+    "msg91": "0.0.6",
+    "node-cron": "^1.2.1",
+    "nodemailer": "^2.7.2",
+    "passport": "^0.3.2",
+    "passport-facebook": "^2.1.1",
+    "passport-facebook-token": "^3.3.0",
+    "passport-google-oauth20": "^1.0.0",
+    "passport-google-token": "^0.1.2",
+    "randomstring": "^1.1.5",
+    "request": "^2.87.0",
+    "slugo": "^0.2.1"
+  }
 }
