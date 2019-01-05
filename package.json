@@ -1,6 +1,6 @@
 {
   "name": "backendappskeleton",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "base backend app skeleton",
   "main": "index.js",
   "scripts": {
@@ -28,6 +28,8 @@
     "express-rate-limit": "^2.11.0",
     "image-downloader": "^3.4.1",
     "image-size": "^0.6.3",
+    "imagemin-jpegtran": "^5.0.2",
+
     "imagemin": "^6.0.0",
     "inspect": "0.0.2",
     "jsonwebtoken": "^8.2.1",
@@ -45,5 +47,5 @@
     "randomstring": "^1.1.5",
     "request": "^2.87.0",
     "slugo": "^0.2.1"
-  }
+}
 }
