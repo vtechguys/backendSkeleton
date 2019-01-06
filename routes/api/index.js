@@ -41,4 +41,11 @@ router.get('/', (request, response) =>{
     response.sendFile(welcomePagePathComplete);
 
 });
+
+
+
+router.get('/abab',(request, response)=>{
+    console.log('abab');
+    response.sendFile(path.join(__dirname, '/../../public/build/index.html'))
+});
 module.exports = router;

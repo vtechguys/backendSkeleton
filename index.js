@@ -30,6 +30,10 @@ const app = express();
 
 //CORS Middleware
 app.use(function (request, response, next) {
+
+    // delete request.headers['if-modified-since'];
+    // delete request.headers['if-none-match'];
+
     response.header("Access-Control-Allow-Origin", "*");
     response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
