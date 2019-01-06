@@ -97,7 +97,7 @@ const index = require('./routes/api/index');
 /////////////////Routes Mapper Middleware///////////////////////
 app.use('/',index);
 
-// app.use('*',index);
+app.use('*',index);
 
 
 

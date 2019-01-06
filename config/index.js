@@ -11,7 +11,8 @@ const dbConfig = require('./db');
 const loggerConfig = require('./logger');
 //response types 
 const responseTypesConfig = require('./responseTypes');
-
+//schemaNames
+const schemaNames = require('./schemaNames');
 
 //////////////////////////Build configs////////////////////////////
 
@@ -31,6 +32,8 @@ const configIndex = {
     paths: pathsConfig,
     logger: loggerConfig,
     responseTypes: responseTypesConfig,
+    schemaNames: schemaNames,
+
 
     //session
     SESSION_MODE: 'jwt',
