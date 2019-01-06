@@ -10,7 +10,8 @@
 
 
 const pathsConfig = {
-    FAVICON: '/public/build/favicon.icon',
-    HOME_PAGE:'/public/build/index.html'
+    FAVICON: '/public/build/favicon.png',
+    HOME_PAGE:'/public/build/index.html',
+    STATIC_FILES:'/public/build/'
 };
 module.exports = pathsConfig;

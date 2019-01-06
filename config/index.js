@@ -7,7 +7,8 @@
 const pathsConfig = require('./paths');
 //db config
 const dbConfig = require('./db');
-
+//Logger
+const loggerConfig = require('./logger');
 
 
 
@@ -26,7 +27,7 @@ const DB_URL = 'mongodb://localhost:27017/backednappskeleton'; //--->comment in 
 const configIndex = {
 
     paths: pathsConfig,
-    
+    logger: loggerConfig,
 
 
     //session

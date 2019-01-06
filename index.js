@@ -6,14 +6,17 @@
 //Express node http framework
 const express = require('express');
 //Logs everthing to file
-const logger = require('morgan');
-//parse html body
+const loggerHttp = require('morgan');
+//parse header body
 const bodyParser = require('body-parser');
 //favicon page
 const mfavicon = require("express-favicon");
+//path module os independent pathing
+const path = require('path');
 
 //configApp
 const config = require('./config');
+const logger = config.logger;
 //RBAC --> Role_Based_Access_Control --> authenticator & session
 
 
@@ -31,13 +34,19 @@ app.use(function (request, response, next) {
     response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
-//Logger
-app.use(logger( config.LOGGER_TYPE ));
+//LoggerHTTP request o console
+app.use(loggerHttp( config.LOGGER_TYPE ));
 //body pareser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+//static file serving
+app.use( express.static( path.join(__dirname, config.paths.STATIC_FILES ) ) );
 //favicon
 app.use(mfavicon(__dirname + config.paths.FAVICON ));
+
+
+
+
 //crash repoter
 require('crashreporter').configure({
     outDir: './logs', // default to cwd
@@ -67,6 +76,40 @@ else{
 }
 
 
+
+
+
+
+
+
+///////////////////Routes Imports//////////////////////////////
+const index = require('./routes/api/index');
+
+
+
+
+
+
+/////////////////Routes Mapper Middleware///////////////////////
+app.use('/',index);
+
+app.use('*',index);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //////////////////////////////Error Handling//////////////////////////
 
 // catch 404 and forward to error handler
@@ -78,12 +121,11 @@ app.use(function (req, res, next) {
 
 //Error handler //--->comment in production
 const vm = require('vm');
-const logger2 = require('./config/logger');
 const Debug = vm.runInDebugContext('Debug'); // Obtain Debug object
 
 Debug.setListener((type, _, e) => { // listen for all debug events
   if (type == Debug.DebugEvent.Exception) {
-    logger2.error(e.exception().stack) // e is an event object
+    logger.error(e.exception().stack) // e is an event object
   }
 });
 
@@ -92,13 +134,13 @@ Debug.setBreakOnException(); // this is required for Exception event to fire
 
 
 ///Will need app instance later....
-module.exports = app;
+// module.exports = app;
 
 
 
 
 
 ///Server starting
-app.listen( 5500 , function () {
-    console.log(`Server stater at port 5500`);
-})
+app.listen( 3000 , function () {
+    console.log(`Server stater at port 3000`);
+});
