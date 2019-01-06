@@ -31,7 +31,7 @@ router.get('/', (request, response) =>{
     //base welcome path could be another server path in that case just send this path in response.sendFile(welcomePathBase)
     let welcomePathBase = config.paths.HOME_PAGE;
     //normailse path move to root cd ./../../ ie up api up routes to ~/folder-App
-    console.log(welcomePagePathBase);
+    console.log(welcomePathBase);
     let root = path.normalize( __dirname + '/../../');
     //In case welcomepage lies on our server completing the path.
     let welcomePagePathComplete = path.join( root, welcomePathBase );

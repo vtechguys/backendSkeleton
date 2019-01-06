@@ -5,7 +5,7 @@
 
 //Express node http framework
 const express = require('express');
-//Logs everthing to file
+//Logs HTTP to console
 const loggerHttp = require('morgan');
 //parse header body
 const bodyParser = require('body-parser');
@@ -93,7 +93,7 @@ const index = require('./routes/api/index');
 /////////////////Routes Mapper Middleware///////////////////////
 app.use('/',index);
 
-app.use('*',index);
+// app.use('*',index);
 
 
 
@@ -119,17 +119,17 @@ app.use(function (req, res, next) {
     next(err);
 });
 
-//Error handler //--->comment in production
-const vm = require('vm');
-const Debug = vm.runInDebugContext('Debug'); // Obtain Debug object
+// //Error handler //--->comment in production
+// const vm = require('vm');
+// const Debug = vm.runInDebugContext('Debug'); // Obtain Debug object
 
-Debug.setListener((type, _, e) => { // listen for all debug events
-  if (type == Debug.DebugEvent.Exception) {
-    logger.error(e.exception().stack) // e is an event object
-  }
-});
+// Debug.setListener((type, _, e) => { // listen for all debug events
+//   if (type == Debug.DebugEvent.Exception) {
+//     logger.error(e.exception().stack) // e is an event object
+//   }
+// });
 
-Debug.setBreakOnException(); // this is required for Exception event to fire
+// Debug.setBreakOnException(); // this is required for Exception event to fire
 
 
 
@@ -138,9 +138,9 @@ Debug.setBreakOnException(); // this is required for Exception event to fire
 
 
 
-
+const PORT = process.env.PORT || 5000;
 
 ///Server starting
-app.listen( 3000 , function () {
-    console.log(`Server stater at port 3000`);
+app.listen( PORT , function () {
+    console.log(`Server stater at port ${PORT}`);
 });

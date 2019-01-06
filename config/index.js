@@ -9,7 +9,8 @@ const pathsConfig = require('./paths');
 const dbConfig = require('./db');
 //Logger
 const loggerConfig = require('./logger');
-
+//response types 
+const responseTypesConfig = require('./responseTypes');
 
 
 //////////////////////////Build configs////////////////////////////
@@ -25,10 +26,11 @@ const DB_URL = 'mongodb://localhost:27017/backednappskeleton'; //--->comment in 
 
 //////////////////////Exporting final configs////////////////////////
 const configIndex = {
+    HOME_PAGE:'/public/build/index.html',
 
     paths: pathsConfig,
     logger: loggerConfig,
-
+    responseTypes: responseTypesConfig,
 
     //session
     SESSION_MODE: 'jwt',
