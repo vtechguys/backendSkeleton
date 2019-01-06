@@ -1,4 +1,4 @@
-BackenAppSkeleton
+BackendAppSkeleton
 
 This is backend app skeleton to be used for all applications.
 Core Skeleton
