@@ -14,6 +14,7 @@ const responseTypesConfig = require('./responseTypes');
 //schemaNames
 const schemaNames = require('./schemaNames');
 
+
 //////////////////////////Build configs////////////////////////////
 
 //DB_TYPE://DB_USERNAME:DB_PASSWORD@DB_BASE_URL:DB_PORT/DB_NAME
@@ -40,7 +41,9 @@ const configIndex = {
     //DB_URL
     DB_URL: DB_URL,
     //LOGGER CONFIG
-    LOGGER_TYPE: 'dev'
+    LOGGER_TYPE: 'dev',
+    //Email used by superAdmin
+    SUPER_ADMIN_EMAIL: 'aniketjha898@gmail.com'
 
 };
 

@@ -27,25 +27,22 @@ const router = express.Router();
 // @Access Public Access
 router.get('/', (request, response) =>{
     logger.debug('GET /. Will send path to welcome page.');
-    console.log("Path")
     //base welcome path could be another server path in that case just send this path in response.sendFile(welcomePathBase)
     let welcomePathBase = config.paths.HOME_PAGE;
     //normailse path move to root cd ./../../ ie up api up routes to ~/folder-App
-    console.log(welcomePathBase);
     let root = path.normalize( __dirname + '/../../');
     //In case welcomepage lies on our server completing the path.
     let welcomePagePathComplete = path.join( root, welcomePathBase );
-    console.log(welcomePagePathComplete);
-
     //sending the HTML file and other static files request
     response.sendFile(welcomePagePathComplete);
 
 });
 
 
+router.post('/webindex',(request, response)=>{
 
-router.get('/abab',(request, response)=>{
-    console.log('abab');
-    response.sendFile(path.join(__dirname, '/../../public/build/index.html'))
 });
+
+
+
 module.exports = router;

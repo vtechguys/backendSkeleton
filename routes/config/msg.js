@@ -1,6 +1,6 @@
 'use strict'
 
-const message = {
+const errorMessage = {
     //400
     badRequest: 'Invalid Inputs',
     //404
