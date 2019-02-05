@@ -143,6 +143,14 @@ app.use(function (req, res, next) {
 
 
 const PORT = process.env.PORT || 5000;
+const Rider = require('./db/class/User/UserRider');
+const RiderObj = new Rider("gfugai67868736","aniketjha898@gmail.com","9540700460");
+console.log(RiderObj);
+RiderObj.$setRole("driver");
+console.log(RiderObj);
+
+
+
 
 ///Server starting
 app.listen( PORT , function () {

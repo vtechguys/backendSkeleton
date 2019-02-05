@@ -42,6 +42,7 @@ const LOGIN = {
 
 
 const msgConfig = {
-    logIn: LOGIN
+    logIn: LOGIN,
+    errors: errorMessage
 };
 module.exports = msgConfig;
