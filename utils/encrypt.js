@@ -2,7 +2,8 @@
 
 /////////////////Encryptiojn pswd & salt//////////////////////
 const crypto = require('crypto');
-const logger = require("../config/logger");
+const config = require('../config');
+const logger = config.logger;
 
 const encrypt={
 

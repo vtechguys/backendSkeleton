@@ -2,8 +2,8 @@ const User = require('./User');
 
 
 class UserAdmin extends User{
-    constructor(userId, email, phoneNo){
-        super(userId, email, phoneNo, "admin");
+    constructor(userId, email){
+        super(userId, email, "admin");
     }
 }
 module.exports = UserAdmin;

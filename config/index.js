@@ -13,7 +13,8 @@ const loggerConfig = require('./logger');
 const responseTypesConfig = require('./responseTypes');
 //schemaNames
 const schemaNames = require('./schemaNames');
-
+//appConstants
+const constants = require('./appConstants');
 
 //////////////////////////Build configs////////////////////////////
 
@@ -34,7 +35,7 @@ const configIndex = {
     logger: loggerConfig,
     responseTypes: responseTypesConfig,
     schemaNames: schemaNames,
-
+    constants: constants,
 
     //session
     SESSION_MODE: 'jwt',
