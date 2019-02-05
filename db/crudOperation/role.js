@@ -1,6 +1,8 @@
 const User = require('../schema/User');
-const UserSuperAdmin = require('../class/User/UserSuperAdmin');
+const Role = require('../schema/Role');
 
+const UserSuperAdmin = require('../class/User/UserSuperAdmin');
+const RoleClass = require('../class/Role/Role');
 
 const config = require('../../config');
 const logger = config.logger;
@@ -26,15 +28,14 @@ const dbOperations = {
                 callback(error, null);
             }
             else{
-                logger.debug('createsuperadmin user.findOneSA ', result);
                 if(!result){
                     let userId = generate.randomString(appConstants.USER_ID_LENGTH);
+
                     let superAdminObj = new UserSuperAdmin(userId, config.SUPER_ADMIN_EMAIL);
                     superAdminObj['password'] = 'superadmin';
                     superAdminObj.$setEmailVerified(false);
-                    console.log({ ...superAdminObj});
-                    let saDbObj = new User({ ...superAdminObj});
-                    saDbObj.save(superAdminObj, (error1, result1)=>{
+
+                    User.create(superAdminObj, (error1, result1)=>{
                         if(error1){
                             logger.error(`createsuperadmin user.create, ${error1}`);
                             console.log(error1)
@@ -43,13 +44,70 @@ const dbOperations = {
                         else{
                             callback(null, result1);
                         }
-                    })
+                    });
                 }
                 else{
                     callback(null, result);
                 }
             }
         })
+    },
+    getRole(role, callback){
+        logger.debug(`getRole ${role}`);
+        Role
+        .findOne({
+            "role": ""
+        })
+        .exec((error, result)=>{
+            if(error){
+                logger.error(`getRole ${role}::::${error}`);
+                callback(error);
+            }
+            else{
+                callback(null, result);
+            }
+        });
+    },
+    fillRights(roleId, rights, callback){
+        logger.debug('roleCRUD fillRights');
+        Role
+        .findOneAndUpdate({
+            "roleId": roleId
+        },{
+            "$set":{
+                "rights": rights
+            }
+        })
+        .exec((error, result)=>{
+            if(error){
+                logger.error(`fillRights ${error}`);
+                callback(error);
+            }
+            else{
+                callback(null, result);
+            }
+        })
+    },
+    createRole(role, callback){
+        logger.debug('roleCRUD createRole');
+        const utils = require('../../utils');
+        const generate = utils.generate;
+
+        let roleId = generate.randomString(appConstants.ROLE_ID_LENGTH);
+        const RoleObj = new RoleClass(roleId);
+        RoleObj.$setRole(role);
+
+        Role.create(RoleObj, (error, result)=>{
+            if(error){
+                logger.error(`createRole ${error}`);
+                callback(error);
+            }
+            else{
+                callback(null, result);
+            }
+        });
+
+
     }
 };
 module.exports = dbOperations;

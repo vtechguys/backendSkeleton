@@ -38,6 +38,7 @@ const init = {
             
         });
         //Now superAdminRights[] consists of all rights that will be accessed thorighout applications
+        //it holds updated rights...
 
         const dbOperations = require('../db/crudOperation/role');
 
@@ -48,6 +49,38 @@ const init = {
             }
         });
 
+        //give superAdmin Role any updated rights as in superAdminRights[]
+        dbOperations.getRole('superadmin', (error, result)=>{
+            if(error){
+                process.exit();
+            }
+            else{
+                if(!result){
+                    //create and then fill
+                    dbOperations.createRole('superadmin',(error1, result1)=>{
+                        if(error1){
+                            process.exit();
+                        }
+                        else{
+                            dbOperations.fillRights(result1.roleId, superAdminRights, (error3, results)=>{
+                                if(error3){
+                                    process.exit();
+                                }
+                            });
+                        }
+                    });
+                }
+                else{
+                    //fill any updated rights
+                    dbOperations.fillRights(result.roleId, superAdminRights, (error2, result2)=>{
+                        if(error2){
+                            process.exit();
+                        }
+
+                    });
+                }
+            }
+        });
 
 
     }
