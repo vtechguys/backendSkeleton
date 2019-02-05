@@ -13,9 +13,12 @@ const init = {
         //array of superadmin rights willbe filled
         const superAdminRights = [];
         //fills superadmin specific urls as its rights
-
+        var l = Object.keys(configUrl);
         Object.keys(configUrl).forEach(function(keyBaseUrl){
-            for(let i = 0; i< keyBaseUrl.length; i++){
+            console.log(keyBaseUrl.length);
+            for(let i = 0; i < configUrl[keyBaseUrl].length; i++){
+                console.log(configUrl[keyBaseUrl][i],keyBaseUrl);
+
                 let right = {
                     name: configUrl[keyBaseUrl][i], // resourece name
                     path: keyBaseUrl, //base path name
@@ -24,14 +27,14 @@ const init = {
                 superAdminRights.push(right);
             }
         });
-
+        // console.log(superAdminRights,"\n\n_________________",authUrls,"_________________")
         //fill now all suppoterd urls as superadmin right...
         Object.keys(authUrls).forEach(function(keyBaseUrl){
-            for(let i=0; i< authUrls.length; i++){
+            for(let i=0; i< authUrls[keyBaseUrl].length; i++){
                 let right = {
                     name: authUrls[keyBaseUrl][i],
                     path: keyBaseUrl,
-                    url:  authUrls[keyBaseUrl] + authUrls[keyBaseUrl][i] 
+                    url:  keyBaseUrl + authUrls[keyBaseUrl][i] 
                 };
                 superAdminRights.push(right);
             }
@@ -39,7 +42,7 @@ const init = {
         });
         //Now superAdminRights[] consists of all rights that will be accessed thorighout applications
         //it holds updated rights...
-
+        console.log(superAdminRights);
         const dbOperations = require('../db/crudOperation/role');
 
         dbOperations.createSuperAdmin((error, result)=>{

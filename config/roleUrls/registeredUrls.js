@@ -2,10 +2,10 @@
 
 const registerUrls = {
     simple:{
-        '/': ['/login','/register']
+        '/': ['login','register']
     },
     auth:{
-        '/': ['/login','/register','/webindex']
+        '/': ['login','register','webindex']
     }
 };
 

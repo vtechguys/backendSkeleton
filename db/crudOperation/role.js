@@ -1,9 +1,10 @@
+//models
 const User = require('../schema/User');
 const Role = require('../schema/Role');
-
+// Classess
 const UserSuperAdmin = require('../class/User/UserSuperAdmin');
 const RoleClass = require('../class/Role/Role');
-
+// config,logger,constants
 const config = require('../../config');
 const logger = config.logger;
 const appConstants = config.constants;
@@ -56,7 +57,7 @@ const dbOperations = {
         logger.debug(`getRole ${role}`);
         Role
         .findOne({
-            "role": ""
+            "role": role
         })
         .exec((error, result)=>{
             if(error){
@@ -81,6 +82,7 @@ const dbOperations = {
         .exec((error, result)=>{
             if(error){
                 logger.error(`fillRights ${error}`);
+                console.log(error)
                 callback(error);
             }
             else{
@@ -100,6 +102,7 @@ const dbOperations = {
         Role.create(RoleObj, (error, result)=>{
             if(error){
                 logger.error(`createRole ${error}`);
+                console.log("ceateRole",error);
                 callback(error);
             }
             else{
