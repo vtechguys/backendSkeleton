@@ -32,11 +32,12 @@ const dbOperations = {
                     let superAdminObj = new UserSuperAdmin(userId, config.SUPER_ADMIN_EMAIL);
                     superAdminObj['password'] = 'superadmin';
                     superAdminObj.$setEmailVerified(false);
-                    console.log(superAdminObj);
-                    let saDbObj = new User(superAdminObj);
+                    console.log({ ...superAdminObj});
+                    let saDbObj = new User({ ...superAdminObj});
                     saDbObj.save(superAdminObj, (error1, result1)=>{
-                        if(error){
-                            logger.error(`createsuperadmin user.create, ${error1}`)
+                        if(error1){
+                            logger.error(`createsuperadmin user.create, ${error1}`);
+                            console.log(error1)
                             callback(error1);
                         }
                         else{

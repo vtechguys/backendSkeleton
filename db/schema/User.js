@@ -14,14 +14,20 @@ const UserSchema = new Schema({
         unique: true,
         required: true
     },
-
+    email:{
+        type: String,
+        unique: true,
+        required: true
+    },
+    emailVerified:{
+        type: Boolean,
+        default: false
+    },
     firstName: {
         type: String,
-        required: true
     },
     lastName:{
         type: String,
-        required: true
     },
    
     role: {
