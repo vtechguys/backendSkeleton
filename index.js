@@ -150,6 +150,9 @@ RiderObj.$setRole("driver");
 console.log(RiderObj);
 
 
+const init = require('./config/init');
+init.superAdmin();
+
 
 
 ///Server starting
