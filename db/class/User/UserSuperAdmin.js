@@ -1,5 +1,9 @@
 const User = require('./User');
 
+const config = require('../../../config');
+const logger = config.logger;
+
+
 class UserSA extends User{
     constructor(userId, email, ){
         super(userId, email,"superadmin");
@@ -9,18 +13,15 @@ class UserSA extends User{
 
     //     }
     // }
-    static $createDbObj(obj){        
+    static $createDbObj(obj){    
+        logger.debug('userSA createDbObj');
         let dbObj;
         try{
-            dbObj = super.$createDbObj(obj);
+            dbObj = User.$createDbObjBase(obj);
         }
         catch(exp){
             throw exp;
         }
-
-
-
-        
         return dbObj;
     }
 }

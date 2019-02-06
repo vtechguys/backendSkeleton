@@ -44,7 +44,8 @@ const configIndex = {
     //LOGGER CONFIG
     LOGGER_TYPE: 'dev',
     //Email used by superAdmin
-    SUPER_ADMIN_EMAIL: 'aniketjha898@gmail.com'
+    SUPER_ADMIN_EMAIL: 'aniketjha898@gmail.com',
+    MOBILE_NO: '9540700460'
 
 };
 

@@ -1,4 +1,5 @@
 const config = require('../../../config');
+const logger = config.logger;
 const appConstants = config.constants;
 const utils = require('../../../utils');
 const validate = utils.validate;
@@ -10,6 +11,7 @@ class User{
         this.userId = userId;
         this.email = email;
         this.role = role || "user";
+
         
     }
     $setFirstName(firstName){
@@ -32,11 +34,13 @@ class User{
     }
     $setEmail(email){
         this.email = email;
+        this.emailVerified = false;
     }
     $setPhoneNo(phoneNo){
-        this.phoneNo = phoneNo;
-    }
+        this.mobile = phoneNo;
+        this.mobileVerified = false;
 
+    }
     encryptPassword(password=""){
 
         if(!validate.password(password)){
@@ -44,7 +48,7 @@ class User{
         }
 
         const salt = encrypt.genRandomString(appConstants.PASSWORD_SALT_LENGTH);
-        const encryptedPassword = encrypt.sha512(password, salt);
+        const encryptedPassword = encrypt.sha512(password, salt).hash;
 
         this.salt = salt;
         this.password = encryptedPassword;
@@ -52,26 +56,21 @@ class User{
 
 
     }
-
-
-    $createDbObj(obj){
-        let dbObj = obj;
-
-        if(!validate.email(obj.email)){
-            throw new Error(`email ${obj.email} is not valid.`);
-        }
+    static $createDbObjBase(obj){
+        logger.debug('user createDbObjBase');
+       
         if(!validate.id(obj.userId)){
             throw new Error(`userId ${obj.userId} is not valid.`);
         }
-        if(!validate.password(obj.password)){
+        if((obj.password.length<6)){
             throw new Error(`password ${obj.password} is not valid.`);
         }
 
-        if(!validate.string(obj.salt)){
+        if(typeof(obj.salt)!=="string"){
             throw new Error(`salt ${obj.salt} is not valid.`);
         }
-        
-        return dbObj;
+       
+        return obj;
     }
 
 }
