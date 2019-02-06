@@ -35,17 +35,26 @@ const dbOperations = {
                     let superAdminObj = new UserSuperAdmin(userId, config.SUPER_ADMIN_EMAIL);
                     superAdminObj['password'] = 'superadmin';
                     superAdminObj.$setEmailVerified(false);
-
-                    User.create(superAdminObj, (error1, result1)=>{
-                        if(error1){
-                            logger.error(`createsuperadmin user.create, ${error1}`);
-                            console.log(error1)
-                            callback(error1);
-                        }
-                        else{
-                            callback(null, result1);
-                        }
-                    });
+                    
+                    let dbObj;
+                    try{
+                        dbObj = UserSuperAdmin.$createDbObj(superAdminObj);
+                        User.create(dbObj, (error1, result1)=>{
+                            if(error1){
+                                logger.error(`createsuperadmin user.create, ${error1}`);
+                                console.log(error1)
+                                callback(error1);
+                            }
+                            else{
+                                callback(null, result1);
+                            }
+                        });
+                    }
+                    catch(exp){
+                        logger.error(`superAdmin createDbObj error format ${exp}`);
+                        console.log(`superAdmin createDbObj error format`,exp);
+                    }
+                    
                 }
                 else{
                     callback(null, result);

@@ -1,5 +1,9 @@
 const config = require('../../../config');
 const appConstants = config.constants;
+const utils = require('../../../utils');
+const validate = utils.validate;
+const encrypt = utils.encrypt;
+
 
 class User{
     constructor(userId, email, role){
@@ -33,5 +37,43 @@ class User{
         this.phoneNo = phoneNo;
     }
 
+    encryptPassword(password=""){
+
+        if(!validate.password(password)){
+            throw new Error(`password ${password} is not valid.`);
+        }
+
+        const salt = encrypt.genRandomString(appConstants.PASSWORD_SALT_LENGTH);
+        const encryptedPassword = encrypt.sha512(password, salt);
+
+        this.salt = salt;
+        this.password = encryptedPassword;
+
+
+
+    }
+
+
+    $createDbObj(obj){
+        let dbObj = obj;
+
+        if(!validate.email(obj.email)){
+            throw new Error(`email ${obj.email} is not valid.`);
+        }
+        if(!validate.id(obj.userId)){
+            throw new Error(`userId ${obj.userId} is not valid.`);
+        }
+        if(!validate.password(obj.password)){
+            throw new Error(`password ${obj.password} is not valid.`);
+        }
+
+        if(!validate.string(obj.salt)){
+            throw new Error(`salt ${obj.salt} is not valid.`);
+        }
+        
+        return dbObj;
+    }
+
 }
-module.exports = User; 
+
+module.exports = User;

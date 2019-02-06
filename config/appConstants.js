@@ -1,6 +1,8 @@
 const appConstants = {
     USER_ID_LENGTH:32,
     ROLE_ID_LENGTH:8,
+    PASSWORD_SALT_LENGTH: 10,
+    RATING_DEFAULT: 5,
     ALL_ROLES: ['superadmin','admin','vender','driver','user']
 };
 module.exports = appConstants;

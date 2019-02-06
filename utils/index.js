@@ -10,10 +10,13 @@ const encryptUtil = require('./encrypt');
 //generate
 const generate = require('./generator');
 
+//validate
+const validate = require('./validate');
 
 
 const utils = {
     encrypt: encryptUtil,
-    generate: generate
+    generate: generate,
+    validate: validate
 };
 module.exports = utils;
