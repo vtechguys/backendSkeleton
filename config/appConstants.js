@@ -3,6 +3,9 @@ const appConstants = {
     ROLE_ID_LENGTH:8,
     PASSWORD_SALT_LENGTH: 10,
     RATING_DEFAULT: 5,
+    jwtDuration: 86400,
+    jwtKey: 'supersecret',
+    sessionType: 'multiple',
     ALL_ROLES: ['superadmin','admin','vender','driver','user']
 };
 module.exports = appConstants;

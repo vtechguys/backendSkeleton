@@ -11,7 +11,7 @@ class UserVendor extends User{
         super(userId, email, "vendor");
     }
 
-    static $createDbObj(obj){        
+    static $createDbObj(obj){
         let dbObj;
         
         try{

@@ -17,7 +17,6 @@ const UserSchema = new Schema({
     email:{
         type: String,
         unique: true,
-        required: true
     },
     emailVerified:{
         type: Boolean,
@@ -29,7 +28,8 @@ const UserSchema = new Schema({
         type: String,
     },
     mobile:{
-        type: String
+        type: String,
+        unique: true
     },
     temporaryMobile:{
         type: String

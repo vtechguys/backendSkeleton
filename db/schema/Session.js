@@ -23,7 +23,7 @@ const sessionSchema = new Schema({
     firstName: String,
     lastName: String,
     userId: String,
-    userEmail: String,
+    email: String,
     username: String,
     role: String,
     registrationDate: Date,
@@ -32,7 +32,7 @@ const sessionSchema = new Schema({
     mobile: String,
     countryCode: String,
     address:{ 
-        
+        a: String,
         area: String,
         city: String,
         state: String,
@@ -63,8 +63,8 @@ const sessionSchema = new Schema({
     profilePic:String
 });
 
-sessionSchema.index({ 'createdAt': 1 },{ expireAfterSeconds: EXPIRE_DOC_TIME });
-
-const Session = mongoose.model(config.schemaNames.sessionsCollection,sessionSchema); 
+sessionSchema.index({ userId: 1 });
+sessionSchema.index({ sessionId: 1 });
+const Session = mongoose.model(config.schemaNames.sessionsCollection, sessionSchema); 
 
 module.exports = Session;

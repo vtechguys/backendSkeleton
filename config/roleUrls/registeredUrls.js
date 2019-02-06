@@ -5,7 +5,8 @@ const registerUrls = {
         '/': ['login','register']
     },
     auth:{
-        '/': ['login','register','webindex']
+        '/': ['login','register','webindex'],
+        '/profile/':['get-profile'],
     }
 };
 

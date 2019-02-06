@@ -13,6 +13,9 @@ const bodyParser = require('body-parser');
 const mfavicon = require("express-favicon");
 //path module os independent pathing
 const path = require('path');
+//authenticator RBAC
+const authenticate = require('./config/session/sessionOptions');
+
 
 //configApp
 const config = require('./config');
@@ -72,8 +75,9 @@ require('crashreporter').configure({
 
 //////////////////Use session technique you want/////////////////////
 //authenticator middleware
+
 if(config.SESSION_MODE === "jwt"){
-    // app.use();
+    app.use( authenticate.jwtSession );
 }
 else{
     //use express session
@@ -115,25 +119,12 @@ app.use('*',index);
 
 
 //////////////////////////////Error Handling//////////////////////////
-
-// catch 404 and forward to error handler
+//catch 404 routes
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
-
-// //Error handler //--->comment in production
-// const vm = require('vm');
-// const Debug = vm.runInDebugContext('Debug'); // Obtain Debug object
-
-// Debug.setListener((type, _, e) => { // listen for all debug events
-//   if (type == Debug.DebugEvent.Exception) {
-//     logger.error(e.exception().stack) // e is an event object
-//   }
-// });
-
-// Debug.setBreakOnException(); // this is required for Exception event to fire
 
 
 

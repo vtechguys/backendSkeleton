@@ -26,6 +26,14 @@ log4js.configure({
             maxLogSize: 20480,
             backups: 10
         },
+        critical:{
+            type: "file",
+            filename: "logs/critical.log",
+            category: 'critical',
+            maxLogSize: 20480,
+            backups: 10
+
+        }
 
     },
     categories: {

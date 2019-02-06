@@ -74,7 +74,7 @@ const dbOperations = {
         .exec((error, result)=>{
             if(error){
                 logger.error(`getRole ${role}::::${error}`);
-                callback(error);
+                callback(error, null);
             }
             else{
                 callback(null, result);
