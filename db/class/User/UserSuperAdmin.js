@@ -5,8 +5,8 @@ const logger = config.logger;
 
 
 class UserSA extends User{
-    constructor(userId, email, ){
-        super(userId, email,"superadmin");
+    constructor(){
+        super("superadmin");
     }
     // static $createNewObj(prototypeObj){
     //     return {

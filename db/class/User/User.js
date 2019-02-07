@@ -6,14 +6,13 @@ const validate = utils.validate;
 const encrypt = utils.encrypt;
 
 
-class User{
-    constructor(userId, email, role){
-        this.userId = userId;
-        this.email = email;
-        this.role = role || "user";
 
-        
+
+class User{
+    constructor(role){
+        this.role = role || "user";
     }
+
     $setFirstName(firstName){
         this.firstName = firstName;
     }
@@ -55,6 +54,21 @@ class User{
 
 
 
+    }
+    $generateUserId(){
+        if(!this.userId){
+            const utils = require('../../../utils');
+            const generate = utils.generate;
+            let userId = generate.randomString(appConstants.USER_ID_LENGTH);
+            this.userId = userId;
+        }
+        
+    }
+    $selectiveUpdate(originalObj, updateObj){
+        return {
+            ...originalObj,
+            ...updateObj
+        }
     }
     static $createDbObjBase(obj){
         logger.debug('user createDbObjBase');

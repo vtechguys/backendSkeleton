@@ -30,13 +30,19 @@ const dbOperations = {
             }
             else{
                 if(!result){
-                    let userId = generate.randomString(appConstants.USER_ID_LENGTH);
 
-                    let superAdminObj = new UserSuperAdmin(userId, config.SUPER_ADMIN_EMAIL);
-                    superAdminObj.encryptPassword("a".repeat(32));
+                    let superAdminObj = new UserSuperAdmin();
+                    
+                    superAdminObj.$generateUserId();
+
+                    superAdminObj.$setEmail(config.SUPER_ADMIN_EMAIL);
                     superAdminObj.$setEmailVerified(false);
+
+                    superAdminObj.encryptPassword("a".repeat(32));
+
                     superAdminObj.$setFirstName('superadmin');
                     superAdminObj.$setLastName('superadmin');
+
                     superAdminObj.$setPhoneNo(config.MOBILE_NO);
 
                     let dbObj;

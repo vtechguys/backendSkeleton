@@ -7,8 +7,8 @@ const utils = require('../../../utils');
 const validate = utils.validate;
 
 class UserVendor extends User{
-    constructor(userId, email){
-        super(userId, email, "vendor");
+    constructor(){
+        super("vendor");
     }
 
     static $createDbObj(obj){
