@@ -291,6 +291,40 @@ const validate = {
         }
         return valid;
     },
+
+    adharNo: function(string){
+        logger.debug('validate adharNo.');
+  
+        var lengthOfAadhaar = string;                        
+    
+        var checkDigits = /^\d+$/.test(lengthOfAadhaar);
+    
+        var zero  =  /.!=000000000000/.test(lengthOfAadhaar); 
+        var one   =  /.!=111111111111/.test(lengthOfAadhaar);
+        var two   =  /.!=222222222222/.test(lengthOfAadhaar);
+        var three =  /.!=333333333333/.test(lengthOfAadhaar);
+        var four =   /.!=444444444444/.test(lengthOfAadhaar);
+        var five =   /.!=555555555555/.test(lengthOfAadhaar);
+        var six =    /.!=666666666666/.test(lengthOfAadhaar);
+        var seven =  /.!=777777777777/.test(lengthOfAadhaar);
+        var eight =  /.!=888888888888/.test(lengthOfAadhaar);
+        var nine =   /.!=999999999999/.test(lengthOfAadhaar);
+    
+    
+        if(lengthOfAadhaar.length<12 || checkDigits == false || zero == false || one ==false || two ==false ||
+            three == false || four == false || five == false || six == false || seven == false || eight == false 
+            || nine == false)
+        {               
+    
+    
+            return false;
+    
+        } 
+        return true;
+        
+    },
+
+
 };
 
 module.exports = validate;

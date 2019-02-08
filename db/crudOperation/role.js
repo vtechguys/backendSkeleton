@@ -33,7 +33,6 @@ const dbOperations = {
 
                     let superAdminObj = new UserSuperAdmin();
                     
-                    superAdminObj.$generateUserId();
 
                     superAdminObj.$setEmail(config.SUPER_ADMIN_EMAIL);
                     superAdminObj.$setEmailVerified(false);
