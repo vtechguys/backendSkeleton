@@ -81,6 +81,7 @@ if(config.SESSION_MODE === "jwt"){
 }
 else{
     //use express session
+    app.use( authenticate.webSession );
 }
 
 

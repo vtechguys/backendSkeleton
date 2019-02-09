@@ -3,6 +3,9 @@ const appConstants = require('../appConstants');
 const allUrls = require('../roleUrls/registeredUrls');
 const configUrls = require('../roleUrls/configUrls');
 const logger = require('../logger');
+const utils = require('../../utils');
+const validate = utils.validate;
+
 
 const simpleUrl = allUrls.simple;
 const authUrl = allUrls.auth;
@@ -71,8 +74,54 @@ const checkRights = (request, response, next)=>{
 }
 
 const authenticate = {
-    webSession(){
+    webSession(request, response, next){
         //express-sessions
+        if( URLS.indexOf( request.url ) > -1 ){
+            logger.debug('session > websession');
+            let isValidSessionId = false;
+            let webSessionExist = false;
+            if( request.body.appCall && request.body.sessionId ){
+                isValidSessionId = validate.string( request.body.sessionId );
+            }
+            else if( request.body.user ){
+                webSessionExist = true;
+            }
+
+            if( webSessionExist ){
+                request["userData"] = request.session.user;
+                request["sessionMode"] = "web";
+                checkRights(request, response, next);
+            }
+            else if( isValidSessionId ){
+                let result = {};
+                const sessionOperation = require('./jwtOptions');
+                sessionOperation.getSessionByUserId(request.body.sessionId, (error, result)=>{
+                    if(error){
+                        response.send(error);
+                    }
+                    else{
+                        if(result && result.sessionId){
+                            request["userData"] = result;
+                            request["sessionMode"] = "app";
+                            checkRights(request, response, next);
+                        }
+                        else{
+                            response.json({ 
+                                message: "User session not found.",
+                                success: false,
+                                code: 401 
+                            });
+                        }
+                    }
+                });
+
+            }
+
+
+        }
+        else {
+            next();
+        }
     },
     jwtSession(request, response, next){
         //jwt-sessions
