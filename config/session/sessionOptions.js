@@ -1,5 +1,5 @@
 'use strict'
-const appConstants = require('../appConstants');
+const appConstants = require('../appConstants/index.js');
 const allUrls = require('../roleUrls/registeredUrls');
 const configUrls = require('../roleUrls/configUrls');
 const logger = require('../logger');

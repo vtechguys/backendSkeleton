@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const Session = require('../../db/model/session');
 const logger = require('../logger');
-const appContants = require('../appConstants');
+const appContants = require('../appConstants/index.js');
 const jwtOperations = {
 
     generateJwt(id, role = "user", duration = 7){

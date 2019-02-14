@@ -14,7 +14,7 @@ const responseTypesConfig = require('./responseTypes');
 //schemaNames
 const schemaNames = require('./schemaNames');
 //appConstants
-const constants = require('./appConstants');
+const constants = require('./appConstants/index.js');
 
 //////////////////////////Build configs////////////////////////////
 
@@ -45,7 +45,11 @@ const configIndex = {
     LOGGER_TYPE: 'dev',
     //Email used by superAdmin
     SUPER_ADMIN_EMAIL: 'aniketjha898@gmail.com',
-    MOBILE_NO: '9540700460'
+    MOBILE_NO: '9540700460',
+    REQ_URL:'http://localhost:5500',
+    SMTP_EMAIL: 'dev.devopsgenesis@gmail.com',
+    SMTP_PASSWORD: 'Ytrewq.12345',
+    SMTP_SERVICE_URL: 'smtp.gmail.com'
 
 };
 

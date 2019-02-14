@@ -77,6 +77,7 @@ require('crashreporter').configure({
 //authenticator middleware
 
 if(config.SESSION_MODE === "jwt"){
+    //use jwt session
     app.use( authenticate.jwtSession );
 }
 else{
@@ -134,7 +135,7 @@ app.use(function (req, res, next) {
 
 
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5500;
 
 
 

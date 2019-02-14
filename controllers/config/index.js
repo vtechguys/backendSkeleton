@@ -1,6 +1,5 @@
 'use strict'
 
-const msg = require('./msg');
 
 const routeConfigs = {
     msg: msg

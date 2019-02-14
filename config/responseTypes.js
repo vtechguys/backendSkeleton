@@ -9,11 +9,30 @@
  * BAD_REQUEST: 400
  * 
  */
+const msg = require('./msg/index.js');
 const responseTypesConfig = {
-    SUCCESS: "success",
-    FAIL: "fail",
-    UNKNOW: "unknown",
-    UNAUTHORISED: "unauthorised",
-    BAD_REQUEST: "bad-request"
+    SUCCESS: {
+        type: "success",
+        code: 200,
+        defaultMsg: msg.errors.success
+    },
+    FAIL: {
+        type: "fail",
+        code: 403,
+        defaultMsg: msg
+    },
+    UNKNOW: {
+        type: "fail",
+        code: 404
+    },
+    UNAUTHORISED:{
+        type:  "unauthorised",
+        code: 401
+    },
+    BAD_REQUEST: {
+        type: "bad-request",
+        code: 400
+    },
+
 };
 module.exports = responseTypesConfig; 
