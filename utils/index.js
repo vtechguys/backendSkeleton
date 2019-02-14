@@ -16,11 +16,15 @@ const validate = require('./validate');
 const mailer = require('./mailer');
 //loadash
 const loadash = require('./lodash');
+//resposer
+const resposer = requrie('./responser');
+
 const utils = {
     encrypt: encryptUtil,
     generate: generate,
     validate: validate,
     mailer: mailer,
-    loadash: loadash
+    loadash: loadash,
+    sendResponse: resposer
 };
 module.exports = utils;

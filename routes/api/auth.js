@@ -1,38 +1,13 @@
 'use strict'
 
-const utils = require('../../utils');
-const sendResponse = utils.sendResponse;
-const validate = utils.validate;
-const _ = utils.lodash;
+const express = require('express');
+const router = express.Router();
 
-function loginValidate(){
-     
-    return {
+const AuthController = require('../../controllers/Auth');
 
-    }
-}
+router.post('/login', AuthController.login);
+// router.post('/register', AuthController.register);
 
-
-const doLogin = (request, response) => {
-    let loginObj = {
-        "loginId": request.body.loginId,
-        "password": request.body.password
-    };
-
-    const { errors, isValid } = loginValidate(loginObj);
-
-    if(!isValid){
-
-    }
-    else{
-
-    }
-
-
-};
-
-
-const routesController = {};
 
 
 module.exports = routesController; 

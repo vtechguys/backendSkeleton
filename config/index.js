@@ -24,7 +24,7 @@ const constants = require('./appConstants/index.js');
 const DB_URL = 'mongodb://localhost:27017/backednappskeleton'; //--->comment in production
 
 
-
+const msg = require('./msg');
 
 
 //////////////////////Exporting final configs////////////////////////
@@ -36,6 +36,7 @@ const configIndex = {
     responseTypes: responseTypesConfig,
     schemaNames: schemaNames,
     constants: constants,
+    msg: msg,
 
     //session
     SESSION_MODE: 'jwt',
@@ -49,7 +50,8 @@ const configIndex = {
     REQ_URL:'http://localhost:5500',
     SMTP_EMAIL: 'dev.devopsgenesis@gmail.com',
     SMTP_PASSWORD: 'Ytrewq.12345',
-    SMTP_SERVICE_URL: 'smtp.gmail.com'
+    SMTP_SERVICE_URL: 'smtp.gmail.com',
+
 
 };
 

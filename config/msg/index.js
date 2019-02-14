@@ -5,7 +5,7 @@ const LOGIN_MESSAGES = require('./logIn');
 
 
 const msgConfig = {
-    logIn: LOGIN_MESSAGES,
+    login: LOGIN_MESSAGES,
     errors: ERROR_MESSAGES
 };
 module.exports = msgConfig;
