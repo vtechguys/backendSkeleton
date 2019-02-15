@@ -14,24 +14,27 @@ const responseTypesConfig = {
     SUCCESS: {
         type: "success",
         code: 200,
-        defaultMsg: msg.errors.success
+        defaultMsg: msg.success
     },
     FAIL: {
         type: "fail",
         code: 403,
-        defaultMsg: msg
+        defaultMsg: msg.fail
     },
     UNKNOW: {
         type: "fail",
-        code: 404
+        code: 404,
+        defaultMsg: msg.unknown
     },
     UNAUTHORISED:{
         type:  "unauthorised",
-        code: 401
+        code: 401,
+        defaultMsg: msg.unauthorised
     },
     BAD_REQUEST: {
         type: "bad-request",
-        code: 400
+        code: 400,
+        defaultMsg: msg.badRequest
     },
 
 };

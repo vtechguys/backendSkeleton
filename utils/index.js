@@ -17,7 +17,7 @@ const mailer = require('./mailer');
 //loadash
 const loadash = require('./lodash');
 //resposer
-const resposer = requrie('./responser');
+const responser = require('./responser');
 
 const utils = {
     encrypt: encryptUtil,
@@ -25,6 +25,6 @@ const utils = {
     validate: validate,
     mailer: mailer,
     loadash: loadash,
-    sendResponse: resposer
+    sendResponse: responser
 };
 module.exports = utils;
