@@ -7,6 +7,6 @@ const appConstants = {
     jwtDuration: 86400,//env
     jwtKey: 'supersecret',//env 
     sessionType: 'multiple',
-    ALL_ROLES: ['superadmin','admin','vender','driver','user']
+    ALL_ROLES: ['superadmin','admin','vender','driver','user'],
 };
 module.exports = appConstants;

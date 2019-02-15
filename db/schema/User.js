@@ -20,6 +20,7 @@ const UserSchema = new Schema({
     },
     emailVerified:{
         type: Boolean,
+        
     },
     firstName: {
         type: String,
@@ -29,18 +30,32 @@ const UserSchema = new Schema({
     },
     mobile:{
         type: String,
-        unique: true
+        unique: true,
     },
     temporaryMobile:{
-        type: String
+        type: String,
+        unique: true,
+
     },
     mobileVerified:{
-        type:Boolean,
+        type: Boolean,
     },
     role: {
         type: String,
         required: true,
         default: 'user',
+    },
+    temporaryRole:{
+        type: String,
+        default: "user"
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    salt: {
+        type: String,
+        required: true
     }
 
 
