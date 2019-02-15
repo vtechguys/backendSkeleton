@@ -30,7 +30,8 @@ const msgConfig = {
 
     emailInvlaid: "email is invalid",
     emailRequired: "email is required",
-    
+
+    accountDuplicate: "A account with this mobile or email already exist",
 
 
 

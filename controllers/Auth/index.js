@@ -98,6 +98,29 @@ exports.login = function(request, response){
 
 };
 
+function registerBasics(body){
+        const utils = require('../../utils');
+        const encrypt = utils.encrypt;
+        const userObj = {};
+        userObj["userId"] = generate.randomString(appConstansts.USER_ID_LENGTH);
+        userObj["firstName"] = body.firstName;
+        userObj["lastName"] = body.lastName;
+        userObj["email"] = body.email;
+        userObj["emailVerified"] = false;
+        userObj["code"] = body.code;
+        userObj["temporaryMobile"] = body.mobile;
+        userObj["mobileVerified"] = false;
+        userObj["salt"] = encrypt.genRandomString(appConstansts.PASSWORD_SALT_LENGTH);
+        userObj["password"] = encrypt.sha512( body.password, userObj["salt"]).hash;
+        userObj["adhar"] = {
+            "value": body.adharNo,
+            "verified": false,
+        };
+        return userObj;
+}
+
+
+
 function registerValidate(info){
     const errors = {};
     if(info && Object.keys(info).length > 0){
@@ -151,6 +174,32 @@ function registerValidate(info){
         else{
             errors["lastName"] = msg.lastNameRequired;
         }
+        //adhar compulsary
+        let isValidAdharNo = false;
+        if(info.adharNo || info.adharNo === ""){
+            isValidAdharNo = validate.adharNo(info.adharNo);
+            if(!isValidAdharNo){
+                errors["adharNo"] = msg.adharNoInvalid;
+            }
+        }
+        else{
+            errors["adharNo"] = info.adharNoRequired;
+        }
+        //pan and voter id not compulsary;
+        let isValidPanNo = true;
+        if(info.panNo || info.panNo === ""){
+            isValidPanNo = validate.panNo(info.panNo);
+            if(!isValidPanNo){
+                errors["panNo"] = msg.panNoInvalid;
+            }
+        }
+        let isValidVoterIdNo = true;
+        if(info.voterIdNo || info.voterIdNo === ""){
+            isValidVoterIdNo = validate.panNo(info.voterIdNo);
+            if(!isValidVoterIdNo){
+                errors["voterIdNo"] = msg.voterIdNoInvalid;
+            }
+        }
     }
     else{
         errors["code"] = msg.codeRequired;
@@ -170,26 +219,50 @@ function registerValidate(info){
  * @params code, mobile, password, email, firstName, lastName
  * @access Driver, Vender, Admin
  */
-exports.registerVender = function(request, repsonse){
-    const body = _.pick(request.body,["code", "mobile", "password", "email", "firstName", "lastName"]);
+exports.registerVender = function(request, response){
+    const body = _.pick(request.body,["code", "mobile", "password", "email", "firstName", "lastName", "adharNo", "panNo", "voterIdNo"]);
     const { errors, isValid } = registerValidate(body);
 
     if(!isValid){
         sendResponse.badRequest(response, msg.badRequest, undefined, errors);
     }
     else{
-        const utils = require('../../utils');
-        const encrypt = utils.encrypt;
-        let userObj = {};
-        userObj["firstName"] = body.firstName;
-        userObj["lastName"] = body.lastName;
-        userObj["email"] = body.email;
-        userObj["code"] = body.code;
-        userObj["mobile"] = body.mobile;
-        userObj["salt"] = encrypt.genRandomString(appConstansts.PASSWORD_SALT_LENGTH);
-        userObj["password"] = encrypt.sha512( body.password, userObj["salt"]).hash;
+        let userObj = registerBasics(body);
         userObj["temporaryRole"] = "vender";
 
+        UserModel
+        .findOne({
+            "$or":[
+                { "temporaryMobile": body.mobile },
+                { "mobile": body.mobile },
+                { "email": body.email }
+            ]
+        })
+        .exec((error, result)=>{
+            if(error){
+                sendResponse.serverError(response);
+            }
+            else{
+                if(result && result.userId){
+                    sendResponse.unauthorized(repsonse, msg.accountDuplicate);
+                }
+                else{
+                    UserModel
+                    .create(userObj, (error1, result1)=>{
+                        if(error1){
+                            sendResponse.serverError(error1);
+                        }
+                        else{
+                            let userData = result1.toObject();
+                            delete userData.password;
+                            delete userData.salt;
+                            //create jwt token here..
+                            sendResponse.success(response, msg.successlfullRegister, { "profile": userData });
+                        }
+                    });
+                }
+            }
+        });
     }
 
 };
@@ -197,8 +270,8 @@ exports.registerVender = function(request, repsonse){
  * @params code, mobile, password, email, firstName, lastName
  * @access Driver, Vender, Admin
  */
-exports.registerDriver = function(request, repsonse){
-    const body = _.pick(request.body,["code", "mobile", "password", "email", "firstName", "lastName"]);
+exports.registerDriver = function(request, response){
+    const body = _.pick(request.body,["code", "mobile", "password", "email", "firstName", "lastName", "adharNo", "panNo", "voterIdNo"]);
     const { errors, isValid } = registerValidate(body);
 
     if(!isValid){
@@ -206,17 +279,9 @@ exports.registerDriver = function(request, repsonse){
 
     }
     else{
-        const utils = require('../../utils');
-        const encrypt = utils.encrypt;
-        let userObj = {};
-        userObj["firstName"] = body.firstName;
-        userObj["lastName"] = body.lastName;
-        userObj["email"] = body.email;
-        userObj["code"] = body.code;
-        userObj["temporaryMobile"] = body.mobile;
-        userObj["salt"] = encrypt.genRandomString(appConstansts.PASSWORD_SALT_LENGTH);
-        userObj["password"] = encrypt.sha512( body.password, userObj["salt"]).hash;
+        let userObj = registerBasics(body);
         userObj["temporaryRole"] = "driver";
+
     }
 
 };
@@ -224,8 +289,8 @@ exports.registerDriver = function(request, repsonse){
  * @params code, mobile, password, email, firstName, lastName
  * @access Driver, Vender, Admin
  */
-exports.registerAdmin = function(request, repsonse){
-    const body = _.pick(request.body,["code", "mobile", "password", "email", "firstName", "lastName"]);
+exports.registerAdmin = function(request, response){
+    const body = _.pick(request.body,["code", "mobile", "password", "email", "firstName", "lastName", "adharNo", "panNo", "voterIdNo"]);
     const { errors, isValid } = registerValidate(body);
 
     if(!isValid){
@@ -233,16 +298,8 @@ exports.registerAdmin = function(request, repsonse){
 
     }
     else{
-        const utils = require('../../utils');
-        const encrypt = utils.encrypt;
-        let userObj = {};
-        userObj["firstName"] = body.firstName;
-        userObj["lastName"] = body.lastName;
-        userObj["email"] = body.email;
-        userObj["code"] = body.code;
-        userObj["mobile"] = body.mobile;
-        userObj["salt"] = encrypt.genRandomString(appConstansts.PASSWORD_SALT_LENGTH);
-        userObj["password"] = encrypt.sha512( body.password, userObj["salt"]).hash;
+        let userObj = registerBasics(body);
+
         userObj["temporaryRole"] = "admin";
 
     }
@@ -265,7 +322,7 @@ function registerValidateViaOTP(info){
             errors["mobile"] = msg.mobileRequired;
         }
 
-        if(info.code || info.code ===""){
+        if(info.code || info.code === ""){
             isValidCode = validate.code(info.code);
             if(!isValidCode){
                 errors["code"] = msg.codeInvalid;
@@ -283,7 +340,7 @@ function registerValidateViaOTP(info){
         errors: errors,
         isValid: _.isEmpty(errors)
     }
-}
+};
 
 
 /**
