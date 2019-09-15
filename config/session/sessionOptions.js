@@ -40,7 +40,7 @@ const checkRights = (request, response, next)=>{
         if(error){
             logger.error(error);
             response.json({
-                message: "Some Error Occured",
+                message: "Some Error Occured.",
                 success: false,
                 code: 500
             });
@@ -48,7 +48,7 @@ const checkRights = (request, response, next)=>{
         else{
             if(!result){
                 response.json({
-                    message: "User unkown or role not found",
+                    message: "User unkown or role not found.",
                     success: false,
                     code: 404
                 });
@@ -95,7 +95,7 @@ const authenticate = {
             else if( isValidSessionId ){
                 let result = {};
                 const sessionOperation = require('./jwtOptions');
-                sessionOperation.getSessionByUserId(request.body.sessionId, (error, result)=>{
+                sessionOperation.getSessionBySessionId(request.body.sessionId, (error, result)=>{
                     if(error){
                         response.send(error);
                     }
@@ -134,21 +134,21 @@ const authenticate = {
 
             const tokenHeader = request.headers["authorization"];
 
-            if(tokenHeader && (typeof(tokenHeader) !== "undefined" ) ){
+            if(tokenHeader && (typeof(tokenHeader) != "undefined" ) ){
                 const tokenArray = tokenHeader.split(" ");
                 const format = tokenArray[0];
                 const token = tokenArray[1];
                 let isValidTokenFormat = false;
-                if(format && typeof(format) === "string" &&  format === "token"){
+                if(format && typeof(format) == "string" &&  format == "token"){
                     isValidTokenFormat = true;
                 }
                 if(isValidTokenFormat){
                     if(!token){
-                        response.send("token missing.");
+                        response.send("token missing.\ntoken<space>{userTokenHere}");
                     }
                     else{
                        request["token"] = token;
-                       jwtOperations.getSessionByUserId(token, (error, result)=>{
+                       jwtOperations.getSessionBySessionId(token, (error, result)=>{
                            if(error){
                                response.send(error);
                            }
@@ -157,8 +157,8 @@ const authenticate = {
                                     request["userData"] = result.toObject();
                                     request["sessionMode"] = "jwt";
                                     jwt.verify(request.token, appConstants.jwtKey, function(error1, result1){
-                                        if(error){
-                                            logger.error(error);
+                                        if(error1){
+                                            logger.error(error1);
                                             response.json({
                                                 message: "Unknown user.",
                                                 success: false,

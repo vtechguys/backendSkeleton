@@ -6,7 +6,7 @@
 const msgConfig = {
 
     loginIdInvalid: "loginId is invalid",
-    loginIdReqquired: "loginId is required.",
+    loginIdRequired: "loginId is required.",
 
     passwordInvalid: "password is invalid.",
     passwordRequired: "password is required",

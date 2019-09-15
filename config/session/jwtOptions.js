@@ -35,7 +35,7 @@ const jwtOperations = {
 
         return token;
     },
-    getSessionByUserId(sessionId, callback){
+    getSessionBySessionId(sessionId, callback){
         logger.debug(`getSessionByUserId ${userId}`);
 
         Session

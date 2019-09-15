@@ -94,7 +94,7 @@ else{
 
 ///////////////////Routes Imports//////////////////////////////
 const index = require('./routes/api/index');
-
+const auth = require('./routes/api/auth');
 
 
 
@@ -102,8 +102,8 @@ const index = require('./routes/api/index');
 
 /////////////////Routes Mapper Middleware///////////////////////
 app.use('/',index);
-
-app.use('*',index);
+app.use('/auth', auth);
+// app.use('*',index);
 
 
 
@@ -124,13 +124,13 @@ app.use('*',index);
 //catch 404 routes
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
-    err.status = 404;
+    err.code = 404;
     next(err);
 });
 
 
 
-///Will need app instance later....
+///Will need to export app instance later....
 // module.exports = app;
 
 
@@ -146,5 +146,6 @@ init.superAdmin();
 
 ///Server starting
 app.listen( PORT , function () {
+    // console.clear();
     console.log(`Server stater at port ${PORT}`);
 });

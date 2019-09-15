@@ -14,9 +14,10 @@ const UserModel = require('../../db/schema/User');
 
 function loginValidate(info){
     const errors = {};
-    if(info && Object.keys(info) > 0){
+    if(info){
         let isValidLoginId = false;
         let isValidPassword = false;
+
         if( info.loginId && ( validate.email(info.loginId) || validate.username(info.loginId) ) ){
             isValidLoginId = true;
         }
@@ -24,7 +25,7 @@ function loginValidate(info){
             errors["loginId"] = msg.loginIdInvalid;
         }
 
-        if( info.password && ( validate(info.password)) ){
+        if( info.password && ( validate.password(info.password)) ){
             isValidPassword = true;
         }
         if(!isValidPassword){
@@ -51,8 +52,9 @@ function loginValidate(info){
 
 exports.login = function(request, response){
     const body = _.pick(request.body, ["loginId", "password"]);
-
+    console.log("Here", body);
     const { errors, isValid } = loginValidate( body );
+
         if(!isValid){
             sendResponse.badRequest(response, msg.badRequest, undefined, errors);
 
