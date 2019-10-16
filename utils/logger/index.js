@@ -32,12 +32,12 @@ log4js.configure({
             maxLogSize: 20480 || logger.DEFAULT_MAX_FILE_SIZE,
             backups: logger.DEFAULT_BACKUPS
         },
-        critical:{
+        critical: {
             type: "file",
             filename: "logs/critical.log",
             category: 'critical',
-            maxLogSize:  20480 || logger.DEFAULT_MAX_FILE_SIZE,
-            backups: 10 ||  logger.DEFAULT_BACKUPS
+            maxLogSize: 20480 || logger.DEFAULT_MAX_FILE_SIZE,
+            backups: 10 || logger.DEFAULT_BACKUPS
 
         }
 
@@ -50,7 +50,7 @@ log4js.configure({
     }
 });
 
-const loggers = log4js.getLogger('debug'); 
+const loggers = log4js.getLogger('debug');
 
 module.exports = loggers;
 

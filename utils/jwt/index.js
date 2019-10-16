@@ -1,8 +1,6 @@
 'use strict'
 const jwt = require('jsonwebtoken');
 
-const dbOperationsSession = require('../../db/crudOperation/session');
-
 const { logger } = require('../logger');
 
 const { constants } = require('../../config');
