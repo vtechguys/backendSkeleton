@@ -1,87 +1,60 @@
 'use strict'
 
-///////////////////////////Imports///////////////////////////////////
-
-
 //Express node http framework
 const express = require('express');
-//Logs HTTP to console
+
+//Logs HTTP request urls to console with time and reply
 const loggerHttp = require('morgan');
-//parse header body
+
 const bodyParser = require('body-parser');
-//favicon page
 const mfavicon = require("express-favicon");
-//path module os independent pathing
 const path = require('path');
-//authenticator RBAC
-const authenticate = require('./config/session/sessionOptions');
+
+//authenticator RBAC middleware used for RBAC implementattion
+const authenticate = require('./middleware/authenticate');
+
+// Utils all required
+// logger is logging utils logs in file all events and error
+// crashReporter is reporting the crash of sytem and sends mail
+const { logger, crashReporter } = require("./utils");
+
+// Configs requried in app
+// constants are all those values that are process var and dont change in app.
+// paths to all resorces 
+const { constants, paths } = require('./config');
 
 
-//configApp
-const config = require('./config');
-const logger = config.logger;
-//RBAC --> Role_Based_Access_Control --> authenticator & session
+/*
 
+    App instance and CORS
 
-
-
-////////////////////////////////App//////////////////////////////////
-
-
-//App instance
+*/
 const app = express();
 
 //CORS Middleware
 app.use(function (request, response, next) {
-
-    // delete request.headers['if-modified-since'];
-    // delete request.headers['if-none-match'];
-
     response.header("Access-Control-Allow-Origin", "*");
     response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
-//LoggerHTTP request o console
-app.use(loggerHttp( config.LOGGER_TYPE ));
-//body pareser
+
+// Https logger middleware, bodyparsing http request request.body, static file serving, browser favicon  
+app.use(loggerHttp( constants.LOGGER_TYPE ));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-//static file serving
-app.use( express.static( path.join(__dirname, config.paths.STATIC_FILES ) ) );
-//favicon
-app.use(mfavicon(__dirname + config.paths.FAVICON ));
+app.use( express.static( path.join(__dirname, paths.STATIC_FILES ) ) );
+app.use(mfavicon(__dirname + paths.FAVICON ));
 
+// crash reporter initialised
+crashReporter();
 
-
-
-//crash repoter
-require('crashreporter').configure({
-    outDir: './logs', // default to cwd
-    exitOnCrash: true, // if you want that crash reporter exit(1) for you, default to true,
-    maxCrashFile: 100, // older files will be removed up, default 5 files are kept
-    // mailEnabled: true,
-    // mailTransportName: 'SMTP',
-    // mailTransportConfig: {
-    //     service: 'Gmail',
-    //     auth: {
-    //         user: "yourmail@gmail.com",
-    //         pass: "yourpass"
-    //     }
-    // },
-    // mailSubject: 'advanced.js crashreporter test',
-    // mailFrom: 'crashreporter <yourmail@gmail.com>',
-    // mailTo: 'yourmail@gmail.com'
-});
-
-//////////////////Use session technique you want/////////////////////
-//authenticator middleware
-
-if(config.SESSION_MODE === "jwt"){
-    //use jwt session
+/*
+    RBAC Middleware dependeing on config decides which strategy to follow expression session or jwt
+*/
+if(constants.SESSION_MODE === "jwt"){
     app.use( authenticate.jwtSession );
 }
 else{
-    //use express session
     app.use( authenticate.webSession );
 }
 
@@ -91,36 +64,18 @@ else{
 
 
 
-
-///////////////////Routes Imports//////////////////////////////
+// Routes importing
+// index serves / webpage and /webindex
 const index = require('./routes/api/index');
+// auth serves /auth login, register etc.
 const auth = require('./routes/api/auth');
 
-
-
-
-
-/////////////////Routes Mapper Middleware///////////////////////
+// Routes Mapper Middleware
 app.use('/',index);
 app.use('/auth', auth);
-// app.use('*',index);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//////////////////////////////Error Handling//////////////////////////
+// Error Handling
 //catch 404 routes
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
@@ -143,9 +98,7 @@ const init = require('./config/init');
 init.superAdmin();
 
 
-
-///Server starting
+// Server stats listening
 app.listen( PORT , function () {
-    // console.clear();
-    console.log(`Server stater at port ${PORT}`);
+    console.log(`Server stated at port ${PORT}`);
 });

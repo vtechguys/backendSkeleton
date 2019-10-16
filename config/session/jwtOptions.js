@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const Session = require('../../db/model/session');
 const logger = require('../logger');
 const appContants = require('../appConstants/index.js');
+
 const jwtOperations = {
 
     generateJwt(id, role = "user", duration = 7){
@@ -65,18 +66,28 @@ const jwtOperations = {
         if(userData.userId){
             let duration = 7;
             if(userData.rememberMe){
-                duration = 11;
+                duration = duration * 2;
+            }
+            if(userData.role === "admin" || userData.role === "admin"){
+                duration = 1; // for higher roles max 1 day expiry limit no matter what.
             }
             let token = that.generateJwt(userData.userId, userData.role, duration);
+
             userData["objectId"] = userData._id;
-            userData._id = undefined;
+
+            delete userData._id;
+
             userData["sessionId"] = token;
+            
+            const uuid = userData["uuid"];
+
             userData["uuid"] = "xxxxxxxxxx";
 
-            const uuid = userData["uuid"];
+
             if(uuid && appContants.sessionType !== "single"){
                 userData["uuid"] = uuid;
             }
+
 
             Session
             .find({
@@ -92,6 +103,12 @@ const jwtOperations = {
                     that.storeSession(userData, callback);
                 }
             })
+        }
+        else{
+            let error = {
+                msg: "REQUIRED USERID"
+            };
+            callback(error, null);
         }
     },
     storeSession(userData, callback){
