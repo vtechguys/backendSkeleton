@@ -1,36 +1,34 @@
+'use strict'
 const jwt = require('jsonwebtoken');
-const Session = require('../../db/model/session');
-const logger = require('../logger');
-const appContants = require('../appConstants/index.js');
+
+const dbOperationsSession = require('../../db/crudOperation/session');
+
+const { logger } = require('../logger');
+
+const { constants } = require('../../config');
 
 const jwtOperations = {
 
     generateJwt(id, role = "user", duration = 7){
         logger.debug('generateJwt');
 
-        let expiryDuration = duration;
-        let jwtDuration = appContants.jwtDuration;//duration is 24hrs
+        let jwtDuration = constants.JWT_DURATION;//duration is 24hrs
 
         if(role === "superadmin"){
-            duration
             jwtDuration = jwtDuration / 4; //6hrs
         }
         else if(role === "admin"){
             jwtDuration = jwtDuration / 2; //12 hrs
         }
-        else if(role === "vender"){
-            jwtDuration = jwtDuration * expiryDuration; //24hrs * duration(1week)
-        }
-        else if(role === "driver"){
-            expiryDuration = expiryDuration * 2;
-            jwtDuration = jwtDuration * expiryDuration;
-        }
         else if(role === "user"){
-            expiryDuration = expiryDuration * 4;
-            jwtDuration = jwtDuration * expiryDuration;
+            jwtDuration = jwtDuration * duration;
+        }
+        else{
+            console.log("FUCK YOU!!");
+            return "";
         }
 
-        let token = jwt.sign({ userId: id }, appContants.jwtKey, {
+        let token = jwt.sign({ userId: id }, constants.JWT_DURATION, {
             expiresIn: jwtDuration
         });
 
@@ -39,7 +37,7 @@ const jwtOperations = {
     getSessionBySessionId(sessionId, callback){
         logger.debug(`getSessionByUserId ${userId}`);
 
-        Session
+        dbOperationsSession
         .findOne({
             "sessionId": sessionId
         })

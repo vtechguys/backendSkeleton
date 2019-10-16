@@ -7,6 +7,10 @@ const CONFIG_URLS = require('../config/roleUrls/configUrls');
 
 const { logger, validate, sendResponse } = require('../utils');
 
+const jwtOperations = require('../utils/session/jwtOperations');
+const jwt = require('jsonwebtoken');
+
+
 const SIMPLE_URLS = ALL_URLS.simple;
 const AUTH_URLS = ALL_URLS.auth;
 
@@ -14,6 +18,10 @@ const SIMPLE_URLS_ARRAY = [];
 const AUTH_URLS_ARRAY = [];
 
 const RoleCRUD = require('../db/crudOperation/role');
+
+
+
+
 
 Object.keys(SIMPLE_URLS).forEach(function (keyBaseUrl) {
     for (let i = 0; i < SIMPLE_URLS[keyBaseUrl].length; i++) {
@@ -64,6 +72,7 @@ function checkRights(request, response, next) {
 }
 
 const authenticate = {
+    //websession needs to be checked.....
     webSession(request, response, next) {
         logger.debug('webSession');
 
@@ -129,8 +138,6 @@ const authenticate = {
 
         if (isRequestedUrlAuthUrl || isRequestedUrlSimpleUrl) {
             logger.debug('sessionJwt urls');
-            const jwt = require('jsonwebtoken');
-            const jwtOperations = require('./jwtOptions');
 
             const tokenHeader = request.headers["authorization"];
 
