@@ -1,30 +1,22 @@
 'use strict'
 
-///////////////////////////Utility for Application////////////////////////
-
-//encryption util
-const encryptUtil = require('./encrypt');
-//Mailer 
-
-
-//generate
+const encrypt = require('./encrypt');
 const generate = require('./generator');
-
-//validate
 const validate = require('./validate');
-//mailer
 const mailer = require('./mailer');
-//loadash
 const loadash = require('./lodash');
-//resposer
-const responser = require('./responser');
+const sendResponse = require('./responser');
+const crashReporter = require('./crashreporter');
+const logger = require('./logger');
 
 const utils = {
-    encrypt: encryptUtil,
-    generate: generate,
-    validate: validate,
-    mailer: mailer,
-    loadash: loadash,
-    sendResponse: responser
+    encrypt,
+    generate,
+    validate,
+    mailer,
+    loadash,
+    sendResponse,
+    crashReporter,
+    logger
 };
 module.exports = utils;

@@ -16,7 +16,7 @@ const authenticate = require('./middleware/authenticate');
 // Utils all required
 // logger is logging utils logs in file all events and error
 // crashReporter is reporting the crash of sytem and sends mail
-const { logger, crashReporter } = require("./utils");
+const { crashReporter } = require("./utils");
 
 // Configs requried in app
 // constants are all those values that are process var and dont change in app.

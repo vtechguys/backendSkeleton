@@ -1,49 +1,18 @@
 'use strict'
 
-const log4js = require('log4js');
+const DEFAULT_FILE_SIZE = 20480;
+const DEFAULT_BACKUPS = 10;
 
-log4js.configure({
-    appenders: {
-        debug: {
-            type: 'file',
-            filename: 'logs/debug.log',
-            category: 'debug',
-            maxLogSize: 20480,
-            backups: 10
-        },
-        info: {
-            type: "file",
-            filename: "logs/info.log",
-            category: 'info',
-            maxLogSize: 20480,
-            backups: 10
+const loggerConfig = {
+    DEFAULT_FILE_SIZE,
+    DEFAULT_BACKUPS,
 
-        },
-        error: {
-            type: 'file',
-            filename: "logs/error.log",
-            category: 'error',
-            maxLogSize: 20480,
-            backups: 10
-        },
-        critical:{
-            type: "file",
-            filename: "logs/critical.log",
-            category: 'critical',
-            maxLogSize: 20480,
-            backups: 10
+    DEBUG_MAX_FILE_SIZE: DEFAULT_FILE_SIZE,
+    INFO_MAX_FILE_SIZE: DEFAULT_FILE_SIZE,
+    ERROR_MAX_FILE_SIZE: DEFAULT_FILE_SIZE,
+    CRITICAL_MAX_FILE_SIZE: DEFAULT_FILE_SIZE,
 
-        }
+    
+}; 
 
-    },
-    categories: {
-        default: {
-            appenders: ['debug'],
-            level: 'debug'
-        }
-    }
-});
-
-const logger = log4js.getLogger('debug');
-module.exports = logger;
-
+module.exports = loggerConfig;
