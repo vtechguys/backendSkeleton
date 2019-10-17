@@ -63,7 +63,6 @@ const jwtOperations = {
             let token = that.generateJwt(userData.userId, userData.role, duration);
 
             userData["objectId"] = userData._id;
-            const userObjectId = userData._id;
             delete userData._id;
 
             userData["sessionId"] = token;
@@ -77,7 +76,7 @@ const jwtOperations = {
                 userData["uuid"] = uuid;
             }
             SessionCRUD
-                .getSessionForThisUser(userData, function utilsFillJwtSessionCb1(error, result) {
+                .removeAllSessionForThisUser(userData, function utilsFillJwtSessionCb1(error, result) {
                     if (error) {
                         logger.error(error);
                         callback(error, null);
