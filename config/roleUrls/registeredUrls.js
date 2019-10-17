@@ -2,13 +2,13 @@
 
 const registerUrls = {
     simple:{
-        '/': ['login','register']
+        '/auth/': ['login','register']
     },
     auth:{
-        '/': ['login','register','webindex'],
+        '/': ['web-index'],
+        '/auth/': ['login','register'],
         '/profile/':['get-profile'],
     }
 };
 
 module.exports = registerUrls;
-// Dont include in index.js(config)

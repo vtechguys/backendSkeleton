@@ -1,6 +1,5 @@
 'use strict';
-const config = require('../../config');
-const logger = config.logger;
+const logger = require('../logger');
 
 const validate = {
 

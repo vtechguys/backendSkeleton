@@ -39,9 +39,9 @@ router.get('/', (request, response) =>{
 });
 
 
-router.post('/webindex',(request, response)=>{
+// router.post('/webindex',(request, response)=>{
 
-});
+// });
 
 
 

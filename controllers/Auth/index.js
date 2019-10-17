@@ -470,8 +470,7 @@ function loginWithFacebook(){
 
 
 module.exports = {
-    login: login,
-    register: register,
+    
     
 
 };

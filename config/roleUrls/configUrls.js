@@ -6,7 +6,7 @@
  * Will configure complete App all at once
  */
 const configUrls = {
-    '/roles/': ['get-rights', 'create', 'update-rights', 'load', 'delete', 'assign']
+    '/roles/': ['get-rights', 'create-role', 'update-rights', 'load-role', 'delete-role', 'assign-role']
 };
 module.exports = configUrls;
 // Dont include in index.js(config)

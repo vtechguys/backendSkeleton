@@ -22,16 +22,10 @@
     "aws-sdk": "^2.238.1",
     "body-parser": "^1.18.3",
     "busboy": "^0.2.14",
-    "compress-images": "^1.4.0",
+
     "crashreporter": "^1.1.0",
     "express-favicon": "^2.0.0",
-    "express-rate-limit": "^2.11.0",
-    "image-downloader": "^3.4.1",
-    "image-size": "^0.6.3",
-    "imagemin-jpegtran": "^5.0.2",
 
-    "imagemin": "^6.0.0",
-    "inspect": "0.0.2",
     "jsonwebtoken": "^8.2.1",
     "log4js": "^3.0.5",
     "mongoose": "^4.8.1",

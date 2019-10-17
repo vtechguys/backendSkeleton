@@ -9,6 +9,8 @@ const sendResponse = require('./responser');
 const crashReporter = require('./crashreporter');
 const logger = require('./logger');
 
+const session = require('./session');
+
 const utils = {
     encrypt,
     generate,
@@ -17,6 +19,7 @@ const utils = {
     loadash,
     sendResponse,
     crashReporter,
-    logger
+    logger,
+    session
 };
 module.exports = utils;

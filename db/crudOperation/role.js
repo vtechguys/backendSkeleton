@@ -5,7 +5,7 @@ const UserCRUD = require('./user');
 
 const { logger } = require('../../utils');
 
-const { assignRoleId, assignRole } = require('../functions/role');
+const { createTheRole } = require('../functions/role');
 
 const {
     $_setSuperAdminEmail,
@@ -26,39 +26,39 @@ const dbOperations = {
             _id: 1,
             userId: 1
         };
-        UserCRUD.findUserForThisQuery(QUERY, PROJECTION, function createSuperAdminDbCb1(error, result) {
-            if (error) {
-                logger.error(error);
-                callback(error, null);
-            }
-            else {
-                if (!result) {
-
-                    const superAdminObj = result;
-
-                    $_setSuperAdminEmail(setSuperAdminEmail);
-                    encryptPassword(superAdminObj, "a".repeat(32));
-                    setFirstName(superAdminObj, 'superadmin');
-                    setLastName(superAdminObj, 'superadmin');
-                    $_setPhoneNumberSuperAdmin(superAdminObj);
-                    $_setPhoneNumberCodeSuperAdmin(superAdminObj);
-
-                    UserCRUD
-                        .createUser(superAdminObj, function createSuperAdminDbCb2(error1, result1) {
-                            if (error1) {
-                                callback(error1, null);
-                            }
-                            else {
-                                callback(null, result1);
-                            }
-                        });
-
+        UserCRUD
+            .findUserForThisQuery(QUERY, PROJECTION, function createSuperAdminDbCb1(error, result) {
+                if (error) {
+                    callback(error, null);
                 }
                 else {
-                    callback(null, result);
+                    if (!result) {
+
+                        const superAdminObj = result;
+
+                        $_setSuperAdminEmail(setSuperAdminEmail);
+                        encryptPassword(superAdminObj, "a".repeat(32));
+                        setFirstName(superAdminObj, 'superadmin');
+                        setLastName(superAdminObj, 'superadmin');
+                        $_setPhoneNumberSuperAdmin(superAdminObj);
+                        $_setPhoneNumberCodeSuperAdmin(superAdminObj);
+
+                        UserCRUD
+                            .createUser(superAdminObj, function createSuperAdminDbCb2(error1, result1) {
+                                if (error1) {
+                                    callback(error1, null);
+                                }
+                                else {
+                                    callback(null, result1);
+                                }
+                            });
+
+                    }
+                    else {
+                        callback(null, result);
+                    }
                 }
-            }
-        });
+            });
     },
     getRole(role, callback) {
         logger.debug("ROLE_CRUD getRole");
@@ -100,14 +100,13 @@ const dbOperations = {
                 }
             });
     },
-    createRole(roleObj, callback) {
+    createRole(role, callback) {
         logger.debug('ROLE_CRUD createRole');
 
-        assignRoleId(roleObj);
-        assignRole(roleObj, role);
+        const roleObj = createTheRole(role);
 
         Role
-            .create(RoleObj, function createRoleDbCb(error, result) {
+            .create(roleObj, function createRoleDbCb(error, result) {
                 if (error) {
                     callback(error);
                 }

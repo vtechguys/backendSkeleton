@@ -6,7 +6,7 @@ function assignRoleId(roleObj) {
 function assignRole(roleObj, role) {
     roleObj.role = role;
 }
-function createRole(role = "guest"){
+function createTheRole(role = "guest"){
     const roleObj = {};
     assignRoleId(roleObj);
     assignRole(role);
@@ -14,5 +14,5 @@ function createRole(role = "guest"){
 module.exports = {
     assignRoleId,
     assignRole,
-    createRole
+    createTheRole
 };

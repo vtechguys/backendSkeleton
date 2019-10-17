@@ -5,8 +5,8 @@ const router = express.Router();
 
 const AuthController = require('../../controllers/Auth');
 
-router.post('/login', AuthController.login);
-router.post('/register', AuthController.registerAdmin);
+router.post('/login', ()=>{});
+router.post('/register', ()=>{});
 // router.post('/register-vender', AuthController.registerVender);
 // router.post('/register-driver', AuthController.registerDriver);
 // router.post('/register-admin', AuthController.registerAdmin);

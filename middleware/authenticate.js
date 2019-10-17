@@ -5,9 +5,11 @@ const { constants } = require('../config');
 const ALL_URLS = require('../config/roleUrls/registeredUrls');
 const CONFIG_URLS = require('../config/roleUrls/configUrls');
 
-const { logger, validate, sendResponse } = require('../utils');
+const { logger, sendResponse } = require('../utils');
 
-const jwtOperations = require('../utils/session/jwtOperations');
+const { session } = require('../utils');
+const jwtOperations = session.jwtOperations;
+
 const jwt = require('jsonwebtoken');
 
 
@@ -72,61 +74,6 @@ function checkRights(request, response, next) {
 }
 
 const authenticate = {
-    //websession needs to be checked..... **DONOT USE IT***
-    webSession(request, response, next) {
-        logger.debug('webSession');
-
-        const requestedUrl = request.url
-
-        const isRequestedUrlAuthUrl = AUTH_URLS_ARRAY.indexOf(requestedUrl) > -1;
-        const isRequestedUrlSimpleUrl = SIMPLE_URLS.indexOf(requestedUrl) > -1;
-
-        if (isRequestedUrlAuthUrl || isRequestedUrlSimpleUrl) {
-            logger.debug('session > websession');
-            let isValidSessionId = false;
-            let webSessionExist = false;
-            if (request.body.appCall && request.body.sessionId) {
-                isValidSessionId = validate.string(request.body.sessionId);
-            }
-            else if (request.body.user) {
-                webSessionExist = true;
-            }
-
-            if (webSessionExist) {
-                request["userData"] = request.session.user;
-                request["sessionMode"] = "web";
-                checkRights(request, response, next);
-            }
-            else if (isValidSessionId) {
-                let result = {};
-                jwtOperations.getSessionBySessionId(request.body.sessionId, (error, result) => {
-                    if (error) {
-                        response.send(error);
-                    }
-                    else {
-                        if (result && result.sessionId) {
-                            request["userData"] = result;
-                            request["sessionMode"] = "app";
-                            checkRights(request, response, next);
-                        }
-                        else {
-                            response.json({
-                                message: "User session not found.",
-                                success: false,
-                                code: 401
-                            });
-                        }
-                    }
-                });
-
-            }
-
-
-        }
-        else {
-            sendResponse.badRequest(response, "URL not supported.");
-        }
-    },
     jwtSession(request, response, next) {
         logger.debug('jwtSession');
 

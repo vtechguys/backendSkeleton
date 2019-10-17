@@ -64,8 +64,8 @@ const init = {
                 else {
                     if (!result) {
                         //create and then fill
-                        const roleObj = createRole('superadmin');
-                        dbOperations.createRole(roleObj, (error1, result1) => {
+                        
+                        dbOperations.createRole('superadmin', (error1, result1) => {
                             if (error1) {
                                 process.exit();
                             }

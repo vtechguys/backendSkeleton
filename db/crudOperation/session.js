@@ -76,6 +76,21 @@ const dbOperations = {
                     }
                 });
 
+    },
+    getBySessionIdAndRemove(sessionId, callback) {
+        Session
+            .find({
+                sessionId: sessionId
+            })
+            .remove(function (error, result) {
+                if (error) {
+                    logger.error(error);
+                    callback(error, null);
+                }
+                else {
+                    callback(null, result);
+                }
+            });
     }
 
 

@@ -10,7 +10,6 @@ const dbConfig = require('./db');
 //Logger
 const loggerConfig = require('./logger');
 //response types 
-const responseTypesConfig = require('./responseTypes');
 //schemaNames
 const schemaNames = require('./schemaNames');
 //appConstants
@@ -32,7 +31,7 @@ const configIndex = {
 
     paths: pathsConfig,
     logger: loggerConfig,
-    responseTypes: responseTypesConfig,
+    // responseTypes: responseTypesConfig,
     schemaNames: schemaNames,
     constants: constants,
 

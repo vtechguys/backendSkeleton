@@ -12,6 +12,7 @@
 const pathsConfig = {
     FAVICON: '/public/build/favicon.png',
     HOME_PAGE:'/public/build/index.html',
-    STATIC_FILES:'/public/build/'
+    STATIC_FILES:'/public/build/',
+    CRASH_REPORTER_FILE_PATH: './logs'
 };
 module.exports = pathsConfig;

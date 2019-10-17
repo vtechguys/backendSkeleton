@@ -36,7 +36,7 @@ app.use(function (request, response, next) {
 });
 
 // Https logger middleware, bodyparsing http request request.body, static file serving, browser favicon  
-app.use(loggerHttp( constants.LOGGER_TYPE ));
+app.use(loggerHttp( constants.HTTP_LOGGER_TYPE ));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use( express.static( path.join(__dirname, paths.STATIC_FILES ) ) );
