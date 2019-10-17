@@ -1,133 +1,120 @@
-//models
-const User = require('../schema/User');
+'use strict'
 const Role = require('../schema/Role');
-// Classess
-const UserSuperAdmin = require('../class/User/UserSuperAdmin');
-const RoleClass = require('../class/Role/Role');
-// config,logger,constants
-const config = require('../../config');
-const logger = config.logger;
-const appConstants = config.constants;
+
+const UserCRUD = require('./user');
+
+const { logger } = require('../../utils');
+
+const { assignRoleId, assignRole } = require('../functions/role');
+
+const {
+    $_setSuperAdminEmail,
+    encryptPassword,
+    setFirstName,
+    setLastName,
+    $_setPhoneNumberSuperAdmin,
+    $_setPhoneNumberCodeSuperAdmin
+} = require('../functions/user');
 
 const dbOperations = {
-    createSuperAdmin(callback){
+    createSuperAdmin(callback) {
         logger.debug('ROLE_CRUD createsuperadmin');
-        const utils = require('../../utils');
-        const generate = utils.generate;
-        let findUserRoleSA = {
+        const QUERY = {
             'role': 'superadmin'
         };
-        let userProjectFields = {
+        const PROJECTION = {
             _id: 1,
             userId: 1
         };
-        User
-        .findOne(findUserRoleSA, userProjectFields)
-        .exec((error, result)=>{
-            if(error){
-                logger.error(`createsuperadmin user.findOne ${error}`);
+        UserCRUD.findUserForThisQuery(QUERY, PROJECTION, function createSuperAdminDbCb1(error, result) {
+            if (error) {
+                logger.error(error);
                 callback(error, null);
             }
-            else{
-                if(!result){
+            else {
+                if (!result) {
 
-                    let superAdminObj = new UserSuperAdmin();
-                    
+                    const superAdminObj = result;
 
-                    superAdminObj.$setEmail(config.SUPER_ADMIN_EMAIL);
-                    superAdminObj.$setEmailVerified(false);
+                    $_setSuperAdminEmail(setSuperAdminEmail);
+                    encryptPassword(superAdminObj, "a".repeat(32));
+                    setFirstName(superAdminObj, 'superadmin');
+                    setLastName(superAdminObj, 'superadmin');
+                    $_setPhoneNumberSuperAdmin(superAdminObj);
+                    $_setPhoneNumberCodeSuperAdmin(superAdminObj);
 
-                    superAdminObj.encryptPassword("a".repeat(32));
-
-                    superAdminObj.$setFirstName('superadmin');
-                    superAdminObj.$setLastName('superadmin');
-
-                    superAdminObj.$setPhoneNo(config.MOBILE_NO);
-
-                    let dbObj;
-                    try{
-                        dbObj = UserSuperAdmin.$createDbObj(superAdminObj);
-                        User.create(dbObj, (error1, result1)=>{
-                            if(error1){
-                                logger.error(`createsuperadmin user.create, ${error1}`);
-                                console.log(error1)
-                                callback(error1);
+                    UserCRUD
+                        .createUser(superAdminObj, function createSuperAdminDbCb2(error1, result1) {
+                            if (error1) {
+                                callback(error1, null);
                             }
-                            else{
+                            else {
                                 callback(null, result1);
                             }
                         });
-                    }
-                    catch(exp){
-                        logger.error(`superAdmin createDbObj error format ${exp}`);
-                        console.log(`superAdmin createDbObj error format`,exp);
-                    }
-                    
+
                 }
-                else{
+                else {
                     callback(null, result);
                 }
             }
-        })
-    },
-    getRole(role, callback){
-        logger.debug(`getRole ${role}`);
-        Role
-        .findOne({
-            "role": role
-        })
-        .exec((error, result)=>{
-            if(error){
-                logger.error(`getRole ${role}::::${error}`);
-                callback(error, null);
-            }
-            else{
-                callback(null, result);
-            }
         });
     },
-    fillRights(roleId, rights, callback){
-        logger.debug('roleCRUD fillRights');
+    getRole(role, callback) {
+        logger.debug("ROLE_CRUD getRole");
+        const QUERY = {
+            "role": role
+        };
+        const PROJECTIONS = {
+
+        };
         Role
-        .findOneAndUpdate({
+            .findOne(QUERY, PROJECTIONS)
+            .exec(function getRoleDbCb(error, result) {
+                if (error) {
+                    callback(error, null);
+                }
+                else {
+                    callback(null, result);
+                }
+            });
+    },
+    fillRights(roleId, rights, callback) {
+        logger.debug('ROLE_CRUD fillRights');
+        const QUERY = {
             "roleId": roleId
-        },{
-            "$set":{
+        };
+        const UPDATE_QUERY = {
+            "$set": {
                 "rights": rights
             }
-        })
-        .exec((error, result)=>{
-            if(error){
-                logger.error(`fillRights ${error}`);
-                console.log(error)
-                callback(error);
-            }
-            else{
-                callback(null, result);
-            }
-        })
+        };
+        Role
+            .findOneAndUpdate(QUERY, UPDATE_QUERY)
+            .exec(function fillRightsDbCb(error, result) {
+                if (error) {
+                    callback(error, null);
+                }
+                else {
+                    callback(null, result);
+                }
+            });
     },
-    createRole(role, callback){
-        logger.debug('roleCRUD createRole');
-        const utils = require('../../utils');
-        const generate = utils.generate;
+    createRole(roleObj, callback) {
+        logger.debug('ROLE_CRUD createRole');
 
-        let roleId = generate.randomString(appConstants.ROLE_ID_LENGTH);
-        const RoleObj = new RoleClass(roleId);
-        RoleObj.$setRole(role);
+        assignRoleId(roleObj);
+        assignRole(roleObj, role);
 
-        Role.create(RoleObj, (error, result)=>{
-            if(error){
-                logger.error(`createRole ${error}`);
-                console.log("ceateRole",error);
-                callback(error);
-            }
-            else{
-                callback(null, result);
-            }
-        });
-
-
+        Role
+            .create(RoleObj, function createRoleDbCb(error, result) {
+                if (error) {
+                    callback(error);
+                }
+                else {
+                    callback(null, result);
+                }
+            });
     }
 };
 module.exports = dbOperations;

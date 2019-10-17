@@ -13,12 +13,9 @@ const path = require('path');
 //authenticator RBAC middleware used for RBAC implementattion
 const authenticate = require('./middleware/authenticate');
 
-// Utils all required
-// logger is logging utils logs in file all events and error
-// crashReporter is reporting the crash of sytem and sends mail
+// crashReporter is reporting the crash of system and sends mail
 const { crashReporter } = require("./utils");
 
-// Configs requried in app
 // constants are all those values that are process var and dont change in app.
 // paths to all resorces 
 const { constants, paths } = require('./config');
@@ -84,12 +81,6 @@ app.use(function (req, res, next) {
 });
 
 
-
-///Will need to export app instance later....
-// module.exports = app;
-
-
-
 const PORT = process.env.PORT || 5500;
 
 
@@ -102,3 +93,6 @@ init.superAdmin();
 app.listen( PORT , function () {
     console.log(`Server stated at port ${PORT}`);
 });
+
+///Will need to export app instance later....
+// module.exports = app;

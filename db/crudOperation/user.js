@@ -1,61 +1,75 @@
 "use strict"
-const UserModel = require("../schema/User");
-const config = require("../../config");
-const logger = config.logger;
-
-const SessionCRUD = require("../../config/session/jwtOptions");
+const User = require("../schema/User");
+const { logger } = require("../../utils");
+const { assignUserId } = require('../functions/user');
 
 const dbOperations = {
 
-    findByEmailOrUsername(loginId, cb){
-        logger.debug("doLogin CRUD");
+    findByEmailOrUsername(loginId, cb) {
+        logger.debug("USER_CRUD findByEmailOrUsername");
+
         const QUERY = {
             "$or": [
                 {
-                    "email" : loginId
+                    "email": loginId
                 },
                 {
                     "username": loginId
                 }
             ]
         };
+
         const PROJECTIONS = {
 
         };
-        UserModel
-        .findOne(QUERY, PROJECTIONS)
-        .exec(function dbfindByEmailOrUsernameCallback(error, queryResult){
-            if(error){
-                cb(error, null);
-            }
-            else{
-                if(queryResult && queryResult.userId){
-                    cb(null, queryResult);
-                }
-                else{
-                    cb(null, null);
-                }
-            }
-        });
-    },
-    createSession(userData, cb){
-        logger.debug("create session CRUD");
-        SessionCRUD.fillJwtSession(userData, function fillJwtSessionCallback(error, queryResult){
-            if(error){
-                cb(error, null);
-            }
-            else{
-                if(!queryResult){
-                    cb(null, null);
+
+        User
+            .findOne(QUERY, PROJECTIONS)
+            .exec(function dbfindByEmailOrUsernameDbCb(error, queryResult) {
+                if (error) {
+                    cb(error, null);
                 }
                 else {
-                    cb(null, queryResult);
+                    if (queryResult && queryResult.userId) {
+                        cb(null, queryResult);
+                    }
+                    else {
+                        cb(null, null);
+                    }
                 }
-            }
-        });
+            });
+    },
+    findUserForThisQuery(Query = {}, Projection = {}, cb) {
+        logger.debug("USER_CRUD findUserForThisQuery");
+        User
+            .findOne(Query, Projection)
+            .exec(function findUserForThisQueryDbCb(error, queryResult) {
+                if (error) {
+                    cb(error, null);
+                }
+                else {
+                    if (queryResult) {
+                        cb(null, queryResult);
+                    }
+                    else {
+                        cb(null, null);
+                    }
+                }
+            });
+    },
+    createUser(userData, cb) {
+        logger.debug("USER_CRUD createUser");
+        assignUserId(userData);
+        User
+            .create(userData, function createUserDbCb(error, result) {
+                if (error) {
+                    cb(error, null);
+                }
+                else {
+                    cb(null, result);
+                }
+            });
     }
-
-
 
 };
 module.exports = dbOperations;

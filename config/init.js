@@ -1,86 +1,94 @@
-const logger = require('./logger');
+'use strict'
 
-//superadmin exclusive rights
-const configUrl = require('./roleUrls/configUrls');
-//all rights/url supported by application;
-const allUrls = require('./roleUrls/registeredUrls');
-//auth
-const authUrls = allUrls.auth;
+const { logger } = require('../utils');
+
+const CONFIG_URLS = require('./roleUrls/configUrls');
+const ALL_URLS = require('./roleUrls/registeredUrls');
+const AUTH_URLS = ALL_URLS.auth;
+
+
+const dbOperations = require('../db/crudOperation/role');
+
+const { createRole } = require('../db/functions/role');
 
 const init = {
-    superAdmin(){
+    superAdmin() {
         logger.debug('init > superAdmin');
-        //array of superadmin rights willbe filled
         const superAdminRights = [];
-        //fills superadmin specific urls as its rights
-        Object.keys(configUrl).forEach(function(keyBaseUrl){
-            console.log(keyBaseUrl.length);
-            for(let i = 0; i < configUrl[keyBaseUrl].length; i++){
-                console.log(configUrl[keyBaseUrl][i],keyBaseUrl);
 
-                let right = {
-                    name: configUrl[keyBaseUrl][i], // resourece name
+        //fills superadmin specific urls as its rights
+        Object.keys(CONFIG_URLS).forEach(function (keyBaseUrl) {
+            console.log(keyBaseUrl.length);
+            for (let i = 0; i < CONFIG_URLS[keyBaseUrl].length; i++) {
+                console.log(CONFIG_URLS[keyBaseUrl][i], keyBaseUrl);
+
+                const right = {
+                    name: CONFIG_URLS[keyBaseUrl][i], // resourece name
                     path: keyBaseUrl, //base path name
-                    url: keyBaseUrl + configUrl[keyBaseUrl][i]// complete url = path(base)/name(resource) 
+                    url: keyBaseUrl + CONFIG_URLS[keyBaseUrl][i]// complete url = path(base)/name(resource) 
                 };
                 superAdminRights.push(right);
             }
         });
         //fill now all suppoterd urls as superadmin right...
-        Object.keys(authUrls).forEach(function(keyBaseUrl){
-            for(let i=0; i< authUrls[keyBaseUrl].length; i++){
-                let right = {
-                    name: authUrls[keyBaseUrl][i],
+        Object.keys(AUTH_URLS).forEach(function (keyBaseUrl) {
+            for (let i = 0; i < AUTH_URLS[keyBaseUrl].length; i++) {
+                const right = {
+                    name: AUTH_URLS[keyBaseUrl][i],
                     path: keyBaseUrl,
-                    url:  keyBaseUrl + authUrls[keyBaseUrl][i] 
+                    url: keyBaseUrl + AUTH_URLS[keyBaseUrl][i]
                 };
                 superAdminRights.push(right);
             }
-            
-        });
-        //Now superAdminRights[] consists of all rights that will be accessed thorighout applications
-        //it holds updated rights...
-        const dbOperations = require('../db/crudOperation/role');
 
-        dbOperations.createSuperAdmin((error, result)=>{
-            if(error){
-                logger.error('error creating superadmin');
-                process.exit();
-            }
         });
+        //Now superAdminRights[] consists of all rights that will be accessed thorghout applications
+
+        //it holds updated rights...
+
+        dbOperations
+            .createSuperAdmin(function initCreateSuperAdmin(error, result) {
+                if (error) {
+                    logger.error(error);
+                    process.exit();
+                }
+            });
 
         //give superAdmin Role any updated rights as in superAdminRights[]
-        dbOperations.getRole('superadmin', (error, result)=>{
-            if(error){
-                process.exit();
-            }
-            else{
-                if(!result){
-                    //create and then fill
-                    dbOperations.createRole('superadmin',(error1, result1)=>{
-                        if(error1){
-                            process.exit();
-                        }
-                        else{
-                            dbOperations.fillRights(result1.roleId, superAdminRights, (error3, results)=>{
-                                if(error3){
-                                    process.exit();
-                                }
-                            });
-                        }
-                    });
+        dbOperations
+            .getRole('superadmin', function initGetRole(error, result) {
+                if (error) {
+                    logger.error(error);
+                    process.exit();
                 }
-                else{
-                    //fill any updated rights
-                    dbOperations.fillRights(result.roleId, superAdminRights, (error2, result2)=>{
-                        if(error2){
-                            process.exit();
-                        }
+                else {
+                    if (!result) {
+                        //create and then fill
+                        const roleObj = createRole('superadmin');
+                        dbOperations.createRole(roleObj, (error1, result1) => {
+                            if (error1) {
+                                process.exit();
+                            }
+                            else {
+                                dbOperations.fillRights(result1.roleId, superAdminRights, (error3, results) => {
+                                    if (error3) {
+                                        process.exit();
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    else {
+                        //fill any updated rights
+                        dbOperations.fillRights(result.roleId, superAdminRights, (error2, result2) => {
+                            if (error2) {
+                                process.exit();
+                            }
 
-                    });
+                        });
+                    }
                 }
-            }
-        });
+            });
 
 
     }

@@ -72,7 +72,7 @@ function checkRights(request, response, next) {
 }
 
 const authenticate = {
-    //websession needs to be checked.....
+    //websession needs to be checked..... **DONOT USE IT***
     webSession(request, response, next) {
         logger.debug('webSession');
 
@@ -99,8 +99,7 @@ const authenticate = {
             }
             else if (isValidSessionId) {
                 let result = {};
-                const sessionOperation = require('./jwtOptions');
-                sessionOperation.getSessionBySessionId(request.body.sessionId, (error, result) => {
+                jwtOperations.getSessionBySessionId(request.body.sessionId, (error, result) => {
                     if (error) {
                         response.send(error);
                     }

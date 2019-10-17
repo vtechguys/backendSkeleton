@@ -1,13 +1,9 @@
 'use strict'
 
-//My mongooose connect
 const mongoose = require('../connectDb');
-//mongoose Schema Class
 const Schema = mongoose.Schema;
-//App config
-const config = require('../../config');
+const { schemaNames } = require('../../config');
 
-//Role Schema
 const roleSchema = new Schema({
   roleId: { 
         type : String,
@@ -27,6 +23,6 @@ const roleSchema = new Schema({
   ]
 });
 
-const Role = mongoose.model(config.schemaNames.rolesCollection, roleSchema);
+const Role = mongoose.model(schemaNames.rolesCollection, roleSchema);
 
 module.exports = Role;
