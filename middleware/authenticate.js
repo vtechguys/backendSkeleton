@@ -17,6 +17,7 @@ const SIMPLE_URLS = ALL_URLS.simple;
 const AUTH_URLS = ALL_URLS.auth;
 
 const SIMPLE_URLS_ARRAY = [];
+// SIMPLE_URLS_ARRAY.push('/');
 const AUTH_URLS_ARRAY = [];
 
 const RoleCRUD = require('../db/crudOperation/role');
@@ -80,8 +81,9 @@ const authenticate = {
         const requestedUrl = request.url
 
         const isRequestedUrlAuthUrl = AUTH_URLS_ARRAY.indexOf(requestedUrl) > -1;
-        const isRequestedUrlSimpleUrl = SIMPLE_URLS.indexOf(requestedUrl) > -1;
-
+        const isRequestedUrlSimpleUrl = SIMPLE_URLS_ARRAY.indexOf(requestedUrl) > -1;
+        console.log(AUTH_URLS_ARRAY);
+        console.log(SIMPLE_URLS_ARRAY);
         if (isRequestedUrlAuthUrl || isRequestedUrlSimpleUrl) {
             logger.debug('sessionJwt urls');
 
@@ -145,6 +147,7 @@ const authenticate = {
         }
         else {
             sendResponse.badRequest(response, "URL not supported.");
+            // next();
         }
     }
 };

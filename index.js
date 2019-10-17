@@ -39,7 +39,7 @@ app.use(function (request, response, next) {
 app.use(loggerHttp( constants.HTTP_LOGGER_TYPE ));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use( express.static( path.join(__dirname, paths.STATIC_FILES ) ) );
+// app.use( express.static( path.join(__dirname, paths.STATIC_FILES ) ) );
 app.use(mfavicon(__dirname + paths.FAVICON ));
 
 // crash reporter initialised
@@ -52,7 +52,7 @@ if(constants.SESSION_MODE === "jwt"){
     app.use( authenticate.jwtSession );
 }
 else{
-    app.use( authenticate.webSession );
+    // app.use( authenticate.webSession ); no more using dont switch to this deleted many functionalities may break the app.
 }
 
 
@@ -70,27 +70,25 @@ const auth = require('./routes/api/auth');
 // Routes Mapper Middleware
 app.use('/',index);
 app.use('/auth', auth);
-
+app.use('*', index);
 
 // Error Handling
 //catch 404 routes
-app.use(function (req, res, next) {
-    var err = new Error('Not Found');
+app.use(function errorHandler(req, res, next) {
+    var err = new Error('URL NOT SUPPORTED');
     err.code = 404;
     next(err);
 });
 
 
-const PORT = process.env.PORT || 5500;
-
-
+const PORT = process.env.PORT || 1234;
 
 const init = require('./config/init');
 init.superAdmin();
 
 
 // Server stats listening
-app.listen( PORT , function () {
+app.listen( PORT , function appListener() {
     console.log(`Server stated at port ${PORT}`);
 });
 

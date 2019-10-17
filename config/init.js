@@ -7,9 +7,8 @@ const ALL_URLS = require('./roleUrls/registeredUrls');
 const AUTH_URLS = ALL_URLS.auth;
 
 
-const dbOperations = require('../db/crudOperation/role');
+const RoleCRUD = require('../db/crudOperation/role');
 
-const { createRole } = require('../db/functions/role');
 
 const init = {
     superAdmin() {
@@ -46,7 +45,7 @@ const init = {
 
         //it holds updated rights...
 
-        dbOperations
+        RoleCRUD
             .createSuperAdmin(function initCreateSuperAdmin(error, result) {
                 if (error) {
                     logger.error(error);
@@ -55,7 +54,7 @@ const init = {
             });
 
         //give superAdmin Role any updated rights as in superAdminRights[]
-        dbOperations
+        RoleCRUD
             .getRole('superadmin', function initGetRole(error, result) {
                 if (error) {
                     logger.error(error);
@@ -64,13 +63,13 @@ const init = {
                 else {
                     if (!result) {
                         //create and then fill
-                        
-                        dbOperations.createRole('superadmin', (error1, result1) => {
+
+                        RoleCRUD.createRole('superadmin', (error1, result1) => {
                             if (error1) {
                                 process.exit();
                             }
                             else {
-                                dbOperations.fillRights(result1.roleId, superAdminRights, (error3, results) => {
+                                RoleCRUD.fillRights(result1.roleId, superAdminRights, (error3, results) => {
                                     if (error3) {
                                         process.exit();
                                     }
@@ -80,7 +79,7 @@ const init = {
                     }
                     else {
                         //fill any updated rights
-                        dbOperations.fillRights(result.roleId, superAdminRights, (error2, result2) => {
+                        RoleCRUD.fillRights(result.roleId, superAdminRights, (error2, result2) => {
                             if (error2) {
                                 process.exit();
                             }

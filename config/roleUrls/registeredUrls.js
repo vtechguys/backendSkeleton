@@ -2,6 +2,7 @@
 
 const registerUrls = {
     simple:{
+        '/':[''],
         '/auth/': ['login','register']
     },
     auth:{

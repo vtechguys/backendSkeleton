@@ -8,7 +8,7 @@ const encrypt = {
     * @function
     * @param {number} length - Length of the random string.
     */
-    genRandomString: function (length) {
+    genRandomString(length) {
         logger.debug('utils encrypt genRandomString');
         return crypto.randomBytes(Math.ceil(length / 2))
             .toString('hex')     /** convert to hexadecimal format */
@@ -21,7 +21,7 @@ const encrypt = {
      * @param {string} password - List of required fields.
      * @param {string} salt - Data to be validated.
      */
-    sha512: function (string, salt) {
+    sha512(string, salt) {
         logger.debug('utils encrypt sha512');
         try {
             var hash = crypto.createHmac('sha512', salt);

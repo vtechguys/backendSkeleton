@@ -22,7 +22,6 @@ function fillSession(userData, response) {
     delete userData.mobileTokenStamp;
     delete userData.locationHistory;
 
-    userData = userData.toObject();
 
     if (userData.social && userData.social[0] && userData.social[0].sId) {
         userData.connectionType = userData.social[0].connection;
@@ -42,28 +41,28 @@ function fillSession(userData, response) {
 
     if (constants.SESSION_MODE === 'jwt') {
 
-        jwtOps.fillJwtSession(userData, function (error, userData2) {
+        jwtOps.fillJwtSession(userData, function (error, sessionData) {
             if (error) {
                 logger.error(error);
                 callback(error, null);
             }
             else {
-                if (userData2) {
+                if (sessionData && sessionData.sessionId) {
                     const responseObject = {
                         code: 200,
                         message: "Session created.",
                         success: true
                     };
 
-                    responseObject.sessionId = userData2.sessionId;
+                    responseObject.sessionId = sessionData.sessionId;
 
-                    userData2 = userData2.toObject();
+                    sessionData = sessionData.toObject();
 
-                    delete userData2.uuid;
-                    delete userData2.sessionId;
+                    delete sessionData.uuid;
+                    delete sessionData.sessionId;
 
                     responseObject.data = {
-                        "profile": userData2
+                        profile: sessionData
                     };
 
                     sendResponse.directSendJSON(response, responseObject);
