@@ -14,7 +14,7 @@ const responseTypesConfig = require('./responseTypes');
 //schemaNames
 const schemaNames = require('./schemaNames');
 //appConstants
-const constants = require('./appConstants/index.js');
+const constants = require('./constants');
 
 //////////////////////////Build configs////////////////////////////
 
@@ -24,7 +24,6 @@ const constants = require('./appConstants/index.js');
 const DB_URL = 'mongodb://localhost:27017/backednappskeleton'; //--->comment in production
 
 
-const msg = require('./msg');
 
 
 //////////////////////Exporting final configs////////////////////////
@@ -36,7 +35,6 @@ const configIndex = {
     responseTypes: responseTypesConfig,
     schemaNames: schemaNames,
     constants: constants,
-    msg: msg,
 
     //session
     SESSION_MODE: 'jwt',
