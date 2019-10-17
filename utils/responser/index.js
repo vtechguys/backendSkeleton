@@ -38,6 +38,9 @@ const responser = {
         const responseObj = defaultResonseObj(message, data, errors);
         responseObj.code = 200;
         response.json(responseObj);
+    },
+    directSendJSON(response, responseObj){
+        response.json(responseObj);
     }
 };
 module.exports = responser;

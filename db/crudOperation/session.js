@@ -5,7 +5,7 @@ const { logger } = require('../../utils');
 
 const dbOperations = {
     getSessionBySessionId(sessionId, callback) {
-        logger.debug("Session CRUD getSessionBySessionId");
+        logger.debug("Session_CRUD getSessionBySessionId");
         Session
             .findOne({
                 "sessionId": sessionId
@@ -25,7 +25,7 @@ const dbOperations = {
             });
     },
     getSessionForThisUser(userData, callback) {
-        logger.debug("Session CRUD getSessionForThisUser");
+        logger.debug("Session_CRUD getSessionForThisUser");
         Session
             .find({
                 "userId": userData.userId,
@@ -46,7 +46,7 @@ const dbOperations = {
             });
     },
     removeAllSessionForThisUser(userData, callback) {
-        logger.debug("Session CRUD removeAllSessionForThisUser");
+        logger.debug("Session_CRUD removeAllSessionForThisUser");
         Session
             .find({
                 "userId": userData.userId,
@@ -63,7 +63,7 @@ const dbOperations = {
             })
     },
     createSession(sessionData, callback) {
-        logger.debug("Session CRUD createSession");
+        logger.debug("Session_CRUD createSession");
         Session
             .create(sessionData,
                 function createSessionDbCb(error, result) {

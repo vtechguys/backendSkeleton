@@ -19,14 +19,14 @@ const jwtOperations = {
             jwtDuration = jwtDuration / 2; //12 hrs
         }
         else if(role === "user"){
-            jwtDuration = jwtDuration * duration;
+            jwtDuration = jwtDuration * duration; // default 7 days
         }
         else{
             console.log("FUCK YOU!!");
             return "";
         }
 
-        let token = jwt.sign({ userId: id }, constants.JWT_DURATION, {
+        let token = jwt.sign({ userId: id }, constants.JWT_KEY, {
             expiresIn: jwtDuration
         });
 
@@ -92,7 +92,6 @@ const jwtOperations = {
             })
             .remove((error, result)=>{
                 if(error){
-                    logger.error(error);
                     callback(error, null);
                 }
                 else{
