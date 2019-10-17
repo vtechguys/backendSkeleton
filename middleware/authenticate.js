@@ -17,7 +17,6 @@ const SIMPLE_URLS = ALL_URLS.simple;
 const AUTH_URLS = ALL_URLS.auth;
 
 const SIMPLE_URLS_ARRAY = [];
-// SIMPLE_URLS_ARRAY.push('/');
 const AUTH_URLS_ARRAY = [];
 
 const RoleCRUD = require('../db/crudOperation/role');
