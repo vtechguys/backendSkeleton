@@ -15,7 +15,7 @@ const dbOperations = {
                     callback(error, null);
                 }
                 else {
-                    if (result.sessionId && result.userId) {
+                    if (result && result.sessionId && result.userId) {
                         callback(null, result);
                     }
                     else {

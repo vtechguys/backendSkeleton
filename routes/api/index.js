@@ -11,10 +11,7 @@ const IndexController = require('../../controllers/Index');
 // @Access Public Access
 router.get('/', IndexController.indexRouteHandler);
 
-
-// router.post('/webindex',(request, response)=>{
-
-// });
+router.post('/web-index', IndexController.indexWebIndexRouteHandler);
 
 
 

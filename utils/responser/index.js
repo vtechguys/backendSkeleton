@@ -5,7 +5,7 @@
 function defaultResonseObj(msg,  errors = null, data = null) {
     const res = {
         message: msg,
-
+        success: false
     };
     if(errors){
         res.errors = errors;
@@ -43,6 +43,7 @@ const responser = {
     success(response, message = "Success.", data = null, errors = null) {
         const responseObj = defaultResonseObj(message, data, errors);
         responseObj.code = 200;
+        responseObj.success = true;
         response.json(responseObj);
     },
     directSendJSON(response, responseObj){

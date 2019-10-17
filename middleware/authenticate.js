@@ -82,13 +82,11 @@ const authenticate = {
 
         const isRequestedUrlAuthUrl = AUTH_URLS_ARRAY.indexOf(requestedUrl) > -1;
         const isRequestedUrlSimpleUrl = SIMPLE_URLS_ARRAY.indexOf(requestedUrl) > -1;
-        console.log(AUTH_URLS_ARRAY);
-        console.log(SIMPLE_URLS_ARRAY);
+       
         if (isRequestedUrlAuthUrl || isRequestedUrlSimpleUrl) {
             logger.debug('sessionJwt urls');
 
             const tokenHeader = request.headers["authorization"];
-
             if (tokenHeader) {
 
                 const tokenArray = tokenHeader.split(" ");
@@ -139,8 +137,12 @@ const authenticate = {
                 }
             }
             else {
-                // no token comming
-                next();
+                if(isRequestedUrlAuthUrl){
+                    sendResponse.unauthorized(response, "Unknown user.");
+                }
+                else{
+                    next();
+                }
             }
 
 
