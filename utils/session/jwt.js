@@ -21,9 +21,10 @@ const jwtOperations = {
         else if (role === "admin") {
             jwtDuration = jwtDuration / 2; //12 hrs
         }
-        else if (role === "user") {
+        else if (role === "user" || role === "guest") {
             jwtDuration = jwtDuration * duration; // default 7 days
         }
+
         else {
             console.log("FUCK YOU!!");
             return "";
