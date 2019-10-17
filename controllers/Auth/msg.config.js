@@ -26,9 +26,14 @@ const messageAuthRoute = {
     lastNameInvalid: "lastName is invalid.",
     lastNameRequired: "lastName is requried.",
 
-    emailInvlaid: "email is invalid.",
+    emailInvalid: "email is invalid.",
     emailRequired: "email is required.",
 
+    usernameRequired: "username is required.",
+    usernameInvalid: "username is invalid.",
+
     accountDuplicate: "A account with this mobile or email already exist.",
+
+    inputErrors: "Input error",
 };
 module.exports = messageAuthRoute;

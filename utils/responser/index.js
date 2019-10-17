@@ -2,35 +2,41 @@
 'use strict'
 
 
-function defaultResonseObj(msg, data = null, errors = null) {
-    return {
+function defaultResonseObj(msg,  errors = null, data = null) {
+    const res = {
         message: msg,
-        data: data,
-        errors: errors
+
     };
+    if(errors){
+        res.errors = errors;
+    }
+    if(data){
+        res.data = data;
+    }
+    return res;
 }
 
 const responser = {
-    badRequest(response, message = "Bad request.", data = null, errors = null) {
-        const responseObj = defaultResonseObj(message, data, errors);
-
+    badRequest(response, message = "Bad request.", errors = null, data = null) {
+        const responseObj = defaultResonseObj(message, errors, data);
+        
         responseObj.code = 400;
 
         response.json(responseObj);
 
     },
-    serverError(response, message = "Some Error Occured.", data = null, errors = null) {
-        const responseObj = defaultResonseObj(message, data, errors);
+    serverError(response, message = "Some Error Occured.", errors = null, data = null) {
+        const responseObj = defaultResonseObj(message, errors, data);
         responseObj.code = 500;
         response.json(responseObj);
     },
-    notFound(response, message = "Not found.", data = null, errors = null) {
-        const responseObj = defaultResonseObj(message, data, errors);
+    notFound(response, message = "Not found.", errors = null, data = null) {
+        const responseObj = defaultResonseObj(message, errors, data);
         responseObj.code = 404;
         response.json(responseObj);
     },
-    unauthorized(response, message = "Unauthorized.", data = null, errors = null) {
-        const responseObj = defaultResonseObj(message, data, errors);
+    unauthorized(response, message = "Unauthorized.", errors = null, data = null) {
+        const responseObj = defaultResonseObj(message, errors, data);
         responseObj.code = 401;
         response.json(responseObj);
     },

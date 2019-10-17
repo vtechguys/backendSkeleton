@@ -1,5 +1,5 @@
 'use strict'
-
+const logger = require('../logger');
 const generator = {
     randomString(length = 8) {
         logger.debug('utils generate random string of length = ', length);

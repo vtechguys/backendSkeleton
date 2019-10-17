@@ -8,7 +8,7 @@ const jwtOps = require('./jwt');
 
 
 
-function fillSession(userData, response) {
+function fillSession(result, response) {
     logger.debug('Utils fillSession');
 
     const userData = result.toObject();
@@ -23,11 +23,11 @@ function fillSession(userData, response) {
     delete userData.locationHistory;
 
 
-    if (userData.social && userData.social[0] && userData.social[0].sId) {
-        userData.connectionType = userData.social[0].connection;
-        userData.social = true;
-    }
-    delete userData.social;
+    // if (userData.social && userData.social[0] && userData.social[0].sId) {
+    //     userData.connectionType = userData.social[0].connection;
+    //     userData.social = true;
+    // }
+    // delete userData.social;
 
     if (userData.temporaryMobile && userData.countryCode) {
         userData.temporaryMobile = userData.temporaryMobile.split(userData.countryCode)[1];
@@ -44,7 +44,8 @@ function fillSession(userData, response) {
         jwtOps.fillJwtSession(userData, function (error, sessionData) {
             if (error) {
                 logger.error(error);
-                callback(error, null);
+                console.log(error);
+                sendResponse.serverError(response);
             }
             else {
                 if (sessionData && sessionData.sessionId) {
@@ -53,14 +54,16 @@ function fillSession(userData, response) {
                         message: "Session created.",
                         success: true
                     };
-
+                   
+                    
                     responseObject.sessionId = sessionData.sessionId;
 
                     sessionData = sessionData.toObject();
 
                     delete sessionData.uuid;
                     delete sessionData.sessionId;
-
+                    sessionData._id = sessionData.objectId;
+                    delete sessionData.objectId;
                     responseObject.data = {
                         profile: sessionData
                     };

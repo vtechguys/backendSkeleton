@@ -9,20 +9,20 @@ const config = require('../../config');
 
 const UserSchema = new Schema({
     // userId
-    userId:{
+    userId: {
         type: String,
         unique: true,
         required: true
     },
     // Email
-    email:{
+    email: {
         type: String,
         unique: true,
         required: true
     },
-    emailVerified:{
+    emailVerified: {
         type: Boolean,
-        default: false    
+        default: false
     },
     emailToken: {
         type: String,
@@ -34,22 +34,22 @@ const UserSchema = new Schema({
     firstName: {
         type: String,
     },
-    lastName:{
+    lastName: {
         type: String,
     },
     // Mobile
     countryCode: {
         type: String
     },
-    mobile:{
+    mobile: {
         type: String,
         unique: true,
         sparse: true
     },
-    temporaryMobile:{
+    temporaryMobile: {
         type: String,
     },
-    mobileVerified:{
+    mobileVerified: {
         type: Boolean,
         default: false
     },
@@ -105,7 +105,7 @@ const UserSchema = new Schema({
     ],
     // profile pic
     profileImage: String,
-    role:{
+    role: {
         type: String,
         default: "guest"
     },

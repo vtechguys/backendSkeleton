@@ -6,14 +6,11 @@ const UserCRUD = require('./user');
 const { logger } = require('../../utils');
 
 const { createTheRole } = require('../functions/role');
+const { constants } = require('../../config');
 
-const {
-    $_setSuperAdminEmail,
-    encryptPassword,
-    setFirstName,
-    setLastName,
-    $_setPhoneNumberSuperAdmin,
-    $_setPhoneNumberCodeSuperAdmin
+
+const {    
+    encryptPassword
 } = require('../functions/user');
 
 const dbOperations = {
@@ -34,14 +31,15 @@ const dbOperations = {
                 else {
                     if (!result) {
 
-                        const superAdminObj = result;
+                        const superAdminObj = {};
 
-                        $_setSuperAdminEmail(setSuperAdminEmail);
+                        superAdminObj.email = constants.SUPER_ADMIN_EMAIL
                         encryptPassword(superAdminObj, "a".repeat(32));
-                        setFirstName(superAdminObj, 'superadmin');
-                        setLastName(superAdminObj, 'superadmin');
-                        $_setPhoneNumberSuperAdmin(superAdminObj);
-                        $_setPhoneNumberCodeSuperAdmin(superAdminObj);
+                        superAdminObj.firstName = 'superadmin';
+                        superAdminObj.lastName = 'superadmin';
+                        superAdminObj.mobile = constants.SUPER_ADMIN_PHONE_NUMBER;
+                        superAdminObj.countryCode = constants.SUPER_ADMIN_PHONE_NUMBER_CODE;
+                        superAdminObj.role = 'superadmin';
 
                         UserCRUD
                             .createUser(superAdminObj, function createSuperAdminDbCb2(error1, result1) {

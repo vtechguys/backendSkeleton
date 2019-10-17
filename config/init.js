@@ -14,12 +14,10 @@ const init = {
     superAdmin() {
         logger.debug('init > superAdmin');
         const superAdminRights = [];
-
+        console.log("INIT_SUPERAMDIN_ROLE_RIGHTS");
         //fills superadmin specific urls as its rights
         Object.keys(CONFIG_URLS).forEach(function (keyBaseUrl) {
-            console.log(keyBaseUrl.length);
             for (let i = 0; i < CONFIG_URLS[keyBaseUrl].length; i++) {
-                console.log(CONFIG_URLS[keyBaseUrl][i], keyBaseUrl);
 
                 const right = {
                     name: CONFIG_URLS[keyBaseUrl][i], // resourece name

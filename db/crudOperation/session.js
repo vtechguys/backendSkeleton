@@ -1,7 +1,7 @@
 'use strict'
 
 const Session = require('../schema/Session');
-const { logger } = require('../../utils');
+const logger  = require('../../utils/logger');
 
 const dbOperations = {
     getSessionBySessionId(sessionId, callback) {
@@ -25,6 +25,7 @@ const dbOperations = {
             });
     },
     getSessionForThisUser(userData, callback) {
+        console.log(logger);
         logger.debug("Session_CRUD getSessionForThisUser");
         Session
             .find({

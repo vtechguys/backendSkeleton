@@ -1,7 +1,7 @@
 'use strict'
 const jwt = require('jsonwebtoken');
 
-const { logger } = require('../logger');
+const  logger  = require('../logger');
 
 const { constants } = require('../../config');
 
@@ -63,7 +63,7 @@ const jwtOperations = {
             let token = that.generateJwt(userData.userId, userData.role, duration);
 
             userData["objectId"] = userData._id;
-
+            const userObjectId = userData._id;
             delete userData._id;
 
             userData["sessionId"] = token;
@@ -83,6 +83,7 @@ const jwtOperations = {
                         callback(error, null);
                     }
                     else {
+                        
                         that.storeSession(userData, callback);
                     }
                 });
