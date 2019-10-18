@@ -8,7 +8,6 @@ const loggerHttp = require('morgan');
 
 const bodyParser = require('body-parser');
 const mfavicon = require("express-favicon");
-const path = require('path');
 
 //authenticator RBAC middleware used for RBAC implementattion
 const authenticate = require('./middleware/authenticate');

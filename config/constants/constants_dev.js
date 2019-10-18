@@ -14,6 +14,7 @@ const appConstants = {
     MAIL_TRANSPORT_SERVICE: 'Gmail',
     MAIL_TRANSPORT_AUTH_EMAIL: 'dev.devopgenesis@gmail.com',
     MAIL_TRANSPORT_AUTH_PASSWORD: 'Ytrewq.123456',
+    MAIL_URL: 'smtp.gmail.com',
 
     SUPER_ADMIN_EMAIL: "aniketjha898@gmail.com",
     SUPER_ADMIN_PHONE_NUMBER: '9540700460',

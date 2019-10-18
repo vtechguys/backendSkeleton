@@ -1,7 +1,7 @@
 "use strict"
 const User = require("../schema/User");
 const { logger, sendResponse, session, encrypt } = require("../../utils");
-const { assignUserId, encryptPassword } = require('../functions/user');
+const { assignUserId, encryptPassword } = require('../functions');
 
 const dbOperations = {
     doLogin(body, response) {

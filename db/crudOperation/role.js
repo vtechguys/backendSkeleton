@@ -5,13 +5,11 @@ const UserCRUD = require('./user');
 
 const { logger } = require('../../utils');
 
-const { createTheRole } = require('../functions/role');
+const { createTheRole, encryptPassword } = require('../functions');
 const { constants } = require('../../config');
 
 
-const {    
-    encryptPassword
-} = require('../functions/user');
+
 
 const dbOperations = {
     createSuperAdmin(callback) {
