@@ -2,7 +2,7 @@
 
 const { loadash, validate, sendResponse, encrypt, logger } = require('../../utils');
 
-const msg = require('./msg.config');
+const msg = require('./msgconfig');
 
 const dbOperations = require('../../db/crudOperation/user');
 

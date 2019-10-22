@@ -4,32 +4,39 @@ const nodeMailer = require('nodemailer');
 const { constants } = require('../../config');
 const logger = require('../logger');
 
-const { emailTemplate } = require('../../template');
+const { email } = require('../../template');
 
 const mailTypes = {
     ACCOUNT_ACTIVATION_LINK: "accountActivationLink",
     ATTEMPT_RESET_PASSWORD: "resetPassword",
     SUCCESS_RESET_PASSWORD: "resetPasswordSuccess"
-
 };
-function accountAcivationLinkEmailGenerate(userData, type) {
+function accountAcivationLinkEmailGenerate(mailData, type) {
     const emailObj = {};
-    const payload = constants.REQ_URL + "/activation-email?token=" + userData.token + "&email" + userData.email;
+    emailObj.to = mailData.email;
+    emailObj.subject = "Confirm Your Email";
+    const payload = constants.REQ_URL + "/activation-email?token=" + mailData.token + "&email" + mailData.email;
     emailObj.text = "Your Account Activation link is " + payload;
-    emailObj.templateData = { ...userData, type: type, payload };
+    emailObj.templateData = { ...mailData, type: type, payload };
     return emailObj;
 }
-function attemptResetPasswordEmailGenerate(userData, type) {
+function attemptResetPasswordEmailGenerate(mailData, type) {
     const emailObj = {};
-    const payload = constants.REQ_URL = emailObj.payload = payload + "/account/reset-password?token=" + userData.token + "&email" + userData.email;
+    emailObj.to = mailData.email;
+    emailObj.subject = "Attemptting to reset password";
+
+    const payload = constants.REQ_URL = emailObj.payload = payload + "/account/reset-password?token=" + mailData.token + "&email" + mailData.email;
     emailObj.text = "Your Password reset link is " + payload;
-    emailObj.templateData = { ...userData, type: type };
+    emailObj.templateData = { ...mailData, type: type };
     return emailObj;
 }
-function successResetPasswordEmailGenerate(userData, type) {
+function successResetPasswordEmailGenerate(mailData, type) {
     const emailObj = {};
+    emailObj.to = mailData.email;
+    emailObj.subject = "Reset password was successfull";
+
     emailObj.text = "Your Password was reset";
-    emailObj.templateData = { ...userData, type: type };
+    emailObj.templateData = { ...mailData, type: type };
     return emailObj;
 }
 
@@ -70,32 +77,33 @@ function _sendMail(To, Subject, EmailText, HtmlBody) {
 }
 
 const mailer = {
-    createMail(userData, type) {
+    createMail(mailData, type) {
         logger.debug("utils mailer createMail");
         let htmlBody = "";
         let templateData;
         switch (type) {
             case mailTypes.ACCOUNT_ACTIVATION_LINK:
-                const emailObj = accountAcivationLinkEmailGenerate(userData, type);
-                htmlBody = emailTemplate.accountAcivation(emailObj.templateData);
+                var emailObj = accountAcivationLinkEmailGenerate(mailData, type);
+                htmlBody = email.accountActivationEmail(emailObj.templateData);
                 _sendMail(emailObj.to, emailObj.subject, emailObj.text, htmlBody);
                 break;
 
             case mailTypes.ATTEMPT_RESET_PASSWORD:
-                const emailObj = attemptResetPasswordEmailGenerate(userData, type);
-                htmlBody = emailTemplate.attemptResetPassword(emailObj.templateData);
+                var emailObj = attemptResetPasswordEmailGenerate(mailData, type);
+                htmlBody = email.attemptResetPassword(emailObj.templateData);
                 _sendMail(emailObj.to, emailObj.subject, emailObj.text, htmlBody);
                 break;
 
             case mailTypes.SUCCESS_RESET_PASSWORD:
-                const emailObj = successResetPasswordEmailGenerate(userData, type);
-                htmlBody = emailTemplate.resetPasswordSuccess(templateData);
+                var emailObj = successResetPasswordEmailGenerate(mailData, type);
+                htmlBody = email.successResetPassword(templateData);
                 _sendMail(emailObj.to, emailObj.subject, emailObj.text, htmlBody);
                 break;
 
         }
 
-    }
+    },
+    mailTypes
 };
 
 

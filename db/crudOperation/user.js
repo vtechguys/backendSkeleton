@@ -1,6 +1,6 @@
 "use strict"
 const User = require("../schema/User");
-const { logger, sendResponse, session, encrypt } = require("../../utils");
+const { logger, sendResponse, session, encrypt, mailer, generate } = require("../../utils");
 const { assignUserId, encryptPassword } = require('../functions');
 
 const dbOperations = {
@@ -31,7 +31,7 @@ const dbOperations = {
     },
     register(body, response) {
         logger.debug('register this user');
-        var that = this;
+        const that = this;
         that.findByEmail(body.email, function registerDbCb(error, result) {
             if (error) {
                 logger.error(error);
@@ -54,14 +54,25 @@ const dbOperations = {
                             else {
                                 encryptPassword(body, body.password);
                                 body.role = "guest";
+
+                                const token = body.emailToken = generate.randomString(8);
+                                body.emailTokenTimeStamp = ( new Date() );
+
                                 that.createUser(body, function registerDbCb3(error3, result3) {
                                     if (error3) {
                                         logger.error(error3);
-                                        console.log("e3", error3);
                                         sendResponse.serverError(response);
                                     }
                                     else {
-                                        sendResponse.success(response, "Successfuly registered.");
+
+                                        const mailObject = {
+                                            userId: result3.userId,
+                                            email: result3.email,
+                                            token: token
+                                        };
+                                        mailer.createMail(mailObject, mailer.mailTypes.ACCOUNT_ACTIVATION_LINK);
+
+                                        sendResponse.success(response, "Successfuly registered. Please consider to confirm Email.");
                                     }
                                 });
                             }
@@ -153,6 +164,51 @@ const dbOperations = {
         };
         const PROJECTION = {};
         that.findUserForThisQuery(QUERY, PROJECTION, cb);
+    },
+    addEmailOrMobileToken(userId, tokenType, media, cb){
+        const TOKEN_LENGTH = 8;
+        const OTP_LENGTH = 6;
+
+        const FIND_QUERY = {
+            "userId": userId
+        };
+        let token ;
+        if(tokenType == "token"){
+            token = generate.randomString(TOKEN_LENGTH);
+        }
+        else{
+            token = generate.randomNumber(OTP_LENGTH);
+        }
+
+
+        const UPDATE_QUERY_SET = {
+
+        };
+       
+
+        if(media === "mobile"){
+            UPDATE_QUERY_SET.mobileToken = token;
+            UPDATE_QUERY_SET.mobileTokenTimeStamp = (  ( new Date() ).getTime() ); // time of creating 
+        }
+        else{
+            UPDATE_QUERY_SET.emailToken = token;
+            UPDATE_QUERY_SET.emailTokenTimeStamp =  (  ( new Date() ).getTime() );
+        }
+
+        const UPDATE_QUERY = {
+            "$set": UPDATE_QUERY_SET
+        };
+
+        User
+        .findOneAndUpdate(FIND_QUERY, UPDATE_QUERY)
+        .exec(function addEmailOrMobileTokenDbCb(error, result){
+            if(error){
+                cb(error, null);
+            }
+            else{
+                cb(null, result);
+            }
+        });
     }
 
 };

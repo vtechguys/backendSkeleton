@@ -8,7 +8,7 @@ const pathsConfig = require('./paths');
 //db config
 const dbConfig = require('./db');
 //Logger
-const loggerConfig = require('./logger');
+// const loggerConfig = require('./logger');
 //response types 
 //schemaNames
 const schemaNames = require('./schemaNames');
@@ -30,7 +30,6 @@ const configIndex = {
     HOME_PAGE:'/public/build/index.html',
 
     paths: pathsConfig,
-    logger: loggerConfig,
     // responseTypes: responseTypesConfig,
     schemaNames: schemaNames,
     constants: constants,
@@ -42,13 +41,7 @@ const configIndex = {
     //LOGGER CONFIG
     LOGGER_TYPE: 'dev',
     //Email used by superAdmin
-    SUPER_ADMIN_EMAIL: 'aniketjha898@gmail.com',
-    MOBILE_NO: '9540700460',
-    REQ_URL:'http://localhost:5500',
-    SMTP_EMAIL: 'dev.devopsgenesis@gmail.com',
-    SMTP_PASSWORD: 'Ytrewq.12345',
-    SMTP_SERVICE_URL: 'smtp.gmail.com',
-
+    
 
 };
 
