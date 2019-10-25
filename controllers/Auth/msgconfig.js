@@ -35,5 +35,19 @@ const messageAuthRoute = {
     accountDuplicate: "A account with this mobile or email already exist.",
 
     inputErrors: "Input error",
+
+
+
+
+    verficationTokenSent: "Verification code was sent on verified medium",
+    mediaNotSupported: "Media not supported.",
+    tokenIncorrect: "Incorrect",
+    paswordResetSuccess: "Passwordwas sucessfully reset",
+    confirmPasswordRequired: "confirm password required",
+    confirmPasswordInvalid: "confrim password invalid",
+    pAndCpMismatch: "Password and confirm password dont match",
+    tokenExpired: "Token you provided has expired.",
+    resetPasswordSuccess: "Reset password success"
+    
 };
 module.exports = messageAuthRoute;

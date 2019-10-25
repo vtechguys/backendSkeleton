@@ -27,7 +27,7 @@ const UserSchema = new Schema({
     emailToken: {
         type: String,
     },
-    emailTimeStamp: {
+    emailTokenTimeStamp: {
         type: Date,
     },
     // Name
@@ -53,7 +53,7 @@ const UserSchema = new Schema({
         type: Boolean,
         default: false
     },
-    mobileTokenStamp: {
+    mobileTokenTimeStamp: {
         type: Date
     },
     mobileToken: {

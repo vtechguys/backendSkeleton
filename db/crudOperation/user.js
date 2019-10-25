@@ -56,7 +56,7 @@ const dbOperations = {
                                 body.role = "guest";
 
                                 const token = body.emailToken = generate.randomString(8);
-                                body.emailTokenTimeStamp = ( new Date() );
+                                body.emailTokenTimeStamp = (new Date());
 
                                 that.createUser(body, function registerDbCb3(error3, result3) {
                                     if (error3) {
@@ -82,7 +82,7 @@ const dbOperations = {
             }
         });
     },
-    findByEmailUsername(loginId, cb) {
+    findByEmailUsername(loginId, callback, projections = {}) {
         logger.debug("USER_CRUD findByEmailOrUsername");
 
         const QUERY = {
@@ -96,119 +96,138 @@ const dbOperations = {
             ]
         };
 
-        const PROJECTIONS = {
 
-        };
 
         User
-            .findOne(QUERY, PROJECTIONS)
+            .findOne(QUERY, projections)
             .exec(function findByEmailOrUsernameDbCb(error, queryResult) {
                 if (error) {
-                    cb(error, null);
+                    callback(error, null);
                 }
                 else {
                     if (queryResult && queryResult.userId) {
-                        cb(null, queryResult);
+                        callback(null, queryResult);
                     }
                     else {
-                        cb(null, null);
+                        callback(null, null);
                     }
                 }
             });
     },
-    findUserForThisQuery(Query = {}, Projection = {}, cb) {
+    findUserForThisQuery(Query = {}, Projection = {}, callback) {
         logger.debug("USER_CRUD findUserForThisQuery");
         User
             .findOne(Query, Projection)
             .exec(function findUserForThisQueryDbCb(error, queryResult) {
                 if (error) {
-                    cb(error, null);
+                    callback(error, null);
                 }
                 else {
                     if (queryResult) {
-                        cb(null, queryResult);
+                        callback(null, queryResult);
                     }
                     else {
-                        cb(null, null);
+                        callback(null, null);
                     }
                 }
             });
     },
-    createUser(userData, cb) {
+    createUser(userData, callback) {
         logger.debug("USER_CRUD createUser");
         assignUserId(userData);
         User
             .create(userData, function createUserDbCb(error, result) {
                 if (error) {
-                    cb(error, null);
+                    callback(error, null);
                 }
                 else {
-                    cb(null, result);
+                    callback(null, result);
                 }
             });
     },
-    findByEmail(email, cb) {
+    findByEmail(email, callback, projections = {}) {
         logger.debug('USER_CURD findByEmail');
         var that = this;
         const QUERY = {
             'email': email
         };
-        const PROJECTION = {};
-        that.findUserForThisQuery(QUERY, PROJECTION, cb);
+        that.findUserForThisQuery(QUERY, projections, callback);
     },
-    findByUsername(username, cb) {
+    findByUsername(username, callback, projections = {}) {
         logger.debug('USER_CURD findByUsername');
         var that = this;
         const QUERY = {
             'username': username
         };
-        const PROJECTION = {};
-        that.findUserForThisQuery(QUERY, PROJECTION, cb);
+        that.findUserForThisQuery(QUERY, projections, callback);
     },
-    addEmailOrMobileToken(userId, tokenType, media, cb){
+    addPasswordToken(userIdOrEmail, callback) {
         const TOKEN_LENGTH = 8;
-        const OTP_LENGTH = 6;
+
 
         const FIND_QUERY = {
-            "userId": userId
+            "$or": [
+                {
+                    "userId": userIdOrEmail
+                },
+                {
+                    "email": userIdOrEmail
+                }
+            ]
         };
-        let token ;
-        if(tokenType == "token"){
-            token = generate.randomString(TOKEN_LENGTH);
-        }
-        else{
-            token = generate.randomNumber(OTP_LENGTH);
-        }
 
 
         const UPDATE_QUERY_SET = {
-
+            passwordToken: generate.randomNumber(TOKEN_LENGTH),
+            passwordTimeStamp: ((new Date()).getTime())
         };
-       
-
-        if(media === "mobile"){
-            UPDATE_QUERY_SET.mobileToken = token;
-            UPDATE_QUERY_SET.mobileTokenTimeStamp = (  ( new Date() ).getTime() ); // time of creating 
-        }
-        else{
-            UPDATE_QUERY_SET.emailToken = token;
-            UPDATE_QUERY_SET.emailTokenTimeStamp =  (  ( new Date() ).getTime() );
-        }
 
         const UPDATE_QUERY = {
             "$set": UPDATE_QUERY_SET
         };
 
         User
-        .findOneAndUpdate(FIND_QUERY, UPDATE_QUERY)
-        .exec(function addEmailOrMobileTokenDbCb(error, result){
-            if(error){
-                cb(error, null);
+            .findOneAndUpdate(FIND_QUERY, UPDATE_QUERY, { new: true })
+            .exec(function addEmailOrMobileTokenDbCb(error, result) {
+                if (error) {
+                    callback(error, null);
+                }
+                else {
+                    if (!result) {
+                        callback(null, null);
+                    }
+                    else {
+                        callback(null, result);
+                    }
+                }
+            });
+    },
+    resetPassword(loginId, password, callback) {
+
+        const QUERY = {
+            'userId': loginId
+        };
+        const passwordObject = encryptPassword({}, password);
+        const UPDATE_QUERY = {
+            '$set': {
+                password: passwordObject.password,
+                salt: passwordObject.salt
+            },
+            '$unset': {
+                passwordToken: 1,
+                passwordTimeStamp: 1
             }
-            else{
-                cb(null, result);
-            }
-        });
+        };
+        User
+            .findOneAndUpdate(QUERY, UPDATE_QUERY)
+            .exec(function resetPasswordDbCb(error, result) {
+                if (error) {
+                    callback(error, null);
+                }
+                else {
+                    callback(null, result);
+                }
+            });
     }
 
 };

@@ -121,14 +121,14 @@ const validate = {
             return true;
         }
     },
-    id: function (string) {
+    id: function (string, min = 8, max = 32) {
         logger.debug('validate id');
         if (string === undefined || typeof(string)!="string") {
             return false;
         }
         var string = string.trim();
         var letters = /^[A-Za-z0-9]+$/;
-        if (string.length < 8 || string.length > 32 || string.match(letters) === null) {
+        if (string.length < min || string.length > max || string.match(letters) === null) {
             return false;
         }
         else {
