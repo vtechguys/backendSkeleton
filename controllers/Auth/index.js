@@ -167,7 +167,7 @@ function validateAttemptToForgotPasswordInputs(info) {
     };
 }
 
-function authAttemptToForgotPassword(request, response) {
+function authAttemptToForgotPasswordRouteHandler(request, response) {
     logger.debug("authAttemptToForgotPassword");
     const ATTEMPT_RESET_PASSWORD = ["email", "media"];
 
@@ -269,7 +269,7 @@ function validateResetPasswordInputs(body) {
     };
 
 }
-function authResetPassword(request, response) {
+function authResetPasswordRouteHandler(request, response) {
 
     const RESET_PASSWORD = ["loginId", "token", "password", "confirmPassword"]; // loginId is email or mobile number
     const body = loadash.pick(request.body, RESET_PASSWORD);
@@ -327,6 +327,6 @@ function authResetPassword(request, response) {
 module.exports = {
     authLoginRouteHandler,
     authRegisterRouteHandler,
-    authAttemptToForgotPassword,
-    authResetPassword
+    authAttemptToForgotPasswordRouteHandler,
+    authResetPasswordRouteHandler
 };
