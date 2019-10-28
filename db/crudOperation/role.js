@@ -111,23 +111,71 @@ const dbOperations = {
                 }
             });
     },
-    getRoles(callback){
+    getRoles(callback) {
         logger.debug('ROLE_CRUD getRoles');
         Role
-        .find({
+            .find({
+                'role': {
+                    '$ne': 'superadmin' // $ne dont use index
+                }
+            }, function getRolesDbCb(error, results) {
+                if (error) {
+                    callback(error, null);
+                }
+                else {
+                    callback(null, results);
+                }
+            });
+    },
+    deleteRole(roleId, callback) {
+        Role
+            .findOneAndRemove({
+                'roleId': roleId,
+                'role': {
+                    '$ne': 'superadmin'
+                }
+            }, function deleteRoleDbCb(error, result) {
+                if (error) {
+                    callback(error, null);
+                }
+                else {
+                    if (!result || result && result.nModified == 0) {
+                        callback(null, null);
+                    }
+                    else {
+                        callback(null, {});
+                    }
+                }
+            });
+    },
+    assignRole(userId, role){
+        const USER_QUERY = {
+            'userId': userId,
             'role': {
-                '$ne': 'superadmin' // $ne dont use index
+                '$ne': 'superadmin'
             }
-        }, function getRolesDbCb(error, results){
+        };
+        const UPDATE_QUERY = {
+            '$set': {
+                'role': role
+            }
+        };
+        UserCRUD
+        .updateOne(USER_QUERY, UPDATE_QUERY, function assignRoleDbCb(error, result){
             if(error){
-                callback(error, null);
+
             }
             else{
-                callback(null, results);
+                if(!result || result.nModified === 0){
+                    callback(null, null);
+                }
+                else{
+                    callback(null, {});
+                }
             }
         });
-    },
-    
+    }
+
 
 };
 module.exports = dbOperations;

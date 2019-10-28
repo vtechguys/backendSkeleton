@@ -8,7 +8,7 @@ const appConstants = {
 
 
 
-// Service used to send email
+    // Service used to send email
 
     MAIL_TRANSPORT_NAME: 'SMTP',
     MAIL_TRANSPORT_SERVICE: 'Gmail',
@@ -19,9 +19,9 @@ const appConstants = {
     SUPER_ADMIN_PHONE_NUMBER: '9876543210',
     SUPER_ADMIN_PHONE_NUMBER_CODE: '+91',
 
-// Company
+    // Company
     COMPANY_NAME: 'DevopsGenesis',
-//  Dev email
+    //  Dev email
     DEV_EMAIL_CRASH_REPORT: 'devcrash@gmail.com',
 };
 module.exports = appConstants;

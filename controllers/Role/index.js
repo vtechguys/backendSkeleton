@@ -198,7 +198,7 @@ function roleAssignRoleRouteHandler(request, response) {
         sendResponse.badRequest(response, msg.inputErrors, errors);
     }
     else {
-        if (body.role == 'superadmin') {
+        if (body.role == 'superadmin' || body.userId == request.userData.userId) { // superadmin making himself somthing else :p
             sendResponse.unauthorized(response, msg.oneSuperAdmin);
         }
         else {
@@ -228,7 +228,12 @@ function roleAssignRoleRouteHandler(request, response) {
                                             sendResponse.serverError(response);
                                         }
                                         else {
-                                            sendResponse.success(response, msg.userRoleUpdated);
+                                            if(!result){
+                                                sendResponse.notFound(response, msg.userNotFound);
+                                            }
+                                            else{
+                                                sendResponse.success(response, msg.userRoleUpdated);
+                                            }
                                         }
                                     });
                             }
@@ -278,7 +283,7 @@ function roleDeleteRoleRouteHandler(request, response) {
                     sendResponse.serverError(response);
                 }
                 else {
-                    if (!result || result.nModified === 0) {
+                    if (!result) {
                         sendResponse.notFound(response, msg.roleNotFound);
                     }
                     else {

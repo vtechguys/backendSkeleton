@@ -14,3 +14,4 @@ const registerUrls = {
 };
 
 module.exports = registerUrls;
+// Dont include in index.js config

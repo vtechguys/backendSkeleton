@@ -1,6 +1,4 @@
 'use strict'
-////////////////Schema Name Configurations/////////////////////
-
 /**
  * 
  * Complete App Schema Names and colltion names.

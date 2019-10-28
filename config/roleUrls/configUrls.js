@@ -1,5 +1,4 @@
 'use strict'
-/////////////////ConfigurationsApp Url EXPLICITLY FOR SUPER ADMIN///////////////////
 /**
  * Super Admin specific routes 
  * Super Admin level --- Carefully manage
