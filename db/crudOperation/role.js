@@ -110,6 +110,24 @@ const dbOperations = {
                     callback(null, result);
                 }
             });
-    }
+    },
+    getRoles(callback){
+        logger.debug('ROLE_CRUD getRoles');
+        Role
+        .find({
+            'role': {
+                '$ne': 'superadmin' // $ne dont use index
+            }
+        }, function getRolesDbCb(error, results){
+            if(error){
+                callback(error, null);
+            }
+            else{
+                callback(null, results);
+            }
+        });
+    },
+    
+
 };
 module.exports = dbOperations;

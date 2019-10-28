@@ -80,11 +80,16 @@ app.use(function errorHandler(req, res, next) {
 });
 
 
-const PORT = process.env.PORT || 1234;
 
 const init = require('./config/init');
 init.superAdmin();
 
+
+
+
+
+
+const PORT = process.env.PORT || 1234;
 
 // Server stats listening
 app.listen( PORT , function appListener() {

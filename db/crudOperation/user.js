@@ -228,6 +228,12 @@ const dbOperations = {
                     callback(null, result);
                 }
             });
+    },
+    findByUserId(userId, callback, projections = {}){
+        const QUERY = {
+            'userId': userId
+        };
+        this.findUserForThisQuery(QUERY, projections, callback); 
     }
 
 };
