@@ -65,10 +65,12 @@ else{
 const index = require('./routes/api/index');
 // auth serves /auth login, register etc.
 const auth = require('./routes/api/auth');
-
+// role serves /role get-roles, get-role, create-role, assign-role, delete-role, fill-rights
+const role = require('./routes/api/role');
 // Routes Mapper Middleware
 app.use('/',index);
 app.use('/auth', auth);
+app.use('/roles', role);
 app.use('*', index);
 
 // Error Handling

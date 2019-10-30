@@ -29,6 +29,9 @@ function roleGetRightsRouteHandler(request, response) {
  */
 function roleGetAllRolesRouteHandler(request, response) {
     logger.debug('route api roleGetAllRolesRouteHandler');
+    const PROJECTIONS = {
+        'rights': 0
+    }
     dbOperations.getRoles(function getAllRolesCbRoute(error, results) {
         if (error) {
             sendResponse.badRequest(response);
@@ -38,19 +41,16 @@ function roleGetAllRolesRouteHandler(request, response) {
                 sendResponse.notFound(response, msg.rolesNotFound);
             }
             else {
-                if(result && results.length === 0){
-                    sendResponse.notFound(response, msg.rolesNotFound);
-                }
-                else{
-                    const data = {
-                        roles: results
-                    };
-                    sendResponse.success(response, msg.rolesFound, data);
-                }
-                
+
+                const data = {
+                    roles: results
+                };
+                sendResponse.success(response, msg.rolesFound, data);
+
+
             }
         }
-    });
+    }, PROJECTIONS);
 }
 
 /**
@@ -145,17 +145,32 @@ function roleCreateRoleRouteHandler(request, response) {
             sendResponse.unauthorized(response, msg.oneSuperAdmin); // roles are unique this fill fail anyway
         }
         else {
-            dbOperations.createRole(body.role, function createRoleCbRoute(error, result) {
-                if (error) {
+            dbOperations.getRole(body.role, function createRoleCbRoute1(error1, result1) {
+                if (error1) {
+                    logger.error(error1);
                     sendResponse.serverError(response);
                 }
                 else {
-                    const data = {
-                        role: result
-                    };
-                    sendResponse.success(response, msg.successCreateRole, data);
+                    if (result1 && result1.roleId) {
+                        sendResponse.badRequest(response, msg.roleAlreadyExist);
+                    }
+                    else {
+                        dbOperations.createRole(body.role, function createRoleCbRoute2(error2, result2) {
+                            if (error2) {
+                                logger.error(error2);
+                                sendResponse.serverError(response);
+                            }
+                            else {
+                                const data = {
+                                    role: result2
+                                };
+                                sendResponse.success(response, msg.successCreateRole, data);
+                            }
+                        });
+                    }
                 }
             });
+
         }
 
     }
@@ -223,15 +238,15 @@ function roleAssignRoleRouteHandler(request, response) {
                             }
                             else {
                                 dbOperations
-                                    .assignRole(result.userId, role, function updateRoleCbRoute(error1) {
+                                    .assignRole(result.userId, body.role, function updateRoleCbRoute(error1) {
                                         if (error1) {
                                             sendResponse.serverError(response);
                                         }
                                         else {
-                                            if(!result){
+                                            if (!result) {
                                                 sendResponse.notFound(response, msg.userNotFound);
                                             }
-                                            else{
+                                            else {
                                                 sendResponse.success(response, msg.userRoleUpdated);
                                             }
                                         }
@@ -270,7 +285,7 @@ function validateDeleteRoleInputs(inputs) {
 
 function roleDeleteRoleRouteHandler(request, response) {
     logger.debug('routes api roleDeleteRoleRouteHandler');
-    const body = loadash.pick(validateDeleteRoleInputs, ["roleId"]);
+    const body = loadash.pick(request.body, ["roleId"]);
     const { isValid, errors } = validateDeleteRoleInputs(body);
 
     if (!isValid) {
@@ -302,42 +317,60 @@ function validateFillRightsInputs(inputs) {
 function roleFillRightsRouteHandler(request, response) {
     logger.debug('routes api roleFillRightsRouteHandler');
 
-    const body = loadash.pick(validateDeleteRoleInputs, ["roleId", "rights"]);
+    const body = loadash.pick(request.body, ["roleId", "rights"]);
     const { isValid, errors } = validateFillRightsInputs(body);
 
     if (!isValid) {
         sendResponse.serverError(response, msg.inputErrors, errors);
     }
     else {
-        const rightsInputs = body.rights;
-        const newRights = [];
-        Object.keys(auth).forEach(function (key) {
-            for (let i = 0; i < auth[key].length; i++) {
-                if (rightsInputs.indexOf(auth[key][i]) > -1) {
-                    const right = {
-                        name: auth[key][i],
-                        path: key,
-                        url: key + auth[key][i]
-                    }
-                    newRights.push(right);
+ 
+        dbOperations
+        .getRoleById(body.roleId, function getRoleByIdCb(error1, result1){
+            if(error1){
+                logger.error(error1);
+                sendResponse.serverError(response);
+            }
+            else{
+                if(!result1){
+                    sendResponse.notFound(response, msg.roleNotFound);
+                }
+                else{
+
+                    const rightsInputs = body.rights || result1.rights;
+                    const newRights = [];
+                    Object.keys(auth).forEach(function (key) {
+                        for (let i = 0; i < auth[key].length; i++) {
+                            if (rightsInputs.indexOf(auth[key][i]) > -1) {
+                                const right = {
+                                    name: auth[key][i],
+                                    path: key,
+                                    url: key + auth[key][i]
+                                }
+                                newRights.push(right);
+                            }
+                        }
+                    });
+
+                    dbOperations
+                    .fillRights(body.roleId, newRights, function fillRightsCbRoute(error2, result2) {
+                        if (error2) {
+                            logger.error(error2);
+                            sendResponse.serverError(response);
+                        }
+                        else {
+                            if (!result2) {
+                                sendResponse.notFound(response, msg.roleNotFound);
+                            }
+                            else {
+                                sendResponse.success(response, msg.roleRightsUpdated);
+                            }
+                        }
+                    });
                 }
             }
         });
 
-        dbOperations
-            .fillRights(body.roleId, newRights, function fillRightsCbRoute(error, result) {
-                if (error) {
-                    sendResponse.serverError(response);
-                }
-                else {
-                    if (!result || result.nModified == 0) {
-                        sendResponse.notFound(response, msg.roleFound);
-                    }
-                    else {
-                        sendResponse.success(response, msg.roleRightsUpdated);
-                    }
-                }
-            });
     }
 }
 
@@ -348,5 +381,6 @@ module.exports = {
     roleGetThisRoleHandler,
     roleGetAllRolesRouteHandler,
     roleGetRightsRouteHandler,
-    roleFillRightsRouteHandler
+    roleFillRightsRouteHandler,
+    roleGetRightsRouteHandler
 };

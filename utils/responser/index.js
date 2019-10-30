@@ -41,7 +41,7 @@ const responser = {
         response.json(responseObj);
     },
     success(response, message = "Success.", data = null, errors = null) {
-        const responseObj = defaultResonseObj(message, data, errors);
+        const responseObj = defaultResonseObj(message,  errors, data);
         responseObj.code = 200;
         responseObj.success = true;
         response.json(responseObj);

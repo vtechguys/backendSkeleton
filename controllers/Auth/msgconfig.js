@@ -41,13 +41,17 @@ const messageAuthRoute = {
 
     verficationTokenSent: "Verification code was sent on verified medium",
     mediaNotSupported: "Media not supported.",
-    tokenIncorrect: "Incorrect",
+    mediaRequired: "required media",
+    tokenIncorrect: "Token incorrect",
     paswordResetSuccess: "Passwordwas sucessfully reset",
     confirmPasswordRequired: "confirm password required",
     confirmPasswordInvalid: "confrim password invalid",
     pAndCpMismatch: "Password and confirm password dont match",
     tokenExpired: "Token you provided has expired.",
-    resetPasswordSuccess: "Reset password success"
+    resetPasswordSuccess: "Reset password success",
+    tokenInvalid: "Token invalid",
+    tokenRequired: "Token is required"
+
     
 };
 module.exports = messageAuthRoute;

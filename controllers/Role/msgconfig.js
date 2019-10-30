@@ -12,6 +12,7 @@ const msg = {
     successCreateRole: 'role created successfuly',
     roleNotFound: 'role not found in system',
     roleFound: 'role found in sysyem',
+    roleAlreadyExist: "role already exist",
 
 
     inputErrors: 'input errors',

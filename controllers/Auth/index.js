@@ -1,6 +1,6 @@
 'use strict'
 
-const { loadash, validate, sendResponse, encrypt, logger, sms, mailer } = require('../../utils');
+const { loadash, validate, sendResponse, logger, sms, mailer } = require('../../utils');
 
 const msg = require('./msgconfig');
 
@@ -10,14 +10,14 @@ const dbOperations = require('../../db/crudOperation/user');
 const EXPIRATION_DURATION = 5 * 60 * 1000;
 
 
-function validateLoginInputs(body) {
+function validateLoginInputs(inputs) {
 
     const errors = {};
 
 
-    if (body.loginId) {
+    if (inputs.loginId) {
 
-        if (!validate.email(body.loginId) || !validate.username(body.loginId)) {
+        if (!validate.email(inputs.loginId) || !validate.username(inputs.loginId)) {
             errors.loginId = msg.loginIdInvalid;
         }
     }
@@ -25,8 +25,8 @@ function validateLoginInputs(body) {
         errors.loginId = msg.loginIdRequired;
     }
 
-    if (body.password) {
-        if (!validate.password(body.password)) {
+    if (inputs.password) {
+        if (!validate.password(inputs.password)) {
             errors.password = msg.passwordInvalid;
         }
     }
@@ -34,8 +34,8 @@ function validateLoginInputs(body) {
         errors.password = msg.passwordInvalid;
     }
 
-    if (!body.rememberMe || body.rememberMe && typeof body.rememberMe !== "boolean") {
-        body.rememberMe = false;
+    if (!inputs.rememberMe || inputs.rememberMe && typeof inputs.rememberMe !== "boolean") {
+        inputs.rememberMe = false;
     }
 
     return {
@@ -44,7 +44,6 @@ function validateLoginInputs(body) {
     }
 
 }
-
 function authLoginRouteHandler(request, response) {
     const LOGIN_BODY = ['loginId', 'password', 'rememberMe'];
 
@@ -60,12 +59,13 @@ function authLoginRouteHandler(request, response) {
     }
 }
 
-function validateRegistrationInputs(body) {
+
+function validateRegistrationInputs(inputs) {
 
     const errors = {};
 
-    if (body.email) {
-        if (!validate.email(body.email)) {
+    if (inputs.email) {
+        if (!validate.email(inputs.email)) {
             errors.email = msg.emailInvalid;
         }
     }
@@ -73,8 +73,8 @@ function validateRegistrationInputs(body) {
         errors.email = msg.emailRequired;
     }
 
-    if (body.username) {
-        if (!validate.username(body.username)) {
+    if (inputs.username) {
+        if (!validate.username(inputs.username)) {
             errors.username = msg.usernameInvalid;
         }
     }
@@ -82,9 +82,9 @@ function validateRegistrationInputs(body) {
         errors.username = msg.usernameRequired;
     }
     let isValidPassword = false;
-    if (body.password) {
+    if (inputs.password) {
         isValidPassword = true;
-        if (!validate.password(body.password)) {
+        if (!validate.password(inputs.password)) {
             isValidPassword = false;
             errors.password = msg.passwordInvalid;
 
@@ -94,9 +94,9 @@ function validateRegistrationInputs(body) {
         errors.password = msg.passwordRequired;
     }
     let isValidConfirmPassword = false
-    if (body.confirmPassword) {
+    if (inputs.confirmPassword) {
         isValidConfirmPassword = true;
-        if (!validate.password(body.confirmPassword)) {
+        if (!validate.password(inputs.confirmPassword)) {
             isValidConfirmPassword = false;
             errors.confirmPassword = msg.confirmPasswordInvalid;
 
@@ -106,19 +106,19 @@ function validateRegistrationInputs(body) {
     else {
         errors.confirmPassword = msg.confirmPasswordRequired;
     }
-    if (isValidConfirmPassword && isValidPassword && body.password !== body.confirmPassword) {
+    if (isValidConfirmPassword && isValidPassword && inputs.password !== inputs.confirmPassword) {
         errors.confirmPassword = msg.pAndCpMismatch;
     }
-    if (body.firstName) {
-        if (!validate.name(body.firstName)) {
+    if (inputs.firstName) {
+        if (!validate.name(inputs.firstName)) {
             errors.firstName = msg.firstNameInvalid;
         }
     }
     else {
         errors.firstName = msg.firstNameRequired;
     }
-    if (body.lastName) {
-        if (!validate.name(body.lastName)) {
+    if (inputs.lastName) {
+        if (!validate.name(inputs.lastName)) {
             errors.lastName = msg.lastNameInvalid;
         }
     }
@@ -132,7 +132,6 @@ function validateRegistrationInputs(body) {
 
 
 }
-
 function authRegisterRouteHandler(request, response) {
     const REGISTRATION_BODY = ["email", "username", "password", "firstName", "lastName", "confirmPassword"];
 
@@ -147,21 +146,27 @@ function authRegisterRouteHandler(request, response) {
     }
 }
 
-function validateAttemptToForgotPasswordInputs(info) {
+
+function validateAttemptToForgotPasswordInputs(inputs) {
     const VALID_MEDIA = ["email", "mobile"];
     const errors = {};
-    if (info.email) {
-        if (!validate.email(info.email)) {
+    if (inputs.email) {
+        if (!validate.email(inputs.email)) {
             errors.email = msg.emailInvalid;
         }
     }
     else {
         errors.email = msg.emailRequired;
     }
-
-    if (VALID_MEDIA.indexOf(info.media) == -1) {
-        errors.media = msg.mediaNotSupported;
+    if(inputs.media){
+        if (VALID_MEDIA.indexOf(inputs.media) == -1) {
+            errors.media = msg.mediaNotSupported;
+        }
     }
+    else{
+        errors.media = msg.mediaRequired;
+    }
+
 
 
 
@@ -170,7 +175,6 @@ function validateAttemptToForgotPasswordInputs(info) {
         errors
     };
 }
-
 function authAttemptToForgotPasswordRouteHandler(request, response) {
     logger.debug("authAttemptToForgotPassword");
     const ATTEMPT_RESET_PASSWORD = ["email", "media"];
@@ -184,7 +188,7 @@ function authAttemptToForgotPasswordRouteHandler(request, response) {
         sendResponse.badRequest(response, msg.inputErrors, errors);
     }
     else {
-        dbOperations.addPasswordToken(body.email, function addPasswordTokenCbRoute(error, result) {
+        dbOperations.addPasswordToken(body.email, body.media, function addPasswordTokenCbRoute(error, result) {
             if (error) {
                 sendResponse.serverError(response);
             }
@@ -221,21 +225,23 @@ function authAttemptToForgotPasswordRouteHandler(request, response) {
 
 
 }
-function validateResetPasswordInputs(body) {
+
+
+function validateResetPasswordInputs(inputs) {
     const TOKEN_LENGTH = 8;
     const errors = {};
 
-    if (body.loginId) {
-        if (!validate.email(body.loginId) || !validate.mobile(body.mobile)) {
-            errors.loginId = msg.loginIdInvalid;
+    if (inputs.email) {
+        if (!validate.email(inputs.email)) {
+            errors.email = msg.emailInvalid;
         }
     }
     else {
-        errors.loginId = msg.loginIdRequired;
+        errors.email = msg.emailRequired;
     }
 
-    if (body.token) {
-        if (!validate.id(body.token, TOKEN_LENGTH, TOKEN_LENGTH)) {
+    if (inputs.token) {
+        if (!validate.id(inputs.token, TOKEN_LENGTH)) {
             errors.token = msg.tokenInvalid;
         }
     }
@@ -243,8 +249,11 @@ function validateResetPasswordInputs(body) {
         errors.token = msg.tokenRequired;
     }
 
-    if (body.password) {
-        if (!validate.password(body.password)) {
+    let isValidPassword = false;
+    if (inputs.password) {
+        isValidPassword = true;
+        if (!validate.password(inputs.password)) {
+            isValidPassword = false;
             errors.password = msg.passwordInvalid;
 
         }
@@ -252,18 +261,20 @@ function validateResetPasswordInputs(body) {
     else {
         errors.password = msg.passwordRequired;
     }
-    if (body.confirmPassword) {
-
-        if (!validate.confirmPassword(body.confirmPassword)) {
+    let isValidConfirmPassword = false
+    if (inputs.confirmPassword) {
+        isValidConfirmPassword = true;
+        if (!validate.password(inputs.confirmPassword)) {
+            isValidConfirmPassword = false;
             errors.confirmPassword = msg.confirmPasswordInvalid;
 
         }
 
     }
     else {
-        errors.confirmPassword = msg.confirmPasswordInvalidRequired;
+        errors.confirmPassword = msg.confirmPasswordRequired;
     }
-    if (body.password && body.confirmPassword && body.password === body.confirmPassword) {
+    if (isValidConfirmPassword && isValidPassword && inputs.password !== inputs.confirmPassword) {
         errors.confirmPassword = msg.pAndCpMismatch;
     }
 
@@ -275,7 +286,7 @@ function validateResetPasswordInputs(body) {
 }
 function authResetPasswordRouteHandler(request, response) {
 
-    const RESET_PASSWORD = ["loginId", "token", "password", "confirmPassword"]; // loginId is email or mobile number
+    const RESET_PASSWORD = ["email", "token", "password", "confirmPassword"]; // loginId is email or mobile number
     const body = loadash.pick(request.body, RESET_PASSWORD);
 
     const { isValid, errors } = validateResetPasswordInputs(body);
@@ -290,7 +301,7 @@ function authResetPasswordRouteHandler(request, response) {
             passwordToken: 1,
             passwordTokenTimeStamp: 1
         };
-        dbOperations.findByEmailUsername(body.loginId, function findByEmailUsernameCbRoute(error, result) {
+        dbOperations.findByEmail(body.email, function findByEmailUsernameCbRoute(error, result) {
             if (error) {
                 sendResponse.serverError(error);
             }
@@ -328,6 +339,8 @@ function authResetPasswordRouteHandler(request, response) {
 
 
 }
+
+
 module.exports = {
     authLoginRouteHandler,
     authRegisterRouteHandler,

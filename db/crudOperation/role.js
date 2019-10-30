@@ -111,14 +111,15 @@ const dbOperations = {
                 }
             });
     },
-    getRoles(callback) {
+    getRoles(callback, projections = {}) {
         logger.debug('ROLE_CRUD getRoles');
+        const QUERY = {
+            'role': {
+                '$ne': 'superadmin' // $ne dont use index
+            }
+        };
         Role
-            .find({
-                'role': {
-                    '$ne': 'superadmin' // $ne dont use index
-                }
-            }, function getRolesDbCb(error, results) {
+            .find(QUERY, projections, function getRolesDbCb(error, results) {
                 if (error) {
                     callback(error, null);
                 }
@@ -148,20 +149,10 @@ const dbOperations = {
                 }
             });
     },
-    assignRole(userId, role){
-        const USER_QUERY = {
-            'userId': userId,
-            'role': {
-                '$ne': 'superadmin'
-            }
-        };
-        const UPDATE_QUERY = {
-            '$set': {
-                'role': role
-            }
-        };
+    assignRole(userId, role, callback){
+
         UserCRUD
-        .updateOne(USER_QUERY, UPDATE_QUERY, function assignRoleDbCb(error, result){
+        ._assignRole(userId, role, function assignRoleDbCb(error, result){
             if(error){
 
             }
@@ -170,7 +161,27 @@ const dbOperations = {
                     callback(null, null);
                 }
                 else{
+                    console.log(result.toObject());
                     callback(null, {});
+                }
+            }
+        });
+    },
+    getRoleById(roleId, callback){
+        Role
+        .findOne({
+            'roleId': roleId
+        })
+        .exec(function getRoleByIdDbCb(error, result){
+            if(error){
+                callback(error, null);
+            }
+            else{
+                if(!result){
+                    callback(null, null);
+                }
+                else{
+                    callback(null, result);
                 }
             }
         });

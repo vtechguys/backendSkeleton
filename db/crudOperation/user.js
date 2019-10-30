@@ -6,8 +6,8 @@ const { assignUserId, encryptPassword } = require('../functions');
 const dbOperations = {
     doLogin(body, response) {
         logger.debug('USER_CRUD doLogin');
-        var that = this;
-        that
+        const that = this;
+        this
             .findByEmailUsername(body.loginId, function doLoginDbCb1(error, result) {
                 if (error) {
                     logger.error(error);
@@ -32,7 +32,7 @@ const dbOperations = {
     register(body, response) {
         logger.debug('register this user');
         const that = this;
-        that.findByEmail(body.email, function registerDbCb(error, result) {
+        this.findByEmail(body.email, function registerDbCb(error, result) {
             if (error) {
                 logger.error(error);
                 sendResponse.serverError(response);
@@ -147,50 +147,44 @@ const dbOperations = {
     },
     findByEmail(email, callback, projections = {}) {
         logger.debug('USER_CURD findByEmail');
-        var that = this;
+        const that = this;
         const QUERY = {
             'email': email
         };
-        that.findUserForThisQuery(QUERY, projections, callback);
+        this.findUserForThisQuery(QUERY, projections, callback);
     },
     findByUsername(username, callback, projections = {}) {
         logger.debug('USER_CURD findByUsername');
-        var that = this;
+        const that = this;
         const QUERY = {
             'username': username
         };
         that.findUserForThisQuery(QUERY, projections, callback);
     },
-    addPasswordToken(userIdOrEmail, callback) {
+    addPasswordToken(userIdOrEmail, media, callback) {
         logger.debug('User_CRUD addPasswordToken');
 
         const TOKEN_LENGTH = 8;
 
 
         const FIND_QUERY = {
-            "$or": [
-                {
-                    "userId": userIdOrEmail
-                },
-                {
-                    "email": userIdOrEmail
-                }
-            ]
+
+            "email": userIdOrEmail
+               
         };
 
 
         const UPDATE_QUERY_SET = {
-            passwordToken: generate.randomNumber(TOKEN_LENGTH),
+            passwordToken: generate.randomString(TOKEN_LENGTH),
             passwordTimeStamp: ((new Date()).getTime())
         };
 
         const UPDATE_QUERY = {
             "$set": UPDATE_QUERY_SET
         };
-
         User
             .findOneAndUpdate(FIND_QUERY, UPDATE_QUERY, { new: true })
-            .exec(function addEmailOrMobileTokenDbCb(error, result) {
+            .exec(function addPasswordTokenDbCb(error, result) {
                 if (error) {
                     callback(error, null);
                 }
@@ -238,7 +232,44 @@ const dbOperations = {
             'userId': userId
         };
         this.findUserForThisQuery(QUERY, projections, callback); 
-    }
+    },
+    _assignRole(userId, role, callback){
+        logger.debug('User_CRUD assignRole');
+        const USER_QUERY = {
+            'userId': userId,
+            'role': {
+                '$ne': 'superadmin'
+            }
+        };
+        const UPDATE_QUERY = {
+            '$set': {
+                'role': role
+            }
+        };
+        console.log(USER_QUERY, UPDATE_QUERY);
+        this.getOneUserAndUpdateFields(USER_QUERY, UPDATE_QUERY, callback)
+    },
+    getOneUserAndUpdateFields(FIND_QUERY, UPDATE_QUERY, callback, options){
+        const updateOptions = options || {
+            // new: true
+        };
+        User
+        .findOneAndUpdate(FIND_QUERY, UPDATE_QUERY, updateOptions)
+        .exec(function getOneUserAndUpdateFieldsCb(error, result){
+            if(error){
+                callback(error, null);
+            }
+            else{
+                if(!result){
+                    callback(null, null);
+                }
+                else{
+                    callback(null, result);
+                }
+            }
+        });
+    },
+
 
 };
 module.exports = dbOperations;
