@@ -162,6 +162,8 @@ const dbOperations = {
         that.findUserForThisQuery(QUERY, projections, callback);
     },
     addPasswordToken(userIdOrEmail, callback) {
+        logger.debug('User_CRUD addPasswordToken');
+
         const TOKEN_LENGTH = 8;
 
 
@@ -203,6 +205,7 @@ const dbOperations = {
             });
     },
     resetPassword(loginId, password, callback) {
+        logger.debug('User_CRUD resetPassword');
 
         const QUERY = {
             'userId': loginId
@@ -230,6 +233,7 @@ const dbOperations = {
             });
     },
     findByUserId(userId, callback, projections = {}){
+        logger.debug('User_CRUD findByUserId');
         const QUERY = {
             'userId': userId
         };

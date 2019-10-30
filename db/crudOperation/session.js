@@ -25,7 +25,6 @@ const dbOperations = {
             });
     },
     getSessionForThisUser(userData, callback) {
-        console.log(logger);
         logger.debug("Session_CRUD getSessionForThisUser");
         Session
             .find({
@@ -79,6 +78,7 @@ const dbOperations = {
 
     },
     getBySessionIdAndRemove(sessionId, callback) {
+        logger.debug('Session_CRUD getBySessionIdAndRemove');
         Session
             .find({
                 sessionId: sessionId

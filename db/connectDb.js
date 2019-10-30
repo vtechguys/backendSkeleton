@@ -3,9 +3,9 @@
 //mongoose 
 const mongoose = require("mongoose");
 //App Configurations
-const config = require("../config");
+const { DB_URL } = require("../config");
 //Connect mongoose
-mongoose.connect(config.DB_URL, function (err) {
+mongoose.connect(DB_URL, function (err) {
     //Logs error and exit process
     if(err){
         console.error('Could not connect to MongoDB!');

@@ -1,7 +1,8 @@
 'use strict'
 const { encrypt, generate } = require('../../utils');
 function assignRoleId(roleObj) {
-    roleObj.roleId = generate.randomString(8);
+    const ROLE_ID_LENGTH = 8;
+    roleObj.roleId = generate.randomString(ROLE_ID_LENGTH);
 }
 function assignRole(roleObj, role) {
     roleObj.role = role;

@@ -2,7 +2,7 @@
 
 //Express node http framework
 const express = require('express');
-
+const path = require('path');
 //Logs HTTP request urls to console with time and reply
 const loggerHttp = require('morgan');
 
@@ -38,7 +38,7 @@ app.use(function (request, response, next) {
 app.use(loggerHttp( constants.HTTP_LOGGER_TYPE ));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-// app.use( express.static( path.join(__dirname, paths.STATIC_FILES ) ) );
+app.use( express.static( path.join(__dirname, paths.STATIC_FILES ) ) );
 app.use(mfavicon(__dirname + paths.FAVICON ));
 
 // crash reporter initialised
