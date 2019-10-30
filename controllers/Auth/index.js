@@ -81,9 +81,11 @@ function validateRegistrationInputs(body) {
     else {
         errors.username = msg.usernameRequired;
     }
-
+    let isValidPassword = false;
     if (body.password) {
+        isValidPassword = true;
         if (!validate.password(body.password)) {
+            isValidPassword = false;
             errors.password = msg.passwordInvalid;
 
         }
@@ -91,18 +93,20 @@ function validateRegistrationInputs(body) {
     else {
         errors.password = msg.passwordRequired;
     }
+    let isValidConfirmPassword = false
     if (body.confirmPassword) {
-
-        if (!validate.confirmPassword(body.confirmPassword)) {
+        isValidConfirmPassword = true;
+        if (!validate.password(body.confirmPassword)) {
+            isValidConfirmPassword = false;
             errors.confirmPassword = msg.confirmPasswordInvalid;
 
         }
 
     }
     else {
-        errors.confirmPassword = msg.confirmPasswordInvalidRequired;
+        errors.confirmPassword = msg.confirmPasswordRequired;
     }
-    if (body.password && body.confirmPassword && body.password === body.confirmPassword) {
+    if (isValidConfirmPassword && isValidPassword && body.password !== body.confirmPassword) {
         errors.confirmPassword = msg.pAndCpMismatch;
     }
     if (body.firstName) {
@@ -145,7 +149,7 @@ function authRegisterRouteHandler(request, response) {
 
 function validateAttemptToForgotPasswordInputs(info) {
     const VALID_MEDIA = ["email", "mobile"];
-
+    const errors = {};
     if (info.email) {
         if (!validate.email(info.email)) {
             errors.email = msg.emailInvalid;
@@ -189,7 +193,7 @@ function authAttemptToForgotPasswordRouteHandler(request, response) {
                     sendResponse.notFound(response, msg.userNotFound);
                 }
                 else {
-                    if (media == "mobile" && result.mobile && result.mobileVerified) {
+                    if (body.media == "mobile" && result.mobile && result.mobileVerified) {
                         const smsObject = {
                             to: result.mobile,
                             token: result.passwordToken,

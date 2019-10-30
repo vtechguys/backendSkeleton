@@ -2,6 +2,7 @@
 const nodeMailer = require('nodemailer');
 
 const { constants } = require('../../config');
+
 const logger = require('../logger');
 
 const { email } = require('../../template');
@@ -11,24 +12,53 @@ const mailTypes = {
     ATTEMPT_RESET_PASSWORD: "resetPassword",
     SUCCESS_RESET_PASSWORD: "resetPasswordSuccess"
 };
+
 function accountAcivationLinkEmailGenerate(mailData, type) {
-    const emailObj = {};
-    emailObj.to = mailData.email;
-    emailObj.subject = "Confirm Your Email";
-    const payload = constants.REQ_URL + "/activation-email?token=" + mailData.token + "&email" + mailData.email;
-    emailObj.text = "Your Account Activation link is " + payload;
-    emailObj.templateData = { ...mailData, type: type, payload };
-    return emailObj;
+    
+    const emailObj = {
+        ...mailData,
+        type
+    };
+    
+    emailObj.TO = mailData.email;
+
+    emailObj.SUBJECT = "Confirm Your Email";
+    
+    const payload = constants.REQ_URL + "/activation-email?token=" + mailData.token + "&email=" + mailData.email;
+    
+    emailObj.REDIRECT_URL = payload;
+    emailObj.HEADER = 'Email verification';
+    emailObj.SUB_HEADER = 'Email verifaction is required to activate your account.';
+    emailObj.TEXT = `This mail is to confirm user registerd with email ${emailObj.TO} on our platform. Please click on link ${emailObj.REDIRECT_URL}`;
+    
+    const HTML_BODY = email.emailVerification(emailObj);
+    
+    _sendMail(emailObj.TO, emailObj.SUBJECT, emailObj.TEXT, HTML_BODY);
 }
 function attemptResetPasswordEmailGenerate(mailData, type) {
-    const emailObj = {};
-    emailObj.to = mailData.email;
-    emailObj.subject = "Attemptting to reset password";
+    const emailObj = {
+        ...mailData,
+        type
+    };
+    
+    emailObj.TO = mailData.email;
 
-    const payload = constants.REQ_URL = emailObj.payload = payload + "/account/reset-password?token=" + mailData.token + "&email" + mailData.email;
-    emailObj.text = "Your Password reset link is " + payload;
-    emailObj.templateData = { ...mailData, type: type };
-    return emailObj;
+    emailObj.SUBJECT = "You Attempting to reset password.";
+    
+    const payload = constants.REQ_URL + "/reset-password?token=" + mailData.token + "&email=" + mailData.email;
+    
+    emailObj.REDIRECT_URL = payload;
+    emailObj.REDIRECT_URL = payload;
+    emailObj.HEADER = 'Attempting to reset password';
+    emailObj.SUB_HEADER = 'Attempting to reset passwrord';
+
+    emailObj.TEXT = `This mail is genereated to serve your request of forgot password. Click here ${emailObj.REDIRECT_URL}`;
+    
+    const HTML_BODY = email.emailVerification(emailObj); //test
+
+    // const HTML_BODY = email.attemptResetPassword(emailObj);
+    _sendMail(emailObj.TO, emailObj.SUBJECT, emailObj.TEXT, HTML_BODY);
+
 }
 function successResetPasswordEmailGenerate(mailData, type) {
     const emailObj = {};
@@ -46,15 +76,24 @@ function successResetPasswordEmailGenerate(mailData, type) {
 
 function _sendMail(To, Subject, EmailText, HtmlBody) {
     logger.debug("utils mailer sendMail");
-    let SMTP_URL = "smtps://" + constants.MAIL_TRANSPORT_AUTH_EMAIL + ":" + constants.MAIL_TRANSPORT_AUTH_PASSWORD + "@" + constants.MAIL_URL;
-    const tranpoter = nodeMailer.createTransport(SMTP_URL);
+    // let SMTP_URL = "smtps://" + constants.MAIL_TRANSPORT_AUTH_EMAIL + ":" + constants.MAIL_TRANSPORT_AUTH_PASSWORD + "@" + constants.MAIL_URL;
+    const transporterOptions = {
+        host: constants.MAIL_URL,
+        port: constants.MAIL_PORT,
+        secure: true, // use SSL
+        auth: {
+            user: constants.MAIL_TRANSPORT_AUTH_EMAIL,
+            pass: constants.MAIL_TRANSPORT_AUTH_PASSWORD
+        }
+    };
+    const tranpoter = nodeMailer.createTransport(transporterOptions);
 
     const mailOptions = {
-        from: constants.COMPANY_NAME + '<h=' + constants.SUPER_ADMIN_EMAIL + '>',
+        from: `"${constants.COMPANY_NAME}" <${constants.MAIL_TRANSPORT_AUTH_EMAIL}>`,
         to: To,
         subject: Subject,
         text: EmailText,
-        html: HtmlBody
+        html: HtmlBody,
 
     };
 
@@ -79,27 +118,13 @@ function _sendMail(To, Subject, EmailText, HtmlBody) {
 const mailer = {
     createMail(mailData, type) {
         logger.debug("utils mailer createMail");
-        let htmlBody = "";
-        let templateData;
         switch (type) {
             case mailTypes.ACCOUNT_ACTIVATION_LINK:
-                var emailObj = accountAcivationLinkEmailGenerate(mailData, type);
-                htmlBody = email.accountActivationEmail(emailObj.templateData);
-                _sendMail(emailObj.to, emailObj.subject, emailObj.text, htmlBody);
-                break;
-
+                return accountAcivationLinkEmailGenerate(mailData, type);
             case mailTypes.ATTEMPT_RESET_PASSWORD:
-                var emailObj = attemptResetPasswordEmailGenerate(mailData, type);
-                htmlBody = email.attemptResetPassword(emailObj.templateData);
-                _sendMail(emailObj.to, emailObj.subject, emailObj.text, htmlBody);
-                break;
-
+                return attemptResetPasswordEmailGenerate(mailData, type);
             case mailTypes.SUCCESS_RESET_PASSWORD:
-                var emailObj = successResetPasswordEmailGenerate(mailData, type);
-                htmlBody = email.successResetPassword(templateData);
-                _sendMail(emailObj.to, emailObj.subject, emailObj.text, htmlBody);
-                break;
-
+                return successResetPasswordEmailGenerate(mailData, type);
         }
 
     },

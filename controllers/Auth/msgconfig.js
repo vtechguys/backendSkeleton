@@ -34,7 +34,7 @@ const messageAuthRoute = {
 
     accountDuplicate: "A account with this mobile or email already exist.",
 
-    inputErrors: "Input error",
+    inputErrors: "Input errors",
 
 
 

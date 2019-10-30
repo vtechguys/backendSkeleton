@@ -1,15 +1,15 @@
 'use strict'
 
 const registerUrls = {
-    simple:{
-        '/':[''],
-        '/auth/': ['login','register']
+    simple: {
+        '/': [''],
+        '/auth/': ['login', 'register', 'attempt-forgot-password', 'reset-forgot-password']
     },
-    auth:{
+    auth: {
         '/': ['web-index'],
-        '/profile/':['get-profile', 'update-profile', ],
+        '/profile/': ['get-profile', 'update-profile',],
     },
-    ALL_ROLES: ['superadmin','admin', 'moderator', 'seller', 'user', 'guest']
+    ALL_ROLES: ['superadmin', 'admin', 'moderator', 'seller', 'user', 'guest']
 
 };
 
