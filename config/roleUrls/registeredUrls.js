@@ -3,7 +3,7 @@
 const registerUrls = {
     simple: {
         '/': [''],
-        '/auth/': ['login', 'register', 'attempt-forgot-password', 'reset-forgot-password']
+        '/auth/': ['login', 'register', 'attempt-forgot-password', 'reset-forgot-password', 'email-activation']
     },
     auth: {
         '/': ['web-index'],

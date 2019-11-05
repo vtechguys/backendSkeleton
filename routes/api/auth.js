@@ -9,5 +9,6 @@ router.post('/login', AuthController.authLoginRouteHandler);
 router.post('/register', AuthController.authRegisterRouteHandler);
 router.post('/attempt-forgot-password', AuthController.authAttemptToForgotPasswordRouteHandler);
 router.post('/reset-forgot-password', AuthController.authResetPasswordRouteHandler);
+router.post('/email-verification', AuthController.authEmailVerificationRouteHandler);
 
 module.exports = router; 

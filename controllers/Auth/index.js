@@ -295,7 +295,7 @@ function authResetPasswordRouteHandler(request, response) {
         sendResponse.badRequest(response, msg.inputErrors, errors);
     }
     else {
-        const userDataProjections = {
+        const PROJECTIONS = {
             userId: 1,
             _id: 1,
             passwordToken: 1,
@@ -314,7 +314,8 @@ function authResetPasswordRouteHandler(request, response) {
                         sendResponse.unauthorized(response, msg.tokenIncorrect);
                     }
                     else {
-                        const timeNow = (new Date()).getTime();
+                        const TOKEN_TIME_STAMP = ( new Date(result.passwordTokenTimeStamp) ).getTime();
+                        const TIME_NOW = (  new Date() ).getTime();
                         if (timeNow  - result.passwordTokenTimeStamp >= EXPIRATION_DURATION) {
                             sendResponse.badRequest(response, msg.tokenExpired);
                         }
@@ -333,17 +334,104 @@ function authResetPasswordRouteHandler(request, response) {
                     }
                 }
             }
-        }, userDataProjections);
+        }, PROJECTIONS);
 
     }
 
 
 }
 
+function validateEmailActivationInputs(inputs){
+    const TOKEN_LENGTH = 8;
+    const errors = {};
+
+    if (inputs.email) {
+        if (!validate.email(inputs.email)) {
+            errors.email = msg.emailInvalid;
+        }
+    }
+    else {
+        errors.email = msg.emailRequired;
+    }
+
+    if (inputs.token) {
+        if (!validate.id(inputs.token, TOKEN_LENGTH)) {
+            errors.token = msg.tokenInvalid;
+        }
+    }
+    else {
+        errors.token = msg.tokenRequired;
+    }
+    return {
+        isValid: loadash.isEmpty(errors),
+        errors
+    }
+}
+
+function authEmailVerificationRouteHandler(request, response){
+    logger.debug("authEmailActivationRouteHandler");
+    
+    const EMAIL_ACTIVATION_INPUTS = ["email", "token"];
+    const body = loadash.pick(request.body, EMAIL_ACTIVATION_INPUTS);
+   
+    const { isValid, errors } = validateEmailActivationInputs(body);
+
+
+    if(!isValid){
+        sendResponse.badRequest(response, msg.inputErrors, errors);
+    }
+    else{
+        const PROJECTIONS = {
+            'userId': 1,
+            'emailToken': 1,
+            'emailTokenTimeStamp': 1
+        };
+        dbOperations
+        .findByEmail(body.email, function findByEmailCbRoute(error, result){
+            if(error){
+                logger.error(error);
+                sendResponse.serverError(response);
+            }
+            else{
+                if(!result){
+                    sendResponse.notFound(response, msg.userNotFound);
+                }
+                else{
+                    const TOKEN_TIME_STAMP = ( new Date(result.emailTokenTimeStamp) ).getTime();
+                    const TIME_NOW = ( new Date() ).getTime();
+
+                    if( TIME_NOW - TOKEN_TIME_STAMP  >= EXPIRATION_DURATION){
+                        sendResponse.badRequest(response, msg.tokenExpired);
+                    }
+                    else{
+                        if(result.emailToken != body.token){
+                            sendResponse.badRequest(response, msg.tokenIncorrect);
+                        }
+                        else{
+                            dbOperations
+                            .setVerified(body.userId, 'email', function setVerifiedCbRoute(error1, result1){
+                                if(error1){
+                                    logger.error(error1);
+                                    sendResponse.serverError(response);
+                                }
+                                else{
+                                    sendResponse.success(response, msg.emailVerified);
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        }, PROJECTIONS);
+    }
+
+
+}
 
 module.exports = {
     authLoginRouteHandler,
     authRegisterRouteHandler,
     authAttemptToForgotPasswordRouteHandler,
-    authResetPasswordRouteHandler
+    authResetPasswordRouteHandler,
+    authEmailVerificationRouteHandler
 };

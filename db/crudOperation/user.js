@@ -176,7 +176,7 @@ const dbOperations = {
 
         const UPDATE_QUERY_SET = {
             passwordToken: generate.randomString(TOKEN_LENGTH),
-            passwordTimeStamp: ((new Date()).getTime())
+            passwordTimeStamp: new Date()
         };
 
         const UPDATE_QUERY = {
@@ -269,7 +269,50 @@ const dbOperations = {
             }
         });
     },
+    setVerified(userId, verified, callback){
+        const setField = {
 
+        };
+        if(verified === 'email'){
+            setField.emailVerified = true;
+        }
+        else if(verified === 'mobile'){
+            setField.mobileVerified = true;
+        }
+
+        const FIND_QUERY = {
+            'userId': userId
+        };
+        const UPDATE_QUERY = {
+            '$set': setField
+        };
+
+        this
+        .getOneUserAndUpdateFields(FIND_QUERY, UPDATE_QUERY, callback);
+    },
+    addToken(userId, type, callback){
+        const TOKEN_LENGTH = 8;
+        const { generate } = require('../../utils');
+        const token = generate.randomString(TOKEN_LENGTH);
+
+        const setFields = {};
+        if(type == "email"){
+            setFields.emailToken = token;
+            setFields.emailTokenTimeStamp = new Date();
+        }
+        else if(type == "mobile"){
+            setFields.mobileToken = token;
+            setFields.mobileTokenTimeStamp = new Date();
+        }
+
+        const FIND_QUERY = {
+            'userId': userId
+        };
+        const UPDATE_QUERY = {
+            '$set': setFields
+        };
+        this.getOneUserAndUpdateFields(FIND_QUERY, UPDATE_QUERY, callback);
+    }
 
 };
 module.exports = dbOperations;
