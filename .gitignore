@@ -1,3 +1,9 @@
 /node_modules
+
 /logs
-/config/constants/*
+
+/config/constants/constants_dev.js
+/config/constants/constants_prod.js
+
+/config/db/dbConfig_dev.js
+/config/db/dbConfig_prod.js

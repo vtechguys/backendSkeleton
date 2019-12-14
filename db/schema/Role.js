@@ -22,6 +22,8 @@ const roleSchema = new Schema({
     }
   ]
 });
+roleSchema.index({ 'roleId': 1 });
+roleSchema.index({ 'role': 1 });
 
 const Role = mongoose.model(schemaNames.rolesCollection, roleSchema);
 

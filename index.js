@@ -28,9 +28,9 @@ const { constants, paths } = require('./config');
 const app = express();
 
 //CORS Middleware
-app.use(function (request, response, next) {
+app.use(function setCorsHeaders(request, response, next) {
     response.header("Access-Control-Allow-Origin", "*");
-    response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
     next();
 });
 
@@ -38,7 +38,8 @@ app.use(function (request, response, next) {
 app.use(loggerHttp( constants.HTTP_LOGGER_TYPE ));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use( express.static( path.join(__dirname, paths.STATIC_FILES ) ) );
+// if we are holding the static content on the very same server then this is requied esle I dont use it.
+// app.use( express.static( path.join(__dirname, paths.STATIC_FILES ) ) );
 app.use(mfavicon(__dirname + paths.FAVICON ));
 
 // crash reporter initialised

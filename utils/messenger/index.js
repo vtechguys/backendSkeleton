@@ -24,7 +24,7 @@ const SMS_TYPES = {
 function mobileActivationSMS(msgObj, type){
     const TO = msgObj.to;
     const TEXT = templateSMS.mobileActivationTemplate(msgObj);
-    $_sendSMS(TO, TEXT, type);
+    _sendSMS(TO, TEXT, type);
 }
 
 const smsOperations = {
@@ -40,7 +40,7 @@ const smsOperations = {
 
 module.exports = smsOperations;
 
-function $_sendSMS(to, text, type){
+function _sendSMS(to, text, type){
     let message =  messageService(constants.MSG91_API_KEY, constants.MSG91_SENDER_ID, msg.MSG91_ROUTE_ID_DEFAULT);
 
     if(type == MSG_91_MESSAGE_TYPE.PROMOTIONS){

@@ -13,14 +13,13 @@ function fillSession(result, response) {
 
     const userData = result.toObject();
 
-    delete userData.password1;
+    delete userData.password;
     delete userData.salt;
     delete userData.passwordTokenStamp;
     delete userData.emailActivationToken;
     delete userData.forgotPasswordToken;
     delete userData.mobileVerificationCode;
     delete userData.mobileTokenStamp;
-    delete userData.locationHistory;
 
 
     // if (userData.social && userData.social[0] && userData.social[0].sId) {
