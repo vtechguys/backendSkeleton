@@ -1,6 +1,6 @@
 'use strict'
 
-const { constants } = require('../config');
+const { constants, APP_VERSION } = require('../config');
 
 const ALL_URLS = require('../config/roleUrls/registeredUrls');
 const CONFIG_URLS = require('../config/roleUrls/configUrls');
@@ -27,25 +27,24 @@ const RoleCRUD = require('../db/crudOperation/role');
 
 Object.keys(SIMPLE_URLS).forEach(function (keyBaseUrl) {
     for (let i = 0; i < SIMPLE_URLS[keyBaseUrl].length; i++) {
-        let url = keyBaseUrl + SIMPLE_URLS[keyBaseUrl][i];
+        let url = '/' + APP_VERSION + keyBaseUrl + SIMPLE_URLS[keyBaseUrl][i];
         SIMPLE_URLS_ARRAY.push(url);
     }
 });
 
 Object.keys(AUTH_URLS).forEach(function (keyBaseUrl) {
     for (let i = 0; i < AUTH_URLS[keyBaseUrl].length; i++) {
-        let url = keyBaseUrl + AUTH_URLS[keyBaseUrl][i];
+        let url = '/' + APP_VERSION +  keyBaseUrl + AUTH_URLS[keyBaseUrl][i];
         AUTH_URLS_ARRAY.push(url);
     }
 });
 
 Object.keys(CONFIG_URLS).forEach(function (keyBaseUrl) {
     for (let i = 0; i < CONFIG_URLS[keyBaseUrl].length; i++) {
-        let url = keyBaseUrl + CONFIG_URLS[keyBaseUrl][i];
+        let url = '/' + APP_VERSION +  keyBaseUrl + CONFIG_URLS[keyBaseUrl][i];
         AUTH_URLS_ARRAY.push(url);
     }
 });
-
 function checkRights(request, response, next) {
     RoleCRUD.getRole(request.userData.role, (error, result) => {
         if (error) {

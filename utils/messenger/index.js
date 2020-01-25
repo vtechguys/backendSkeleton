@@ -15,7 +15,7 @@ const MSG_91_MESSAGE_TYPE = {
 
 
 const SMS_TYPES = {
-    MOBILE_ACTIVATION: "Moblie activation",
+    MOBILE_ACTIVATION: "moblieActivation",
     ATTEMPT_RESET_PASSWORD: "resetPassword",
     SUCCESS_RESET_PASSWORD: "resetPasswordSuccess"
 };

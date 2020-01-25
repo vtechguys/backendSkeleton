@@ -17,7 +17,7 @@ const { crashReporter } = require("./utils");
 
 // constants are all those values that are process var and dont change in app.
 // paths to all resorces 
-const { constants, paths } = require('./config');
+const { constants, paths, APP_VERSION } = require('./config');
 
 
 /*
@@ -62,17 +62,8 @@ else{
 
 
 // Routes importing
-// index serves / webpage and /webindex
-const index = require('./routes/api/index');
-// auth serves /auth login, register etc.
-const auth = require('./routes/api/auth');
-// role serves /role get-roles, get-role, create-role, assign-role, delete-role, fill-rights
-const role = require('./routes/api/role');
-// Routes Mapper Middleware
-app.use('/',index);
-app.use('/auth', auth);
-app.use('/roles', role);
-app.use('*', index);
+const routesForApplicationVersion = require('./routes');
+routesForApplicationVersion[APP_VERSION](app);
 
 // Error Handling
 //catch 404 routes

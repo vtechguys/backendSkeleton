@@ -161,7 +161,6 @@ const dbOperations = {
                     callback(null, null);
                 }
                 else{
-                    console.log(result.toObject());
                     callback(null, {});
                 }
             }
