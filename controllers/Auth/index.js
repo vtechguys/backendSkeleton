@@ -316,7 +316,7 @@ function authResetPasswordRouteHandler(request, response) {
                     else {
                         const TOKEN_TIME_STAMP = ( new Date(result.passwordTokenTimeStamp) ).getTime();
                         const TIME_NOW = (  new Date() ).getTime();
-                        if (timeNow  - result.passwordTokenTimeStamp >= EXPIRATION_DURATION) {
+                        if (TIME_NOW  - TOKEN_TIME_STAMP >= EXPIRATION_DURATION) {
                             sendResponse.badRequest(response, msg.tokenExpired);
                         }
                         else {
