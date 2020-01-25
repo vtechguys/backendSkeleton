@@ -146,8 +146,8 @@ const authenticate = {
 
         }
         else {
-            sendResponse.badRequest(response, "URL not supported.");
-            // next();
+            // sendResponse.badRequest(response, "URL not supported.");
+            next();
         }
     }
 };
