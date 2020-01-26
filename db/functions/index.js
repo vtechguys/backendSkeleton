@@ -11,11 +11,9 @@ function createTheRole(role = 'guest'){
     roleObj.role = role;
     return roleObj;
 }
-function assignUserId(userObj) {
+function generateUserId() {
     const USER_ID_LENGTH = 12;
-    const { generate } = require('../../utils');
-
-    userObj.userId = generate.randomString(USER_ID_LENGTH);
+    return uniqueIdGenerator(USER_ID_LENGTH);
 }
 function encryptedPasswordAndHash(password) {
     const salt = encrypt.genRandomString(10);
@@ -31,5 +29,5 @@ module.exports = {
     createTheRole,
     encryptedPasswordAndHash,
     
-    assignUserId,
+    generateUserId,
 };

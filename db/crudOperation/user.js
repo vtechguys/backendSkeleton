@@ -1,7 +1,7 @@
 'use strict'
 const User = require('../schema/User');
 const { logger, sendResponse, session, encrypt, mailer, generate } = require('../../utils');
-const { assignUserId, encryptedPasswordAndHash } = require('../functions');
+const { generateUserId, encryptedPasswordAndHash } = require('../functions');
 
 const dbOperations = {
     doLogin(body, response) {
@@ -136,7 +136,7 @@ const dbOperations = {
     },
     createUser(userData, callback) {
         logger.debug('USER_CRUD createUser');
-        assignUserId(userData);
+        userData.userId = generateUserId(userData);
         User
             .create(userData, function createUserDbCb(error, result) {
                 if (error) {
