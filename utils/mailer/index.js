@@ -8,9 +8,9 @@ const logger = require('../logger');
 const { email } = require('../../template');
 
 const mailTypes = {
-    ACCOUNT_ACTIVATION_LINK: "accountActivationLink",
-    ATTEMPT_RESET_PASSWORD: "resetPassword",
-    SUCCESS_RESET_PASSWORD: "resetPasswordSuccess"
+    ACCOUNT_ACTIVATION_LINK: 'accountActivationLink',
+    ATTEMPT_RESET_PASSWORD: 'resetPassword',
+    SUCCESS_RESET_PASSWORD: 'resetPasswordSuccess'
 };
 
 function accountAcivationLinkEmailGenerate(mailData, type) {
@@ -22,9 +22,9 @@ function accountAcivationLinkEmailGenerate(mailData, type) {
     
     emailObj.TO = mailData.email;
 
-    emailObj.SUBJECT = "Confirm Your Email";
+    emailObj.SUBJECT = 'Confirm Your Email';
     
-    const payload = constants.REQ_URL + "/activation-email?token=" + mailData.token + "&email=" + mailData.email;
+    const payload = constants.REQ_URL + '/activation-email?token=' + mailData.token + '&email=' + mailData.email;
     
     emailObj.REDIRECT_URL = payload;
     emailObj.HEADER = 'Email verification';
@@ -43,9 +43,9 @@ function attemptResetPasswordEmailGenerate(mailData, type) {
     
     emailObj.TO = mailData.email;
 
-    emailObj.SUBJECT = "You Attempting to reset password.";
+    emailObj.SUBJECT = 'You Attempting to reset password.';
     
-    const payload = constants.REQ_URL + "/reset-password?token=" + mailData.token + "&email=" + mailData.email;
+    const payload = constants.REQ_URL + '/reset-password?token=' + mailData.token + '&email=' + mailData.email;
     
     emailObj.REDIRECT_URL = payload;
     emailObj.REDIRECT_URL = payload;
@@ -63,9 +63,9 @@ function attemptResetPasswordEmailGenerate(mailData, type) {
 function successResetPasswordEmailGenerate(mailData, type) {
     const emailObj = {};
     emailObj.to = mailData.email;
-    emailObj.subject = "Reset password was successfull";
+    emailObj.subject = 'Reset password was successfull';
 
-    emailObj.text = "Your Password was reset";
+    emailObj.text = 'Your Password was reset';
     emailObj.templateData = { ...mailData, type: type };
     return emailObj;
 }
@@ -75,8 +75,8 @@ function successResetPasswordEmailGenerate(mailData, type) {
 
 
 function _sendMail(To, Subject, EmailText, HtmlBody) {
-    logger.debug("utils mailer sendMail");
-    // let SMTP_URL = "smtps://" + constants.MAIL_TRANSPORT_AUTH_EMAIL + ":" + constants.MAIL_TRANSPORT_AUTH_PASSWORD + "@" + constants.MAIL_URL;
+    logger.debug('utils mailer sendMail');
+    // let SMTP_URL = 'smtps://' + constants.MAIL_TRANSPORT_AUTH_EMAIL + ':' + constants.MAIL_TRANSPORT_AUTH_PASSWORD + '@' + constants.MAIL_URL;
     const transporterOptions = {
         host: constants.MAIL_URL,
         port: constants.MAIL_PORT,
@@ -89,7 +89,7 @@ function _sendMail(To, Subject, EmailText, HtmlBody) {
     const tranpoter = nodeMailer.createTransport(transporterOptions);
 
     const mailOptions = {
-        from: `"${constants.COMPANY_NAME}" <${constants.MAIL_TRANSPORT_AUTH_EMAIL}>`,
+        from: `'${constants.COMPANY_NAME}' <${constants.MAIL_TRANSPORT_AUTH_EMAIL}>`,
         to: To,
         subject: Subject,
         text: EmailText,
@@ -104,12 +104,12 @@ function _sendMail(To, Subject, EmailText, HtmlBody) {
         }
         else {
             if (!info) {
-                logger.debug("Error sending mail");
-                console.log("Error sending mail");
+                logger.debug('Error sending mail');
+                console.log('Error sending mail');
             }
             else {
-                logger.debug("Message Sent ");
-                console.log("Message Sent", info.response);
+                logger.debug('Message Sent ');
+                console.log('Message Sent', info.response);
             }
         }
     })
@@ -117,7 +117,7 @@ function _sendMail(To, Subject, EmailText, HtmlBody) {
 
 const mailer = {
     createMail(mailData, type) {
-        logger.debug("utils mailer createMail");
+        logger.debug('utils mailer createMail');
         switch (type) {
             case mailTypes.ACCOUNT_ACTIVATION_LINK:
                 return accountAcivationLinkEmailGenerate(mailData, type);

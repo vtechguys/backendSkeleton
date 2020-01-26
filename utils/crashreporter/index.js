@@ -1,5 +1,5 @@
 'use strict'
-const { paths, constants } = require("../../config");
+const { paths, constants } = require('../../config');
 const logger = require('../logger');
 function crashReporter() {
     //crash repoter

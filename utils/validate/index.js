@@ -5,7 +5,7 @@ const validate = {
 
     username: function (string) {
         logger.debug('validate username');
-        if (string === undefined || typeof(string)!="string") {
+        if (string === undefined || typeof(string)!='string') {
             return false;
         }
         var string = string.trim();
@@ -19,7 +19,7 @@ const validate = {
     },
     password: function (string) {
         logger.debug('validate password');
-        if (string === undefined || typeof(string)!="string") {
+        if (string === undefined || typeof(string)!='string') {
             return false;
         }
         var string = string.trim();
@@ -33,18 +33,18 @@ const validate = {
     },
     email: function (string) {
         logger.debug('validate email');
-        if (string === undefined || typeof(string)!="string") {
+        if (string === undefined || typeof(string)!='string') {
             return false;
         }
         var string = string.trim();
         var comValid=true;
-        var atpos = string.indexOf("@");
-        var dotpos = string.lastIndexOf(".");
+        var atpos = string.indexOf('@');
+        var dotpos = string.lastIndexOf('.');
         if (atpos < 1 || dotpos < atpos + 2 || dotpos + 2 >= string.length) {
             comValid=false;
         }
         var letters = /^[A-Z0-9a-z!@#$%&*+-/=?^_`'{|}~]+$/;
-        if (string.length < 5 || string.length > 50 || string.match(letters) === null || string.match("@") === null || comValid===false) {
+        if (string.length < 5 || string.length > 50 || string.match(letters) === null || string.match('@') === null || comValid===false) {
             return false;
         }
         else {
@@ -53,7 +53,7 @@ const validate = {
     },
     mobile: function (string) {
         logger.debug('validate mobile');
-        if (string === undefined || typeof(string)!="string") {
+        if (string === undefined || typeof(string)!='string') {
             return false;
         }
         var string = string.trim();
@@ -67,7 +67,7 @@ const validate = {
     },
     number: function (string) {
         logger.debug('validate number');
-        if (string === undefined || typeof(string)!="string") {
+        if (string === undefined || typeof(string)!='string') {
             return false;
         }
         var string = string.trim();
@@ -81,7 +81,7 @@ const validate = {
     },
     string: function (string) {
         logger.debug('validate string');
-        if (string === undefined || typeof(string)!="string") {
+        if (string === undefined || typeof(string)!='string') {
             return false;
         }
         var string = string.trim();
@@ -95,7 +95,7 @@ const validate = {
     },
     name: function (string) {
         logger.debug('validate name');
-        if (string === undefined || typeof(string)!="string") {
+        if (string === undefined || typeof(string)!='string') {
             return false;
         }
         var string = string.trim();
@@ -109,7 +109,7 @@ const validate = {
     },
     code: function (string) {
         logger.debug('validate code');
-        if (string === undefined || typeof(string)!="string") {
+        if (string === undefined || typeof(string)!='string') {
             return false;
         }
         var string = string.trim();
@@ -123,7 +123,7 @@ const validate = {
     },
     id: function (string, min = 8, max = 32) {
         logger.debug('validate id');
-        if (string === undefined || typeof(string)!="string") {
+        if (string === undefined || typeof(string)!='string') {
             return false;
         }
         var string = string.trim();
@@ -137,7 +137,7 @@ const validate = {
     },
     gender: function (string) {
         logger.debug('validate gender');
-        if (string === undefined || typeof(string)!="string") {
+        if (string === undefined || typeof(string)!='string') {
             return false;
         }
         var string = string.trim();
@@ -150,7 +150,7 @@ const validate = {
     },
     longString: function (string) {
         logger.debug('validate longstring');
-        if (string === undefined || typeof(string)!="string") {
+        if (string === undefined || typeof(string)!='string') {
             return false;
         }
         
@@ -227,7 +227,7 @@ const validate = {
         };
         for (var i = 0; i < array.length; i++) {
             Object.keys(array[i]).forEach(function (key) {
-                var valid = (typeof(array[i][key]) === "string" || (array[i][key] instanceof Array=== true))
+                var valid = (typeof(array[i][key]) === 'string' || (array[i][key] instanceof Array=== true))
                 
                 if (valid != true) {
                     allProperty.valid = false;

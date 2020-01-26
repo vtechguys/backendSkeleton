@@ -50,7 +50,7 @@ function fillSession(result, response) {
                 if (sessionData && sessionData.sessionId) {
                     const responseObject = {
                         code: 200,
-                        message: "Session created.",
+                        message: 'Session created.',
                         success: true
                     };
                    
@@ -76,7 +76,7 @@ function fillSession(result, response) {
         });
     }
     else {
-        console.log("EXPRESS_WEB_SESSIONS_REMOVED");
+        console.log('EXPRESS_WEB_SESSIONS_REMOVED');
         process.exit();
     }
 }

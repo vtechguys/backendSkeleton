@@ -1,8 +1,11 @@
 'use strict'
 
 const dbOperations = require('../../db/crudOperation/user');
-const { sendResponse, logger, mailer } = require('../../utils');
+const { sendResponse, logger, mailer, messenger } = require('../../utils');
 const msg = require('./msgconfig');
+
+
+
 
 function profileRequestEmailVerification(request, response){
     const userData = request.userData;
@@ -31,29 +34,30 @@ function profileRequestEmailVerification(request, response){
     }
 
 }
+function validate(){
 
+}
 function profileRegisterMobile(request, response){
-
+    const TYPE = 'mobile';
     const userId = request.userId;
     dbOperations
-    .findByMobile(body.mobile, function findByMobileCbRoute(error1, result1){
-        if(error1){
-            logger.error(error1);
-            sendResponse.serverError(response);
-        }
-        else{
-            
-        }
-    });
-
-    dbOperations
-    .addToken(userId, 'mobile', function addTokenCbRoute(error, result){
+    .addToken(userId, TYPE, function addTokenCbRoute(error, result){
         if(error){
             logger.error(error);
             sendResponse.serverError(response);
         }
         else{
+            if(!result){
+                sendResponse.notFound(response, msg.userNotFound);
+            }
+            else{
+                // token added successfully now send otp
+                const msgObj = {
 
+                };
+                messenger.createSMS(msgObj, messenger.smsTypes.MOBILE_ACTIVATION);
+                sendResponse.success(response, msg.mobileNumberNoted);
+            }
         }
     });
 
@@ -62,5 +66,5 @@ function profileMobileVerification(request, response){
 
 }
 function profileRequestMobileVerification(request, response){
-
+    
 }

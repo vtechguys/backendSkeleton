@@ -18,7 +18,7 @@ const dbOpeartions = {
                 }
                 else{
                     if(!result){
-                        sendResponse.notFound(response, "User not found.");
+                        sendResponse.notFound(response, 'User not found.');
                     }
                     else{
                         session.fillJwtSession(result, response);

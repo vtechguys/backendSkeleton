@@ -7,7 +7,7 @@ const registerUrls = {
     },
     auth: {
         '/': ['web-index'],
-        '/profile/': ['get-profile', 'update-profile',],
+        '/profile/': ['fetch-profile', 'update-profile',],
     },
     ALL_ROLES: ['superadmin', 'admin', 'moderator', 'seller', 'user', 'guest']
 

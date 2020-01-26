@@ -10,24 +10,24 @@ const SessionCRUD = require('../../db/crudOperation/session');
 
 const jwtOperations = {
 
-    generateJwt(id, role = "user", duration = 7) {
+    generateJwt(id, role = 'user', duration = 7) {
         logger.debug('generateJwt');
 
         let jwtDuration = constants.JWT_DURATION;//duration is 24hrs
 
-        if (role === "superadmin") {
+        if (role === 'superadmin') {
             jwtDuration = jwtDuration / 4; //6hrs
         }
-        else if (role === "admin") {
+        else if (role === 'admin') {
             jwtDuration = jwtDuration / 2; //12 hrs
         }
-        else if (role === "user" || role === "guest") {
+        else if (role === 'user' || role === 'guest') {
             jwtDuration = jwtDuration * duration; // default 7 days
         }
 
         else {
-            console.log("FUCK YOU!!");
-            return "";
+            console.log('FUCK YOU!!');
+            return '';
         }
 
         let token = jwt.sign({ userId: id }, constants.JWT_KEY, {
@@ -63,18 +63,18 @@ const jwtOperations = {
 
             let token = that.generateJwt(userData.userId, userData.role, duration);
 
-            userData["objectId"] = userData._id;
+            userData['objectId'] = userData._id;
             delete userData._id;
 
-            userData["sessionId"] = token;
+            userData['sessionId'] = token;
 
-            const uuid = userData["uuid"];
+            const uuid = userData['uuid'];
 
-            userData["uuid"] = "xxxxxxxxxx";
+            userData['uuid'] = 'xxxxxxxxxx';
 
 
-            if (uuid && constants.SESSION_TYPE !== "single") {
-                userData["uuid"] = uuid;
+            if (uuid && constants.SESSION_TYPE !== 'single') {
+                userData['uuid'] = uuid;
             }
             SessionCRUD
                 .removeAllSessionForThisUser(userData, function utilsFillJwtSessionCb1(error, result) {
@@ -90,7 +90,7 @@ const jwtOperations = {
         }
         else {
             let error = {
-                msg: "REQUIRED USERID"
+                msg: 'REQUIRED USERID'
             };
             callback(error, null);
         }

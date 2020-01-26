@@ -107,7 +107,7 @@ const UserSchema = new Schema({
     profileImage: String,
     role: {
         type: String,
-        default: "guest"
+        default: 'guest'
     },
     // bio
 });

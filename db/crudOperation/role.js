@@ -5,7 +5,7 @@ const UserCRUD = require('./user');
 
 const { logger } = require('../../utils');
 
-const { createTheRole, encryptPassword } = require('../functions');
+const { createTheRole, encryptedPasswordAndHash } = require('../functions');
 const { constants } = require('../../config');
 
 
@@ -32,7 +32,12 @@ const dbOperations = {
                         const superAdminObj = {};
 
                         superAdminObj.email = constants.SUPER_ADMIN_EMAIL
-                        encryptPassword(superAdminObj, "a".repeat(32));
+                        
+                        const saltAndHash = encryptedPasswordAndHash('a'.repeat(32));
+                        
+                        superAdminObj.password = saltAndHash.hash;
+                        superAdminObj.salt = saltAndHash.salt;
+                        
                         superAdminObj.firstName = 'superadmin';
                         superAdminObj.lastName = 'superadmin';
                         superAdminObj.mobile = constants.SUPER_ADMIN_PHONE_NUMBER;
@@ -57,9 +62,9 @@ const dbOperations = {
             });
     },
     getRole(role, callback) {
-        logger.debug("ROLE_CRUD getRole");
+        logger.debug('ROLE_CRUD getRole');
         const QUERY = {
-            "role": role
+            'role': role
         };
         const PROJECTIONS = {
 
@@ -78,11 +83,11 @@ const dbOperations = {
     fillRights(roleId, rights, callback) {
         logger.debug('ROLE_CRUD fillRights');
         const QUERY = {
-            "roleId": roleId
+            'roleId': roleId
         };
         const UPDATE_QUERY = {
-            "$set": {
-                "rights": rights
+            '$set': {
+                'rights': rights
             }
         };
         Role

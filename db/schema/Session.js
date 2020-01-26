@@ -1,8 +1,8 @@
 'use strict';
 
 /////////////////////////////Schema for session//////////////////
-const mongoose = require("../connectDb");
-const config = require("../../config");
+const mongoose = require('../connectDb');
+const config = require('../../config');
 const Schema = mongoose.Schema;
 
 
@@ -57,7 +57,7 @@ const sessionSchema = new Schema({
       },
     createdAt:{
         type:Date,
-        expires:"30d",
+        expires:'30d',
         default:Date.now
     },
     profilePic:String

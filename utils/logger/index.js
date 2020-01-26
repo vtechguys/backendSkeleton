@@ -19,8 +19,8 @@ log4js.configure({
             backups: 10
         },
         info: {
-            type: "file",
-            filename: "logs/info.log",
+            type: 'file',
+            filename: 'logs/info.log',
             category: 'info',
             maxLogSize: 20480,
             backups: 10
@@ -28,14 +28,14 @@ log4js.configure({
         },
         error: {
             type: 'file',
-            filename: "logs/error.log",
+            filename: 'logs/error.log',
             category: 'error',
             maxLogSize: 20480,
             backups: 10
         },
         critical: {
-            type: "file",
-            filename: "logs/critical.log",
+            type: 'file',
+            filename: 'logs/critical.log',
             category: 'critical',
             maxLogSize: 20480,
             backups: 10

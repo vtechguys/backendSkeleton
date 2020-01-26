@@ -8,7 +8,7 @@ const loadash = require('./lodash');
 const sendResponse = require('./responser');
 const crashReporter = require('./crashreporter');
 const logger = require('./logger');
-
+const messenger = require('./messenger');
 const session = require('./session');
 
 const utils = {
@@ -20,6 +20,7 @@ const utils = {
     sendResponse,
     crashReporter,
     logger,
-    session
+    session,
+    messenger
 };
 module.exports = utils;

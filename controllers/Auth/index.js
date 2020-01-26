@@ -34,7 +34,7 @@ function validateLoginInputs(inputs) {
         errors.password = msg.passwordInvalid;
     }
 
-    if (!inputs.rememberMe || inputs.rememberMe && typeof inputs.rememberMe !== "boolean") {
+    if (!inputs.rememberMe || inputs.rememberMe && typeof inputs.rememberMe !== 'boolean') {
         inputs.rememberMe = false;
     }
 
@@ -133,7 +133,7 @@ function validateRegistrationInputs(inputs) {
 
 }
 function authRegisterRouteHandler(request, response) {
-    const REGISTRATION_BODY = ["email", "username", "password", "firstName", "lastName", "confirmPassword"];
+    const REGISTRATION_BODY = ['email', 'username', 'password', 'firstName', 'lastName', 'confirmPassword'];
 
     const body = loadash.pick(request.body, REGISTRATION_BODY);
     const { isValid, errors } = validateRegistrationInputs(request.body);
@@ -148,7 +148,7 @@ function authRegisterRouteHandler(request, response) {
 
 
 function validateAttemptToForgotPasswordInputs(inputs) {
-    const VALID_MEDIA = ["email", "mobile"];
+    const VALID_MEDIA = ['email', 'mobile'];
     const errors = {};
     if (inputs.email) {
         if (!validate.email(inputs.email)) {
@@ -176,8 +176,8 @@ function validateAttemptToForgotPasswordInputs(inputs) {
     };
 }
 function authAttemptToForgotPasswordRouteHandler(request, response) {
-    logger.debug("authAttemptToForgotPassword");
-    const ATTEMPT_RESET_PASSWORD = ["email", "media"];
+    logger.debug('authAttemptToForgotPassword');
+    const ATTEMPT_RESET_PASSWORD = ['email', 'media'];
 
     const body = loadash.pick(request.body, ATTEMPT_RESET_PASSWORD);
 
@@ -197,14 +197,14 @@ function authAttemptToForgotPasswordRouteHandler(request, response) {
                     sendResponse.notFound(response, msg.userNotFound);
                 }
                 else {
-                    if (body.media == "mobile" && result.mobile && result.mobileVerified) {
+                    if (body.media == 'mobile' && result.mobile && result.mobileVerified) {
                         const smsObject = {
                             to: result.mobile,
                             token: result.passwordToken,
                             userId: result.userId
                         };
                         sms.createSMS(smsObject, sms.smsTypes.ATTEMPT_RESET_PASSWORD);
-                        sendResponse.success(response, msg.verficationTokenSent + " " + result.mobile);
+                        sendResponse.success(response, msg.verficationTokenSent + ' ' + result.mobile);
                     }
                     else {
                         const mailObject = {
@@ -214,7 +214,7 @@ function authAttemptToForgotPasswordRouteHandler(request, response) {
                         };
                         mailer.createMail(mailObject, mailer.mailTypes.ATTEMPT_RESET_PASSWORD);
 
-                        sendResponse.success(response, msg.verficationTokenSent + " " + result.email);
+                        sendResponse.success(response, msg.verficationTokenSent + ' ' + result.email);
 
                     }
                 }
@@ -286,7 +286,7 @@ function validateResetPasswordInputs(inputs) {
 }
 function authResetPasswordRouteHandler(request, response) {
 
-    const RESET_PASSWORD = ["email", "token", "password", "confirmPassword"]; // loginId is email or mobile number
+    const RESET_PASSWORD = ['email', 'token', 'password', 'confirmPassword']; // loginId is email or mobile number
     const body = loadash.pick(request.body, RESET_PASSWORD);
 
     const { isValid, errors } = validateResetPasswordInputs(body);
@@ -369,9 +369,9 @@ function validateEmailActivationInputs(inputs){
 }
 
 function authEmailVerificationRouteHandler(request, response){
-    logger.debug("authEmailActivationRouteHandler");
+    logger.debug('authEmailActivationRouteHandler');
     
-    const EMAIL_ACTIVATION_INPUTS = ["email", "token"];
+    const EMAIL_ACTIVATION_INPUTS = ['email', 'token'];
     const body = loadash.pick(request.body, EMAIL_ACTIVATION_INPUTS);
    
     const { isValid, errors } = validateEmailActivationInputs(body);

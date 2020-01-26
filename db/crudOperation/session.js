@@ -5,10 +5,10 @@ const logger  = require('../../utils/logger');
 
 const dbOperations = {
     getSessionBySessionId(sessionId, callback) {
-        logger.debug("Session_CRUD getSessionBySessionId");
+        logger.debug('Session_CRUD getSessionBySessionId');
         Session
             .findOne({
-                "sessionId": sessionId
+                'sessionId': sessionId
             }, function getSessionBySessionIdDbCb(error, result) {
                 if (error) {
                     logger.error(error);
@@ -25,11 +25,11 @@ const dbOperations = {
             });
     },
     getSessionForThisUser(userData, callback) {
-        logger.debug("Session_CRUD getSessionForThisUser");
+        logger.debug('Session_CRUD getSessionForThisUser');
         Session
             .find({
-                "userId": userData.userId,
-                "uuid": userData.uuid
+                'userId': userData.userId,
+                'uuid': userData.uuid
             }, function getSessionForThisUserDbCb(error, result) {
                 if (error) {
                     logger.error(error);
@@ -46,11 +46,11 @@ const dbOperations = {
             });
     },
     removeAllSessionForThisUser(userData, callback) {
-        logger.debug("Session_CRUD removeAllSessionForThisUser");
+        logger.debug('Session_CRUD removeAllSessionForThisUser');
         Session
             .find({
-                "userId": userData.userId,
-                "uuid": userData.uuid
+                'userId': userData.userId,
+                'uuid': userData.uuid
             })
             .remove(function removeAllSessionForThisUserDbCb(error, result) {
                 if (error) {
@@ -63,7 +63,7 @@ const dbOperations = {
             })
     },
     createSession(sessionData, callback) {
-        logger.debug("Session_CRUD createSession");
+        logger.debug('Session_CRUD createSession');
         Session
             .create(sessionData,
                 function createSessionDbCb(error, result) {

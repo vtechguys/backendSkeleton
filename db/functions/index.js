@@ -1,18 +1,14 @@
 'use strict'
 const { encrypt, generate } = require('../../utils');
-function assignRoleId(roleObj) {
-    const ROLE_ID_LENGTH = 8;
-    const { generate } = require('../../utils');
-
-    roleObj.roleId = generate.randomString(ROLE_ID_LENGTH);
+function uniqueIdGenerator(length = 8){
+    return generate.randomString(length);
 }
-function assignRole(roleObj, role) {
-    roleObj.role = role;
-}
-function createTheRole(role = "guest"){
+function createTheRole(role = 'guest'){
     const roleObj = {};
-    assignRoleId(roleObj);
-    assignRole(roleObj, role);
+    const ROLE_ID_LENGTH = 8;
+
+    roleObj.roleId = uniqueIdGenerator(ROLE_ID_LENGTH);
+    roleObj.role = role;
     return roleObj;
 }
 function assignUserId(userObj) {
@@ -21,18 +17,19 @@ function assignUserId(userObj) {
 
     userObj.userId = generate.randomString(USER_ID_LENGTH);
 }
-function encryptPassword(userObj, password) {
+function encryptedPasswordAndHash(password) {
     const salt = encrypt.genRandomString(10);
-    const passwordHash = encrypt.sha512(password, salt ).hash;
-    userObj.password = passwordHash;
-    userObj.salt = salt;
-    return userObj;
+    const hash = encrypt.sha512(password, salt ).hash;
+    return {
+        hash,
+        salt
+    };
 }
 module.exports = {
     assignRoleId,
     assignRole,
     createTheRole,
-    encryptPassword,
+    encryptedPasswordAndHash,
     
     assignUserId,
 };

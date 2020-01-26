@@ -8,9 +8,9 @@
  */
 
 const schemaNames = {
-    rolesCollection: "roles",
-    usersCollection: "users",
-    sessionsCollection: "sessions",
+    rolesCollection: 'roles',
+    usersCollection: 'users',
+    sessionsCollection: 'sessions',
     
 };
 module.exports = schemaNames;

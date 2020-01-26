@@ -1,7 +1,7 @@
-"use strict"
-const User = require("../schema/User");
-const { logger, sendResponse, session, encrypt, mailer, generate } = require("../../utils");
-const { assignUserId, encryptPassword } = require('../functions');
+'use strict'
+const User = require('../schema/User');
+const { logger, sendResponse, session, encrypt, mailer, generate } = require('../../utils');
+const { assignUserId, encryptedPasswordAndHash } = require('../functions');
 
 const dbOperations = {
     doLogin(body, response) {
@@ -15,12 +15,12 @@ const dbOperations = {
                 }
                 else {
                     if (!result) {
-                        sendResponse.notFound(response, "User not found.");
+                        sendResponse.notFound(response, 'User not found.');
                     }
                     else {
                         const passwordHash = encrypt.sha512(body.password, result.salt).hash;
                         if (passwordHash != result.password) {
-                            sendResponse.unauthorized(response, "Password incorrect.");
+                            sendResponse.unauthorized(response, 'Password incorrect.');
                         }
                         else {
                             session.fillJwtSession(result, response);
@@ -39,7 +39,7 @@ const dbOperations = {
             }
             else {
                 if (result) {
-                    sendResponse.badRequest(response, "Email alreay taken.");
+                    sendResponse.badRequest(response, 'Email alreay taken.');
                 }
                 else {
                     that.findByUsername(body.username, function registerDbCb2(error2, result2) {
@@ -49,11 +49,13 @@ const dbOperations = {
                         }
                         else {
                             if (result2) {
-                                sendResponse.badRequest(response, "Username already taken.");
+                                sendResponse.badRequest(response, 'Username already taken.');
                             }
                             else {
-                                encryptPassword(body, body.password);
-                                body.role = "guest";
+                                const saltAndHash = encryptedPasswordAndHash(body.password);
+                                body.password = saltAndHash.hash;
+                                body.salt = saltAndHash.salt;
+                                body.role = 'guest';
 
                                 const token = body.emailToken = generate.randomString(8);
                                 body.emailTokenTimeStamp = (new Date());
@@ -72,7 +74,7 @@ const dbOperations = {
                                         };
                                         mailer.createMail(mailObject, mailer.mailTypes.ACCOUNT_ACTIVATION_LINK);
 
-                                        sendResponse.success(response, "Successfuly registered. Please consider to confirm Email.");
+                                        sendResponse.success(response, 'Successfuly registered. Please consider to confirm Email.');
                                     }
                                 });
                             }
@@ -83,15 +85,15 @@ const dbOperations = {
         });
     },
     findByEmailUsername(loginId, callback, projections = {}) {
-        logger.debug("USER_CRUD findByEmailOrUsername");
+        logger.debug('USER_CRUD findByEmailOrUsername');
 
         const QUERY = {
-            "$or": [
+            '$or': [
                 {
-                    "email": loginId
+                    'email': loginId
                 },
                 {
-                    "username": loginId
+                    'username': loginId
                 }
             ]
         };
@@ -115,7 +117,7 @@ const dbOperations = {
             });
     },
     findUserForThisQuery(Query = {}, Projection = {}, callback) {
-        logger.debug("USER_CRUD findUserForThisQuery");
+        logger.debug('USER_CRUD findUserForThisQuery');
         User
             .findOne(Query, Projection)
             .exec(function findUserForThisQueryDbCb(error, queryResult) {
@@ -133,7 +135,7 @@ const dbOperations = {
             });
     },
     createUser(userData, callback) {
-        logger.debug("USER_CRUD createUser");
+        logger.debug('USER_CRUD createUser');
         assignUserId(userData);
         User
             .create(userData, function createUserDbCb(error, result) {
@@ -169,7 +171,7 @@ const dbOperations = {
 
         const FIND_QUERY = {
 
-            "email": userIdOrEmail
+            'email': userIdOrEmail
                
         };
 
@@ -180,7 +182,7 @@ const dbOperations = {
         };
 
         const UPDATE_QUERY = {
-            "$set": UPDATE_QUERY_SET
+            '$set': UPDATE_QUERY_SET
         };
         User
             .findOneAndUpdate(FIND_QUERY, UPDATE_QUERY, { new: true })
@@ -204,11 +206,11 @@ const dbOperations = {
         const QUERY = {
             'userId': loginId
         };
-        const passwordObject = encryptPassword({}, password);
+        const saltAndHash = encryptedPasswordAndHash(password);
         const UPDATE_QUERY = {
             '$set': {
-                password: passwordObject.password,
-                salt: passwordObject.salt
+                password: saltAndHash.hash,
+                salt: saltAndHash.salt
             },
             '$unset': {
                 passwordToken: 1,
@@ -296,11 +298,11 @@ const dbOperations = {
         const token = generate.randomString(TOKEN_LENGTH);
 
         const setFields = {};
-        if(type == "email"){
+        if(type == 'email'){
             setFields.emailToken = token;
             setFields.emailTokenTimeStamp = new Date();
         }
-        else if(type == "mobile"){
+        else if(type == 'mobile'){
             setFields.mobileToken = token;
             setFields.mobileTokenTimeStamp = new Date();
         }
@@ -312,7 +314,8 @@ const dbOperations = {
             '$set': setFields
         };
         this.getOneUserAndUpdateFields(FIND_QUERY, UPDATE_QUERY, callback);
-    }
+    },
+    
 
 };
 module.exports = dbOperations;

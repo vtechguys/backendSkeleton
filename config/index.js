@@ -33,7 +33,6 @@ const configIndex = {
     schemaNames: schemaNames,
     constants: constants,
     DB_URL: DB_URL,
-    APP_VERSION: process.env.APP_VERSION || 'v1'
 };
 
 module.exports = configIndex;

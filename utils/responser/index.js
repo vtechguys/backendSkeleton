@@ -17,7 +17,7 @@ function defaultResonseObj(msg,  errors = null, data = null) {
 }
 
 const responser = {
-    badRequest(response, message = "Bad request.", errors = null, data = null) {
+    badRequest(response, message = 'Bad request.', errors = null, data = null) {
         const responseObj = defaultResonseObj(message, errors, data);
         
         responseObj.code = 400;
@@ -25,22 +25,22 @@ const responser = {
         response.json(responseObj);
 
     },
-    serverError(response, message = "Some Error Occured.", errors = null, data = null) {
+    serverError(response, message = 'Some Error Occured.', errors = null, data = null) {
         const responseObj = defaultResonseObj(message, errors, data);
         responseObj.code = 500;
         response.json(responseObj);
     },
-    notFound(response, message = "Not found.", errors = null, data = null) {
+    notFound(response, message = 'Not found.', errors = null, data = null) {
         const responseObj = defaultResonseObj(message, errors, data);
         responseObj.code = 404;
         response.json(responseObj);
     },
-    unauthorized(response, message = "Unauthorized.", errors = null, data = null) {
+    unauthorized(response, message = 'Unauthorized.', errors = null, data = null) {
         const responseObj = defaultResonseObj(message, errors, data);
         responseObj.code = 401;
         response.json(responseObj);
     },
-    success(response, message = "Success.", data = null, errors = null) {
+    success(response, message = 'Success.', data = null, errors = null) {
         const responseObj = defaultResonseObj(message,  errors, data);
         responseObj.code = 200;
         responseObj.success = true;

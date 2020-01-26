@@ -28,7 +28,7 @@ const isEmpty = value =>
 
 //Validates date
 const isValidDate = date => {
-  if (Object.prototype.toString.call(date) === "[object Date]") {
+  if (Object.prototype.toString.call(date) === '[object Date]') {
     // it is a date
     if (isNaN(date.getTime())) {
       // date is not valid

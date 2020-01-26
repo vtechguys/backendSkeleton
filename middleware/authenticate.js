@@ -1,6 +1,6 @@
 'use strict'
 
-const { constants, APP_VERSION } = require('../config');
+const { constants,  } = require('../config');
 
 const ALL_URLS = require('../config/roleUrls/registeredUrls');
 const CONFIG_URLS = require('../config/roleUrls/configUrls');
@@ -27,21 +27,21 @@ const RoleCRUD = require('../db/crudOperation/role');
 
 Object.keys(SIMPLE_URLS).forEach(function (keyBaseUrl) {
     for (let i = 0; i < SIMPLE_URLS[keyBaseUrl].length; i++) {
-        let url = '/' + APP_VERSION + keyBaseUrl + SIMPLE_URLS[keyBaseUrl][i];
+        let url = keyBaseUrl + SIMPLE_URLS[keyBaseUrl][i];
         SIMPLE_URLS_ARRAY.push(url);
     }
 });
 
 Object.keys(AUTH_URLS).forEach(function (keyBaseUrl) {
     for (let i = 0; i < AUTH_URLS[keyBaseUrl].length; i++) {
-        let url = '/' + APP_VERSION +  keyBaseUrl + AUTH_URLS[keyBaseUrl][i];
+        let url =  keyBaseUrl + AUTH_URLS[keyBaseUrl][i];
         AUTH_URLS_ARRAY.push(url);
     }
 });
 
 Object.keys(CONFIG_URLS).forEach(function (keyBaseUrl) {
     for (let i = 0; i < CONFIG_URLS[keyBaseUrl].length; i++) {
-        let url = '/' + APP_VERSION +  keyBaseUrl + CONFIG_URLS[keyBaseUrl][i];
+        let url =  keyBaseUrl + CONFIG_URLS[keyBaseUrl][i];
         AUTH_URLS_ARRAY.push(url);
     }
 });
@@ -53,7 +53,7 @@ function checkRights(request, response, next) {
         }
         else {
             if (!result) {
-                sendResponse.notFound(response, "User unknown or role not found.");
+                sendResponse.notFound(response, 'User unknown or role not found.');
             }
             else {
                 const rights = [];
@@ -65,7 +65,7 @@ function checkRights(request, response, next) {
                     next();
                 }
                 else {
-                    sendResponse.unauthorized(response, "Access denied.");
+                    sendResponse.unauthorized(response, 'Access denied.');
                 }
             }
         }
@@ -84,22 +84,22 @@ const authenticate = {
         if (isRequestedUrlAuthUrl || isRequestedUrlSimpleUrl) {
             logger.debug('sessionJwt urls');
 
-            const tokenHeader = request.headers["authorization"];
+            const tokenHeader = request.headers['authorization'];
             if (tokenHeader) {
 
-                const tokenArray = tokenHeader.split(" ");
+                const tokenArray = tokenHeader.split(' ');
                 const format = tokenArray[0];
                 const token = tokenArray[1];
 
                 let isValidTokenFormat = false;
 
-                if (format && typeof (format) == "string" && format == "token") {
+                if (format && typeof (format) == 'string' && format == 'token') {
                     isValidTokenFormat = true;
                 }
 
                 if (isValidTokenFormat && token) {
 
-                    request["token"] = token;
+                    request['token'] = token;
 
                     jwtOperations.getSessionBySessionId(token, (error, sessionResult) => {
                         if (error) {
@@ -109,14 +109,14 @@ const authenticate = {
                         else {
                             if (sessionResult && sessionResult.sessionId) {
 
-                                request["userData"] = sessionResult.toObject();
-                                request["sessionMode"] = "jwt";
+                                request['userData'] = sessionResult.toObject();
+                                request['sessionMode'] = 'jwt';
 
                                 jwt.verify(request.token, constants.JWT_KEY, function (error1, result1) {
                                     if (error1) {
                                         logger.error(error1);
                                         // error occurrs this token is invalid jwt token
-                                        sendResponse.serverError(response, "Unknown user.");
+                                        sendResponse.serverError(response, 'Unknown user.');
                                     }
                                     else {
                                         checkRights(request, response, next);
@@ -124,19 +124,19 @@ const authenticate = {
                                 });
                             }
                             else {
-                                sendResponse.notFound(response, "Session not found.");
+                                sendResponse.notFound(response, 'Session not found.');
                             }
                         }
                     });
 
                 }
                 else {
-                    sendResponse.badRequest(response, "Invalid token format or missing token.");
+                    sendResponse.badRequest(response, 'Invalid token format or missing token.');
                 }
             }
             else {
                 if(isRequestedUrlAuthUrl){
-                    sendResponse.unauthorized(response, "Unknown user.");
+                    sendResponse.unauthorized(response, 'Unknown user.');
                 }
                 else{
                     next();
@@ -146,7 +146,7 @@ const authenticate = {
 
         }
         else {
-            // sendResponse.badRequest(response, "URL not supported.");
+            // sendResponse.badRequest(response, 'URL not supported.');
             next();
         }
     }

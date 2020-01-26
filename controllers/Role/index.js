@@ -90,7 +90,7 @@ function validateGetRoleInputs(inputs) {
  */
 function roleGetThisRoleHandler(request, response) {
     logger.debug('roles api roleGetThisRoleHandler');
-    const body = loadash.pick(request.body, ["role"]);
+    const body = loadash.pick(request.body, ['role']);
 
     const { isValid, errors } = validateGetRoleInputs(body);
 
@@ -133,7 +133,7 @@ function validateCreateRoleInputs(inputs) {
 }
 function roleCreateRoleRouteHandler(request, response) {
     logger.debug('route api roleCreateRoleRouteHandler');
-    const body = loadash.pick(request.body, ["role"]);
+    const body = loadash.pick(request.body, ['role']);
 
     const { isValid, errors } = validateCreateRoleInputs(body);
 
@@ -141,7 +141,7 @@ function roleCreateRoleRouteHandler(request, response) {
         sendResponse.badRequest(response, msg.inputErrors, errors);
     }
     else {
-        if (body.role === "superadmin") {
+        if (body.role === 'superadmin') {
             sendResponse.unauthorized(response, msg.oneSuperAdmin); // roles are unique this fill fail anyway
         }
         else {
@@ -285,7 +285,7 @@ function validateDeleteRoleInputs(inputs) {
 
 function roleDeleteRoleRouteHandler(request, response) {
     logger.debug('routes api roleDeleteRoleRouteHandler');
-    const body = loadash.pick(request.body, ["roleId"]);
+    const body = loadash.pick(request.body, ['roleId']);
     const { isValid, errors } = validateDeleteRoleInputs(body);
 
     if (!isValid) {
@@ -317,7 +317,7 @@ function validateFillRightsInputs(inputs) {
 function roleFillRightsRouteHandler(request, response) {
     logger.debug('routes api roleFillRightsRouteHandler');
 
-    const body = loadash.pick(request.body, ["roleId", "rights"]);
+    const body = loadash.pick(request.body, ['roleId', 'rights']);
     const { isValid, errors } = validateFillRightsInputs(body);
 
     if (!isValid) {
@@ -382,5 +382,4 @@ module.exports = {
     roleGetAllRolesRouteHandler,
     roleGetRightsRouteHandler,
     roleFillRightsRouteHandler,
-    roleGetRightsRouteHandler
 };

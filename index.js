@@ -7,17 +7,17 @@ const path = require('path');
 const loggerHttp = require('morgan');
 
 const bodyParser = require('body-parser');
-const mfavicon = require("express-favicon");
+const mfavicon = require('express-favicon');
 
 //authenticator RBAC middleware used for RBAC implementattion
 const authenticate = require('./middleware/authenticate');
 
 // crashReporter is reporting the crash of system and sends mail
-const { crashReporter } = require("./utils");
+const { crashReporter } = require('./utils');
 
 // constants are all those values that are process var and dont change in app.
 // paths to all resorces 
-const { constants, paths, APP_VERSION } = require('./config');
+const { constants, paths,  } = require('./config');
 
 
 /*
@@ -29,8 +29,8 @@ const app = express();
 
 //CORS Middleware
 app.use(function setCorsHeaders(request, response, next) {
-    response.header("Access-Control-Allow-Origin", "*");
-    response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    response.header('Access-Control-Allow-Origin', '*');
+    response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
     next();
 });
 
@@ -48,7 +48,7 @@ crashReporter();
 /*
     RBAC Middleware dependeing on config decides which strategy to follow expression session or jwt
 */
-if(constants.SESSION_MODE === "jwt"){
+if(constants.SESSION_MODE === 'jwt'){
     app.use( authenticate.jwtSession );
 }
 else{
@@ -62,8 +62,7 @@ else{
 
 
 // Routes importing
-const routesForApplicationVersion = require('./routes');
-routesForApplicationVersion[APP_VERSION](app);
+require('./routes')(app);
 
 // Error Handling
 //catch 404 routes
