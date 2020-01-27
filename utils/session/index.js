@@ -6,21 +6,22 @@ const { constants } = require('../../config');
 
 const jwtOps = require('./jwt');
 
-
+function delUnnecessary(userDataOld){
+    const userData = userDataOld.toObject();
+        delete userData.password;
+        delete userData.salt;
+        delete userData.passwordTokenStamp;
+        delete userData.emailActivationToken;
+        delete userData.forgotPasswordToken;
+        delete userData.mobileVerificationCode;
+        delete userData.mobileTokenStamp;
+    return userData;
+}
 
 function fillSession(result, response) {
     logger.debug('Utils fillSession');
 
-    const userData = result.toObject();
-
-    delete userData.password;
-    delete userData.salt;
-    delete userData.passwordTokenStamp;
-    delete userData.emailActivationToken;
-    delete userData.forgotPasswordToken;
-    delete userData.mobileVerificationCode;
-    delete userData.mobileTokenStamp;
-
+    const userData = delUnnecessary(result);
 
     // if (userData.social && userData.social[0] && userData.social[0].sId) {
     //     userData.connectionType = userData.social[0].connection;
@@ -43,33 +44,25 @@ function fillSession(result, response) {
         jwtOps.fillJwtSession(userData, function (error, sessionData) {
             if (error) {
                 logger.error(error);
-                console.log(error);
                 sendResponse.serverError(response);
             }
             else {
                 if (sessionData && sessionData.sessionId) {
-                    const responseObject = {
-                        code: 200,
-                        message: 'Session created.',
-                        success: true
+                    let sessionDataNew = sessionData.toObject();
+
+                    delete sessionDataNew.uuid;
+                    delete sessionDataNew.sessionId;
+                    sessionDataNew._id = sessionDataNew.objectId;
+                    delete sessionDataNew.objectId;
+
+                    const data = {
+                        'profile': sessionDataNew
                     };
-                   
-                    
-                    responseObject.sessionId = sessionData.sessionId;
-
-                    sessionData = sessionData.toObject();
-
-                    delete sessionData.uuid;
-                    delete sessionData.sessionId;
-                    sessionData._id = sessionData.objectId;
-                    delete sessionData.objectId;
-                    responseObject.data = {
-                        profile: sessionData
-                    };
-
-                    sendResponse.directSendJSON(response, responseObject);
-
-
+                    sendResponse.success(response, 'Session created.', data);
+                }
+                else{
+                    // couldnot create the session bcz of unknown role
+                    sendResponse.badRequest(response, 'Could not create session for a unknown role');
                 }
             }
 

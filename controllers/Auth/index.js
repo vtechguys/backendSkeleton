@@ -188,7 +188,7 @@ function authAttemptToForgotPasswordRouteHandler(request, response) {
         sendResponse.badRequest(response, msg.inputErrors, errors);
     }
     else {
-        dbOperations.addPasswordToken(body.email, body.media, function addPasswordTokenCbRoute(error, result) {
+        dbOperations.addPasswordToken(body.email, function addPasswordTokenCbRoute(error, result) {
             if (error) {
                 sendResponse.serverError(response);
             }

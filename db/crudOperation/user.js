@@ -6,7 +6,7 @@ const { generateUserId, encryptedPasswordAndHash } = require('../functions');
 const dbOperations = {
     doLogin(body, response) {
         logger.debug('USER_CRUD doLogin');
-        const that = this;
+        const context = this;
         this
             .findByEmailUsername(body.loginId, function doLoginDbCb1(error, result) {
                 if (error) {
@@ -31,7 +31,7 @@ const dbOperations = {
     },
     register(body, response) {
         logger.debug('register this user');
-        const that = this;
+        const context = this;
         this.findByEmail(body.email, function registerDbCb(error, result) {
             if (error) {
                 logger.error(error);
@@ -42,7 +42,7 @@ const dbOperations = {
                     sendResponse.badRequest(response, 'Email alreay taken.');
                 }
                 else {
-                    that.findByUsername(body.username, function registerDbCb2(error2, result2) {
+                    context.findByUsername(body.username, function registerDbCb2(error2, result2) {
                         if (error2) {
                             logger.error(error2);
                             sendResponse.serverError(response);
@@ -60,7 +60,7 @@ const dbOperations = {
                                 const token = body.emailToken = generate.randomString(8);
                                 body.emailTokenTimeStamp = (new Date());
 
-                                that.createUser(body, function registerDbCb3(error3, result3) {
+                                context.createUser(body, function registerDbCb3(error3, result3) {
                                     if (error3) {
                                         logger.error(error3);
                                         sendResponse.serverError(response);
@@ -149,7 +149,7 @@ const dbOperations = {
     },
     findByEmail(email, callback, projections = {}) {
         logger.debug('USER_CURD findByEmail');
-        const that = this;
+        const context = this;
         const QUERY = {
             'email': email
         };
@@ -157,49 +157,13 @@ const dbOperations = {
     },
     findByUsername(username, callback, projections = {}) {
         logger.debug('USER_CURD findByUsername');
-        const that = this;
+        const context = this;
         const QUERY = {
             'username': username
         };
-        that.findUserForThisQuery(QUERY, projections, callback);
+        context.findUserForThisQuery(QUERY, projections, callback);
     },
-    addPasswordToken(userIdOrEmail, media, callback) {
-        logger.debug('User_CRUD addPasswordToken');
 
-        const TOKEN_LENGTH = 8;
-
-
-        const FIND_QUERY = {
-
-            'email': userIdOrEmail
-               
-        };
-
-
-        const UPDATE_QUERY_SET = {
-            passwordToken: generate.randomString(TOKEN_LENGTH),
-            passwordTimeStamp: new Date()
-        };
-
-        const UPDATE_QUERY = {
-            '$set': UPDATE_QUERY_SET
-        };
-        User
-            .findOneAndUpdate(FIND_QUERY, UPDATE_QUERY, { new: true })
-            .exec(function addPasswordTokenDbCb(error, result) {
-                if (error) {
-                    callback(error, null);
-                }
-                else {
-                    if (!result) {
-                        callback(null, null);
-                    }
-                    else {
-                        callback(null, result);
-                    }
-                }
-            });
-    },
     resetPassword(loginId, password, callback) {
         logger.debug('User_CRUD resetPassword');
 
@@ -251,22 +215,19 @@ const dbOperations = {
         console.log(USER_QUERY, UPDATE_QUERY);
         this.getOneUserAndUpdateFields(USER_QUERY, UPDATE_QUERY, callback)
     },
-    getOneUserAndUpdateFields(FIND_QUERY, UPDATE_QUERY, callback, options){
-        const updateOptions = options || {
-            // new: true
-        };
+    getOneUserAndUpdateFields(FIND_QUERY, UPDATE_QUERY, callback, options = {}){
         User
-        .findOneAndUpdate(FIND_QUERY, UPDATE_QUERY, updateOptions)
+        .findOneAndUpdate(FIND_QUERY, UPDATE_QUERY, options)
         .exec(function getOneUserAndUpdateFieldsCb(error, result){
             if(error){
-                callback(error, null);
+                return callback(error, null);
             }
             else{
                 if(!result){
-                    callback(null, null);
+                    return callback(null, null);
                 }
                 else{
-                    callback(null, result);
+                    return callback(null, result);
                 }
             }
         });
@@ -275,36 +236,39 @@ const dbOperations = {
         const setField = {
 
         };
+        const unsetFieds = {};
         if(verified === 'email'){
             setField.emailVerified = true;
-        }
-        else if(verified === 'mobile'){
-            setField.mobileVerified = true;
-        }
+            unsetFieds.emailTokenTimeStamp = 1;
+            unsetFieds.emailToken = 1;
 
+        }
         const FIND_QUERY = {
             'userId': userId
         };
         const UPDATE_QUERY = {
             '$set': setField
         };
-
         this
         .getOneUserAndUpdateFields(FIND_QUERY, UPDATE_QUERY, callback);
     },
+    setEmailVerified(){},
     addToken(userId, type, callback){
         const TOKEN_LENGTH = 8;
         const { generate } = require('../../utils');
         const token = generate.randomString(TOKEN_LENGTH);
-
         const setFields = {};
-        if(type == 'email'){
+        if(type === 'email'){
             setFields.emailToken = token;
             setFields.emailTokenTimeStamp = new Date();
         }
-        else if(type == 'mobile'){
+        else if(type === 'mobile'){
             setFields.mobileToken = token;
             setFields.mobileTokenTimeStamp = new Date();
+        }
+        else if(type === 'password'){
+            setFields.passwordToken =  generate.randomString(TOKEN_LENGTH),
+            setFields.passwordTimeStamp = new Date()
         }
 
         const FIND_QUERY = {
@@ -313,9 +277,17 @@ const dbOperations = {
         const UPDATE_QUERY = {
             '$set': setFields
         };
-        this.getOneUserAndUpdateFields(FIND_QUERY, UPDATE_QUERY, callback);
+        return this.getOneUserAndUpdateFields(FIND_QUERY, UPDATE_QUERY, callback);
     },
-    
+    addPasswordToken(userId, callback) {
+        return this.addToken(userId, 'password', callback);
+    },
+    addEmailToken(userId, callback){
+       return this.addToken(userId, 'email', callback);
+    },
+    addMobileToken(userId, callback){
+        return this.addToken(userId, 'mobile', callback);
+    },
 
 };
 module.exports = dbOperations;

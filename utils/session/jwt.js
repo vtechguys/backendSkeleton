@@ -7,28 +7,30 @@ const { constants } = require('../../config');
 
 const SessionCRUD = require('../../db/crudOperation/session');
 
+function returnSessionDurationBasedOnRole(role, duration = 7, rememeberMe = false){
+    let jwtDuration = constants.JWT_DURATION;//duration is 24hrs
+    if (role === 'superadmin') {
+        jwtDuration = jwtDuration / 4; //6hrs
+    }
+    else if (role === 'admin') {
+        jwtDuration = jwtDuration / 2; //12 hrs
+    }
+    else if (role === 'user' || role === 'guest') {
+        if(rememeberMe){
+            jwtDuration = jwtDuration * duration * 2; // default 7 days
+        }
+        else{
+            jwtDuration = jwtDuration * duration; // default 7 days
+        }
+    }
+    return jwtDuration;
+}
 
 const jwtOperations = {
 
     generateJwt(id, role = 'user', duration = 7) {
         logger.debug('generateJwt');
-
-        let jwtDuration = constants.JWT_DURATION;//duration is 24hrs
-
-        if (role === 'superadmin') {
-            jwtDuration = jwtDuration / 4; //6hrs
-        }
-        else if (role === 'admin') {
-            jwtDuration = jwtDuration / 2; //12 hrs
-        }
-        else if (role === 'user' || role === 'guest') {
-            jwtDuration = jwtDuration * duration; // default 7 days
-        }
-
-        else {
-            console.log('FUCK YOU!!');
-            return '';
-        }
+        let jwtDuration = returnSessionDurationBasedOnRole(role, duration, rememberMe);
 
         let token = jwt.sign({ userId: id }, constants.JWT_KEY, {
             expiresIn: jwtDuration
@@ -43,17 +45,17 @@ const jwtOperations = {
             .getSessionBySessionId(sessionId, function utilsGetSessionBySessionIdCb(error, result) {
                 if (error) {
                     logger.error(error);
-                    callback(error, null);
+                    return callback(error, null);
                 }
                 else {
-                    callback(null, result);
+                    return callback(null, result);
                 }
             });
 
     },
     fillJwtSession(userData, callback) {
         logger.debug('fillJwtSession');
-        let that = this;
+        const context = this;
         if (userData.userId) {
             let duration = 7;
 
@@ -61,8 +63,10 @@ const jwtOperations = {
                 duration = duration * 2;
             }
 
-            let token = that.generateJwt(userData.userId, userData.role, duration);
-
+            let token = context.generateJwt(userData.userId, userData.role, duration);
+            if(!token || token && token.length == 0){
+                return callback(null, null);
+            }
             userData['objectId'] = userData._id;
             delete userData._id;
 
@@ -80,11 +84,11 @@ const jwtOperations = {
                 .removeAllSessionForThisUser(userData, function utilsFillJwtSessionCb1(error, result) {
                     if (error) {
                         logger.error(error);
-                        callback(error, null);
+                        return callback(error, null);
                     }
                     else {
                         
-                        that.storeSession(userData, callback);
+                        return context.storeSession(userData, callback);
                     }
                 });
         }
@@ -101,10 +105,10 @@ const jwtOperations = {
             .createSession(userData, function utilsStoreSessionCb(error, result) {
                 if (error) {
                     logger.error(error);
-                    callback(error, null);
+                    return callback(error, null);
                 }
                 else {
-                    callback(null, result);
+                    return callback(null, result);
                 }
             });
     }

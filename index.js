@@ -1,6 +1,5 @@
 'use strict'
 
-//Express node http framework
 const express = require('express');
 const path = require('path');
 //Logs HTTP request urls to console with time and reply
@@ -15,16 +14,8 @@ const authenticate = require('./middleware/authenticate');
 // crashReporter is reporting the crash of system and sends mail
 const { crashReporter } = require('./utils');
 
-// constants are all those values that are process var and dont change in app.
-// paths to all resorces 
 const { constants, paths,  } = require('./config');
 
-
-/*
-
-    App instance and CORS
-
-*/
 const app = express();
 
 //CORS Middleware
