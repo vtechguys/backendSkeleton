@@ -109,6 +109,10 @@ const UserSchema = new Schema({
         type: String,
         default: 'guest'
     },
+    isVisible: {
+        type: Boolean,
+        default: true
+    }
     // bio
 });
 UserSchema.index({ email: 1 });

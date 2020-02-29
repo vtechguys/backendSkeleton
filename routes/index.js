@@ -12,10 +12,10 @@ const auth = require('./api/auth');
 const role = require('./api/role');
   
 function routesForApplicationVersion(app) {
-  app.use('/v1/', index);
-  app.use('/v1/auth', auth);
-  app.use('/v1/roles', role);
-  app.use('/v1/*', index);
+  app.use('/', index);
+  app.use('/auth', auth);
+  app.use('/roles', role);
+  app.use('*', index);
 }
 
 

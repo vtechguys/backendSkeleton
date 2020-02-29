@@ -33,6 +33,7 @@ const configIndex = {
     schemaNames: schemaNames,
     constants: constants,
     DB_URL: DB_URL,
+    TOKEN_TIME_STAMP: 10 * 60 * 1000
 };
 
 module.exports = configIndex;

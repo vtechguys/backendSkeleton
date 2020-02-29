@@ -3,11 +3,12 @@
 const registerUrls = {
     simple: {
         '/': [''],
-        '/auth/': ['login', 'register', 'attempt-forgot-password', 'reset-forgot-password', 'email-activation']
+        '/auth/': ['login', 'register', 'attempt-forgot-password', 'reset-forgot-password', 'email-verification']
     },
     auth: {
         '/': ['web-index'],
-        '/profile/': ['fetch-profile', 'update-profile',],
+        '/auth/': [],
+        '/profile/': ['fetch-profile', 'update-profile']
     },
     ALL_ROLES: ['superadmin', 'admin', 'moderator', 'seller', 'user', 'guest']
 

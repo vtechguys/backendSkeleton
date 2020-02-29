@@ -7,12 +7,14 @@
  * ~/backend = rootLevel = #/
  * 
  */
-
-
+const path = require('path');
+function completePath(pathFile){  
+    return path.join(__dirname, '../', pathFile);
+}
 const pathsConfig = {
-    FAVICON: '/public/build/favicon.png',
-    HOME_PAGE:'/public/build/index.html',
-    STATIC_FILES:'/public/build/',
-    CRASH_REPORTER_FILE_PATH: './logs'
+    FAVICON: completePath('public/build/favicon.png'),
+    HOME_PAGE: completePath('public/build/index.html'),
+    STATIC_FILES: completePath('public/build/'),
+    CRASH_REPORTER_FILE_PATH: completePath('logs')
 };
 module.exports = pathsConfig;

@@ -24,10 +24,6 @@ function encryptedPasswordAndHash(password) {
     };
 }
 module.exports = {
-    assignRoleId,
-    assignRole,
-    createTheRole,
-    encryptedPasswordAndHash,
+    uniqueIdGenerator, createTheRole, generateUserId, encryptedPasswordAndHash
     
-    generateUserId,
 };

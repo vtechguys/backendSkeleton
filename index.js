@@ -1,12 +1,11 @@
 'use strict'
 
 const express = require('express');
-const path = require('path');
 //Logs HTTP request urls to console with time and reply
 const loggerHttp = require('morgan');
 
 const bodyParser = require('body-parser');
-const mfavicon = require('express-favicon');
+// const mfavicon = require('express-favicon');
 
 //authenticator RBAC middleware used for RBAC implementattion
 const authenticate = require('./middleware/authenticate');
@@ -30,8 +29,8 @@ app.use(loggerHttp( constants.HTTP_LOGGER_TYPE ));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 // if we are holding the static content on the very same server then this is requied esle I dont use it.
-// app.use( express.static( path.join(__dirname, paths.STATIC_FILES ) ) );
-app.use(mfavicon(__dirname + paths.FAVICON ));
+// app.use( express.static( paths.STATIC_FILES  ) );
+// app.use(mfavicon(paths.FAVICON ));
 
 // crash reporter initialised
 crashReporter();
@@ -80,5 +79,5 @@ app.listen( PORT , function appListener() {
     console.log(`Server stated at port ${PORT}`);
 });
 
-///Will need to export app instance later....
+///Will need to export app later....
 // module.exports = app;
