@@ -2,7 +2,7 @@
 
 const { loadash, validate, sendResponse, logger, sms, mailer } = require('../../utils');
 
-const msg = require('./msgconfig');
+const { msg } = require('../msgConfig');
 
 const dbOperations = require('../../db/crudOperation/user');
 
@@ -301,7 +301,7 @@ function authResetPasswordRouteHandler(request, response) {
             passwordToken: 1,
             passwordTokenTimeStamp: 1
         };
-        dbOperations.findByEmail(body.email, function findByEmailUsernameCbRoute(error, result) {
+        dbOperations.findByEmail(body.email, function findByEmailCbRoute(error, result) {
             if (error) {
                 return sendResponse.serverError(error);
             }

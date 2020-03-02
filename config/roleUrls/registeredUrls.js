@@ -8,7 +8,8 @@ const registerUrls = {
     auth: {
         '/': ['web-index'],
         '/auth/': [],
-        '/profile/': ['fetch-profile', 'update-profile']
+        '/profile/': ['fetch-profile', 'update-profile'],
+        '/role/': ['fetch-right-for-this-role']
     },
     ALL_ROLES: ['superadmin', 'admin', 'moderator', 'seller', 'user', 'guest']
 

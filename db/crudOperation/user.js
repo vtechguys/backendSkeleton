@@ -15,7 +15,7 @@ const dbOperations = {
   doLogin(body, response) {
     logger.debug("USER_CRUD doLogin");
     const context = this;
-    context.findByEmailUsername(
+    context.findByEmailUsernameMobile(
       body.loginId,
       function doLoginDbCb1(error, result) {
         if (error) {
@@ -34,8 +34,7 @@ const dbOperations = {
             }
           }
         }
-      },
-      false
+      }
     );
   },
   register(body, response) {
@@ -112,7 +111,7 @@ const dbOperations = {
       MinimalProjection
     );
   },
-  findByEmailUsername(loginId, callback, projections = {}, isVisible = true) {
+  findByEmailUsernameMobile(loginId, callback, projections = {}, isVisible = true) {
     logger.debug("USER_CRUD findByEmailOrUsername");
     const context = this;
     const queryMatch = [];
@@ -155,7 +154,7 @@ const dbOperations = {
       if (error) {
         return callback(error, null);
       } else {
-        if (queryResult && queryResult._id) {
+        if (queryResult && queryResult._id && queryResult.userId) {
           return callback(null, queryResult);
         } else {
           return callback(null, null);
@@ -350,6 +349,9 @@ const dbOperations = {
   addMobileToken(userId, callback) {
     const context = this;
     return context.addToken(userId, "mobile", callback);
+  },
+  addMobileNumber(){
+    
   }
 };
 module.exports = dbOperations;

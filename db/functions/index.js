@@ -23,6 +23,7 @@ function encryptedPasswordAndHash(password) {
         salt
     };
 }
+const 
 module.exports = {
     uniqueIdGenerator, createTheRole, generateUserId, encryptedPasswordAndHash
     
