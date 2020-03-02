@@ -1,10 +1,10 @@
-'use strict'
+"use strict";
 
-const email = require('./email');
+const email = require("./email");
 
-const sms = require('./sms');
+const sms = require("./sms");
 
 module.exports = {
-    email,
-    sms
+  email,
+  sms
 };

@@ -1,7 +1,7 @@
-'use strict'
+"use strict";
 
-function template(templateData){
-    const sms = ``;
-    return sms;
+function template(templateData) {
+  const sms = ``;
+  return sms;
 }
 module.exports = {};
