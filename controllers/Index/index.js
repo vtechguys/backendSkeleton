@@ -1,16 +1,16 @@
-'use strict'
+"use strict";
 
-const dbOperations = require('../../db/crudOperation/index');
+const dbOperations = require("../../db/crudOperation/index");
 
-function indexRouteHandler(request, response){
-    response.send('😃🔗👽');
+function indexRouteHandler(request, response) {
+  response.send("😃🔗👽");
 }
-function indexWebIndexRouteHandler(request, response){
-    const userData = request.userData;
-    dbOperations.checkUserAndThenCreateSession(userData, response);
+function indexWebIndexRouteHandler(request, response) {
+  const userData = request.userData;
+  dbOperations.checkUserAndThenCreateSession(userData, response);
 }
 
 module.exports = {
-    indexRouteHandler,
-    indexWebIndexRouteHandler
+  indexRouteHandler,
+  indexWebIndexRouteHandler
 };
