@@ -1,14 +1,14 @@
-BackendAppSkeleton
+# BackendAppSkeleton
 
 This is backend app skeleton to be used for all applications.
-Core Skeleton
+```Core Skeleton```
 
-Includes
+## Includes
 
-RBAC - Jwt Session
-Crpto - password encryption
-Picture - upload, download, minimise, compress, size crop.
-AWS - using S3 busket to store images
-Messaging - msg service using msg91
-Email - email service using gmail/Zoho
-Login - core logins, social logins
+- RBAC - Jwt Session
+- Crpto - password encryption
+- Picture - upload, download, minimise, compress, size crop.
+- AWS - using S3 busket to store images
+- Messaging - msg service using msg91
+- Email - email service using gmail/Zoho
+- Login - core logins, social logins
